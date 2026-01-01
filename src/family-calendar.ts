@@ -1,7 +1,7 @@
 import { LitElement, html, PropertyValues } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { HomeAssistant } from 'custom-card-helpers';
-import { Calendar } from '@fullcalendar/core';
+import { Calendar, DatesSetArg } from '@fullcalendar/core';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import deLocale from '@fullcalendar/core/locales/de';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -135,11 +135,11 @@ export class FamilyCalendar extends LitElement {
            meridiem: false
         },
         // Callback wenn sich der sichtbare Zeitraum ändert (z.B. "Nächste Woche")
-        datesSet: (arg) => {
+        datesSet: (arg: DatesSetArg) => {
           this.adjustTimeRange(arg.start, arg.end);
         },
         events: [] 
-      });
+      } as any);
       this.calendar.render();
       
       // Falls hass schon gesetzt wurde (z.B. durch Mock), lade Events
