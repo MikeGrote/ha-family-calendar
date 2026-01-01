@@ -2,6 +2,8 @@ import { css } from 'lit';
 
 export const calendarStyles = css`
   :host {
+    display: block;
+    width: 100%;
     /* Leichter bläulicher Verlauf für mehr Tiefe - Transparenter für Glass Effekt */
     --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.6), rgba(235, 245, 255, 0.5));
     --glass-border: rgba(255, 255, 255, 0.4);
@@ -14,6 +16,8 @@ export const calendarStyles = css`
   }
 
   ha-card {
+    width: 100%;
+    box-sizing: border-box;
     background: var(--glass-bg);
     backdrop-filter: blur(30px) saturate(180%);
     -webkit-backdrop-filter: blur(30px) saturate(180%);
