@@ -40,86 +40,171 @@
   <body>
     <div class="container">
       <h2>Lokale Simulation</h2>
+      
+      <div id="connection-panel" style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <h3 style="margin-top: 0;">Verbindung zu Home Assistant</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+          <div>
+            <label style="display: block; margin-bottom: 5px;">HA URL (z.B. http://192.168.1.5:8123)</label>
+            <input type="text" id="ha-url" placeholder="http://homeassistant.local:8123" style="width: 100%; padding: 8px; box-sizing: border-box;">
+          </div>
+          <div>
+            <label style="display: block; margin-bottom: 5px;">Long-Lived Access Token</label>
+            <input type="password" id="ha-token" placeholder="eyJhbG..." style="width: 100%; padding: 8px; box-sizing: border-box;">
+          </div>
+        </div>
+        <button id="btn-connect" style="background: #0078d4; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Verbinden</button>
+        <button id="btn-mock" style="background: #666; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin-left: 10px;">Mock Daten nutzen</button>
+        <div id="status" style="margin-top: 10px; color: #666;"></div>
+      </div>
+
       <!-- Das Custom Element -->
       <family-calendar id="dev-calendar"></family-calendar>
     </div>
 
     <script>
       const calendar = document.getElementById('dev-calendar');
+      const btnConnect = document.getElementById('btn-connect');
+      const btnMock = document.getElementById('btn-mock');
+      const statusEl = document.getElementById('status');
+      
+      // Gespeicherte Daten laden
+      document.getElementById('ha-url').value = localStorage.getItem('ha-url') || '';
+      document.getElementById('ha-token').value = localStorage.getItem('ha-token') || '';
 
-      // 1. Mock Konfiguration (wie in YAML)
       const mockConfig = {
         entities: ['calendar.privat', 'calendar.arbeit'],
         colors: {
-          'calendar.privat': '#0078d4', // Blau
-          'calendar.arbeit': '#d93025'  // Rot
+          'calendar.privat': '#0078d4',
+          'calendar.arbeit': '#d93025'
         }
       };
 
-      // 2. Mock Home Assistant Objekt
       const mockHass = {
-        // Simuliert die States (für friendly_name)
         states: {
-          'calendar.privat': {
-            attributes: { friendly_name: 'Privat' }
-          },
-          'calendar.arbeit': {
-            attributes: { friendly_name: 'Arbeit' }
-          }
+          'calendar.privat': { attributes: { friendly_name: 'Privat (Mock)' } },
+          'calendar.arbeit': { attributes: { friendly_name: 'Arbeit (Mock)' } }
         },
-        // Simuliert den WebSocket Aufruf
-        callWS: async (msg) => {
-          console.log('[SIMULATION] callWS aufgerufen:', msg);
-          
-          if (msg.type === 'calendar/event_list') {
+        callApi: async (method, path) => {
+          console.log('[MOCK] callApi', method, path);
+          if (path.startsWith('calendars/')) {
             const now = new Date();
             const todayStr = now.toISOString().split('T')[0];
-            
-            // Generiere ein paar Dummy-Termine für "Heute"
-            if (msg.entity_id === 'calendar.privat') {
-              return [
-                {
-                  summary: 'Frühstück',
-                  start: { dateTime: `${todayStr}T08:00:00` },
-                  end: { dateTime: `${todayStr}T09:00:00` }
-                },
-                {
-                  summary: 'Sport',
-                  start: { dateTime: `${todayStr}T18:00:00` },
-                  end: { dateTime: `${todayStr}T19:30:00` }
-                }
-              ];
-            }
-            
-            if (msg.entity_id === 'calendar.arbeit') {
-              return [
-                {
-                  summary: 'Daily Meeting',
-                  start: { dateTime: `${todayStr}T09:30:00` },
-                  end: { dateTime: `${todayStr}T10:00:00` }
-                },
-                {
-                  summary: 'Projekt Fokus',
-                  start: { dateTime: `${todayStr}T13:00:00` },
-                  end: { dateTime: `${todayStr}T15:00:00` }
-                }
-              ];
-            }
+            return [
+              {
+                summary: 'Mock Termin 1',
+                start: { dateTime: `${todayStr}T10:00:00` },
+                end: { dateTime: `${todayStr}T11:00:00` }
+              }
+            ];
           }
           return [];
+        },
+        callService: async (domain, service, data) => {
+          console.log('[MOCK] callService', domain, service, data);
+          alert(`[MOCK] Service call: ${domain}.${service}`);
         }
       };
 
-      // 3. Initialisierung simulieren
-      // Wir warten kurz, bis das Element geladen ist
-      setTimeout(() => {
-        console.log('[SIMULATION] Setze Config und Hass...');
+      btnMock.addEventListener('click', () => {
+        statusEl.textContent = 'Nutze Mock Daten...';
         calendar.setConfig(mockConfig);
         calendar.hass = mockHass;
-        
-        // Erzwinge ein Update, da wir 'hass' von außen setzen
-        if(calendar.fetchEvents) calendar.fetchEvents();
-      }, 500);
+        statusEl.textContent = 'Mock Modus aktiv.';
+      });
+
+      btnConnect.addEventListener('click', async () => {
+        const url = document.getElementById('ha-url').value.replace(/\/$/, '');
+        const token = document.getElementById('ha-token').value;
+
+        if (!url || !token) {
+          alert('Bitte URL und Token angeben');
+          return;
+        }
+
+        // Speichern
+        localStorage.setItem('ha-url', url);
+        localStorage.setItem('ha-token', token);
+
+        statusEl.textContent = 'Verbinde...';
+
+        try {
+          // 1. Test Connection & Fetch States
+          const res = await fetch(`${url}/api/states`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
+
+          if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
+          
+          const states = await res.json();
+          const statesMap = {};
+          const calendarEntities = [];
+          
+          states.forEach(s => {
+            statesMap[s.entity_id] = s;
+            if (s.entity_id.startsWith('calendar.')) {
+              calendarEntities.push(s.entity_id);
+            }
+          });
+
+          statusEl.textContent = `Verbunden! ${calendarEntities.length} Kalender gefunden.`;
+
+          // Real Hass Object
+          const realHass = {
+            states: statesMap,
+            callApi: async (method, path, data) => {
+              console.log('[REAL] callApi', method, path);
+              const opts = {
+                method,
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'Content-Type': 'application/json'
+                }
+              };
+              if (data) opts.body = JSON.stringify(data);
+              
+              const r = await fetch(`${url}/api/${path}`, opts);
+              if (!r.ok) throw new Error(`API Error ${r.status}`);
+              return r.json();
+            },
+            callService: async (domain, service, data) => {
+              console.log('[REAL] callService', domain, service, data);
+              const r = await fetch(`${url}/api/services/${domain}/${service}`, {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+              });
+              if (!r.ok) throw new Error(`Service Error ${r.status}`);
+              return r.json();
+            }
+          };
+
+          // Config bauen mit echten Kalendern
+          const config = {
+            entities: calendarEntities.length > 0 ? calendarEntities : ['calendar.demo'],
+            colors: {}
+          };
+          
+          // Zufällige Farben zuweisen
+          const colors = ['#0078d4', '#d93025', '#107c10', '#f1c40f', '#9b59b6', '#00bcf2'];
+          config.entities.forEach((id, idx) => {
+            config.colors[id] = colors[idx % colors.length];
+          });
+
+          calendar.setConfig(config);
+          calendar.hass = realHass;
+
+        } catch (e) {
+          console.error(e);
+          statusEl.textContent = 'Fehler: ' + e.message;
+        }
+      });
     </script>
   </body>
 </html>
