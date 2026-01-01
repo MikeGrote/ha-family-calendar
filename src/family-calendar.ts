@@ -377,12 +377,14 @@ export class FamilyCalendar extends LitElement {
 
     for (const entity_id of this.config.entities) {
       try {
-        const events = await this.hass.callWS<any[]>({
-          type: 'calendar/event_list',
-          entity_id: entity_id,
-          start: start,
-          end: end,
-        });
+        // Wir nutzen die REST API, da callWS('calendar/event_list') bei manchen Usern Probleme macht
+        const startEnc = encodeURIComponent(start);
+        const endEnc = encodeURIComponent(end);
+        
+        const events = await this.hass.callApi<any[]>(
+          'GET', 
+          `calendars/${entity_id}?start=${startEnc}&end=${endEnc}`
+        );
 
         const color = this.config.colors?.[entity_id] || '#0078d4';
 

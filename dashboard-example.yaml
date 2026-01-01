@@ -37,3 +37,16 @@ views:
               calendar.schule: "#f1c40f"      # Gelb
               calendar.geburtstage: "#9b59b6" # Lila
               calendar.muellabfuhr: "#107c10" # Grün
+
+  - title: Kalender (Vollbild)
+    path: kalender-panel
+    icon: mdi:calendar
+    type: panel
+    cards:
+      - type: custom:family-calendar
+        entities:
+          - calendar.family
+          - calendar.mike
+        colors:
+          calendar.family: "#0078d4"
+          calendar.mike: "#d93025"
