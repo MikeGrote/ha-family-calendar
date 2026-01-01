@@ -3,6 +3,7 @@ import { customElement, property, query, state } from 'lit/decorators.js';
 import { HomeAssistant } from 'custom-card-helpers';
 import { Calendar, DatesSetArg } from '@fullcalendar/core';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
 import deLocale from '@fullcalendar/core/locales/de';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { calendarStyles } from './styles';
@@ -15,6 +16,14 @@ export class FamilyCalendar extends LitElement {
 
   @state() activeCalendars: string[] = [];
   @state() isCompact: boolean = false;
+  
+  // Modal State
+  @state() showModal: boolean = false;
+  @state() newEventTitle: string = '';
+  @state() newEventStart: string = '';
+  @state() newEventEnd: string = '';
+  @state() newEventRecurrence: string = '';
+
   private allFetchedEvents: any[] = [];
 
   @query('#calendar') calendarEl!: HTMLElement;
@@ -70,8 +79,111 @@ export class FamilyCalendar extends LitElement {
           </div>
         </div>
         <div id="calendar"></div>
+        ${this.renderModal()}
       </ha-card>
     `;
+  }
+
+  renderModal() {
+    if (!this.showModal) return html``;
+
+    return html`
+      <div class="modal-overlay" @click=${this.closeModal}>
+        <div class="modal-content" @click=${(e: Event) => e.stopPropagation()}>
+          <h3>Neuer Termin</h3>
+          
+          <div class="form-group">
+            <label>Titel</label>
+            <input 
+              type="text" 
+              .value=${this.newEventTitle} 
+              @input=${(e: any) => this.newEventTitle = e.target.value}
+              placeholder="Termin Titel"
+              autofocus
+            >
+          </div>
+
+          <div class="form-group">
+            <label>Von</label>
+            <input 
+              type="datetime-local" 
+              .value=${this.newEventStart}
+              @input=${(e: any) => this.newEventStart = e.target.value}
+            >
+          </div>
+
+          <div class="form-group">
+            <label>Bis</label>
+            <input 
+              type="datetime-local" 
+              .value=${this.newEventEnd}
+              @input=${(e: any) => this.newEventEnd = e.target.value}
+            >
+          </div>
+
+          <div class="form-group">
+            <label>Wiederholung</label>
+            <select 
+              .value=${this.newEventRecurrence}
+              @change=${(e: any) => this.newEventRecurrence = e.target.value}
+            >
+              <option value="">Keine</option>
+              <option value="DAILY">Täglich</option>
+              <option value="WEEKLY">Wöchentlich</option>
+              <option value="MONTHLY">Monatlich</option>
+            </select>
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn-cancel" @click=${this.closeModal}>Abbrechen</button>
+            <button class="btn-save" @click=${this.saveEvent}>Speichern</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.newEventTitle = '';
+    this.newEventStart = '';
+    this.newEventEnd = '';
+    this.newEventRecurrence = '';
+  }
+
+  async saveEvent() {
+    if (!this.newEventTitle) {
+      alert('Bitte einen Titel eingeben');
+      return;
+    }
+
+    const targetCalendar = this.config.entities[0];
+    if (!targetCalendar) {
+      alert('Kein Kalender konfiguriert!');
+      return;
+    }
+
+    try {
+      const eventData: any = {
+        entity_id: targetCalendar,
+        summary: this.newEventTitle,
+        start_date_time: this.newEventStart,
+        end_date_time: this.newEventEnd
+      };
+
+      if (this.newEventRecurrence) {
+        eventData.recurrence_rule = `FREQ=${this.newEventRecurrence}`;
+      }
+
+      await this.hass.callService('calendar', 'create_event', eventData);
+      
+      this.closeModal();
+      await this.fetchEvents();
+      
+    } catch (e) {
+      console.error('Fehler beim Erstellen des Termins:', e);
+      alert('Fehler beim Erstellen des Termins. Siehe Konsole.');
+    }
   }
 
   toggleCompact() {
@@ -111,9 +223,12 @@ export class FamilyCalendar extends LitElement {
   firstUpdated() {
     if (this.calendarEl) {
       this.calendar = new Calendar(this.calendarEl, {
-        plugins: [timeGridPlugin, dayGridPlugin],
+        plugins: [timeGridPlugin, dayGridPlugin, interactionPlugin],
         initialView: 'timeGridWeek',
         locale: deLocale,
+        selectable: true,
+        selectMirror: true,
+        select: (info: any) => this.handleDateSelect(info),
         headerToolbar: {
           left: 'prev,next today',
           center: 'title',
@@ -264,6 +379,30 @@ export class FamilyCalendar extends LitElement {
     
     // Filter anwenden (das aktualisiert auch den Kalender)
     this.applyFilters();
+  }
+
+  async handleDateSelect(info: any) {
+    // Nur in der Wochen/Tagesansicht erlauben, nicht in der Monatsansicht (optional)
+    // if (info.view.type === 'dayGridMonth') return;
+
+    const calendarApi = info.view.calendar;
+    calendarApi.unselect(); // Auswahl aufheben
+
+    // Formatieren für datetime-local input (YYYY-MM-DDTHH:mm)
+    // FullCalendar liefert ISO Strings, wir müssen sie evtl. anpassen
+    const formatForInput = (dateStr: string) => {
+      const date = new Date(dateStr);
+      // Lokale Zeit berücksichtigen (einfacher Hack für datetime-local)
+      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+      return date.toISOString().slice(0, 16);
+    };
+
+    this.newEventStart = formatForInput(info.startStr);
+    this.newEventEnd = formatForInput(info.endStr);
+    this.newEventTitle = '';
+    this.newEventRecurrence = '';
+    
+    this.showModal = true;
   }
 
   static styles = calendarStyles;
