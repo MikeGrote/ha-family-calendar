@@ -19,6 +19,8 @@ export class FamilyCalendar extends LitElement {
   
   // Modal State
   @state() showModal: boolean = false;
+  @state() editMode: boolean = false;
+  @state() currentEventId: string = '';
   @state() newEventTitle: string = '';
   @state() newEventCalendar: string = '';
   @state() newEventStart: string = '';
@@ -91,7 +93,7 @@ export class FamilyCalendar extends LitElement {
     return html`
       <div class="modal-overlay" @click=${this.closeModal}>
         <div class="modal-content" @click=${(e: Event) => e.stopPropagation()}>
-          <h3>Neuer Termin</h3>
+          <h3>${this.editMode ? 'Termin bearbeiten' : 'Neuer Termin'}</h3>
           
           <div class="form-group">
             <label>Titel</label>
@@ -109,6 +111,7 @@ export class FamilyCalendar extends LitElement {
             <select 
               .value=${this.newEventCalendar}
               @change=${(e: any) => this.newEventCalendar = e.target.value}
+              ?disabled=${this.editMode}
             >
               ${this.config.entities.map(entityId => {
                 const name = this.hass?.states[entityId]?.attributes?.friendly_name || entityId;
@@ -140,6 +143,7 @@ export class FamilyCalendar extends LitElement {
             <select 
               .value=${this.newEventRecurrence}
               @change=${(e: any) => this.newEventRecurrence = e.target.value}
+              ?disabled=${this.editMode}
             >
               <option value="">Keine</option>
               <option value="DAILY">Täglich</option>
@@ -149,8 +153,11 @@ export class FamilyCalendar extends LitElement {
           </div>
 
           <div class="modal-actions">
+            ${this.editMode ? html`
+              <button class="btn-delete" style="background-color: #d93025; color: white; margin-right: auto;" @click=${this.deleteEvent}>Löschen</button>
+            ` : ''}
             <button class="btn-cancel" @click=${this.closeModal}>Abbrechen</button>
-            <button class="btn-save" @click=${this.saveEvent}>Speichern</button>
+            <button class="btn-save" @click=${this.saveEvent}>${this.editMode ? 'Aktualisieren' : 'Speichern'}</button>
           </div>
         </div>
       </div>
@@ -159,11 +166,30 @@ export class FamilyCalendar extends LitElement {
 
   closeModal() {
     this.showModal = false;
+    this.editMode = false;
+    this.currentEventId = '';
     this.newEventTitle = '';
     this.newEventCalendar = '';
     this.newEventStart = '';
     this.newEventEnd = '';
     this.newEventRecurrence = '';
+  }
+
+  async deleteEvent() {
+    if (!confirm('Möchtest du diesen Termin wirklich löschen?')) return;
+
+    try {
+      await this.hass.callService('calendar', 'delete_event', {
+        entity_id: this.newEventCalendar,
+        uid: this.currentEventId
+      });
+      
+      this.closeModal();
+      setTimeout(() => this.fetchEvents(), 500);
+    } catch (e) {
+      console.error('Fehler beim Löschen:', e);
+      alert('Fehler beim Löschen. Unterstützt dein Kalender das Löschen?');
+    }
   }
 
   async saveEvent() {
@@ -178,6 +204,20 @@ export class FamilyCalendar extends LitElement {
     }
 
     try {
+      // Wenn wir bearbeiten, löschen wir zuerst den alten Termin
+      if (this.editMode && this.currentEventId) {
+        try {
+          await this.hass.callService('calendar', 'delete_event', {
+            entity_id: this.newEventCalendar,
+            uid: this.currentEventId
+          });
+          // Kurze Pause um sicherzugehen
+          await new Promise(r => setTimeout(r, 200));
+        } catch (e) {
+          console.warn('Konnte alten Termin nicht löschen (vielleicht nicht unterstützt?), erstelle trotzdem neuen.', e);
+        }
+      }
+
       const eventData: any = {
         entity_id: this.newEventCalendar,
         summary: this.newEventTitle,
@@ -185,7 +225,7 @@ export class FamilyCalendar extends LitElement {
         end_date_time: this.newEventEnd
       };
 
-      if (this.newEventRecurrence) {
+      if (this.newEventRecurrence && !this.editMode) {
         eventData.recurrence_rule = `FREQ=${this.newEventRecurrence}`;
       }
 
@@ -197,8 +237,8 @@ export class FamilyCalendar extends LitElement {
       setTimeout(() => this.fetchEvents(), 500);
       
     } catch (e) {
-      console.error('Fehler beim Erstellen des Termins:', e);
-      alert('Fehler beim Erstellen des Termins. Siehe Konsole.');
+      console.error('Fehler beim Speichern des Termins:', e);
+      alert('Fehler beim Speichern des Termins. Siehe Konsole.');
     }
   }
 
@@ -245,6 +285,7 @@ export class FamilyCalendar extends LitElement {
         selectable: true,
         selectMirror: true,
         select: (info: any) => this.handleDateSelect(info),
+        eventClick: (info: any) => this.handleEventClick(info),
         headerToolbar: {
           left: 'prev,next today',
           center: 'title',
@@ -389,6 +430,7 @@ export class FamilyCalendar extends LitElement {
         const color = this.config.colors?.[entity_id] || '#0078d4';
 
         const mappedEvents = events.map(e => ({
+          id: e.uid || e.id, // Wichtig für Bearbeitung/Löschen
           title: e.summary,
           start: e.start.dateTime || e.start.date,
           end: e.end.dateTime || e.end.date,
@@ -433,6 +475,28 @@ export class FamilyCalendar extends LitElement {
     this.newEventCalendar = this.config.entities[0] || '';
     this.newEventRecurrence = '';
     
+    this.showModal = true;
+  }
+
+  handleEventClick(info: any) {
+    const event = info.event;
+    
+    // Formatieren für datetime-local input
+    const formatForInput = (date: Date) => {
+      if (!date) return '';
+      const d = new Date(date);
+      d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+      return d.toISOString().slice(0, 16);
+    };
+
+    this.editMode = true;
+    this.currentEventId = event.id;
+    this.newEventTitle = event.title;
+    this.newEventCalendar = event.extendedProps.entityId;
+    this.newEventStart = formatForInput(event.start);
+    this.newEventEnd = formatForInput(event.end || event.start); // End kann null sein bei Moment-Events
+    this.newEventRecurrence = ''; // Wiederholungserkennung ist komplex, lassen wir erstmal leer
+
     this.showModal = true;
   }
 
