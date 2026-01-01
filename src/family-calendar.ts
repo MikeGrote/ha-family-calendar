@@ -20,6 +20,7 @@ export class FamilyCalendar extends LitElement {
   // Modal State
   @state() showModal: boolean = false;
   @state() newEventTitle: string = '';
+  @state() newEventCalendar: string = '';
   @state() newEventStart: string = '';
   @state() newEventEnd: string = '';
   @state() newEventRecurrence: string = '';
@@ -104,6 +105,19 @@ export class FamilyCalendar extends LitElement {
           </div>
 
           <div class="form-group">
+            <label>Kalender</label>
+            <select 
+              .value=${this.newEventCalendar}
+              @change=${(e: any) => this.newEventCalendar = e.target.value}
+            >
+              ${this.config.entities.map(entityId => {
+                const name = this.hass?.states[entityId]?.attributes?.friendly_name || entityId;
+                return html`<option value="${entityId}">${name}</option>`;
+              })}
+            </select>
+          </div>
+
+          <div class="form-group">
             <label>Von</label>
             <input 
               type="datetime-local" 
@@ -146,6 +160,7 @@ export class FamilyCalendar extends LitElement {
   closeModal() {
     this.showModal = false;
     this.newEventTitle = '';
+    this.newEventCalendar = '';
     this.newEventStart = '';
     this.newEventEnd = '';
     this.newEventRecurrence = '';
@@ -157,15 +172,14 @@ export class FamilyCalendar extends LitElement {
       return;
     }
 
-    const targetCalendar = this.config.entities[0];
-    if (!targetCalendar) {
-      alert('Kein Kalender konfiguriert!');
+    if (!this.newEventCalendar) {
+      alert('Bitte einen Kalender auswählen');
       return;
     }
 
     try {
       const eventData: any = {
-        entity_id: targetCalendar,
+        entity_id: this.newEventCalendar,
         summary: this.newEventTitle,
         start_date_time: this.newEventStart,
         end_date_time: this.newEventEnd
@@ -400,6 +414,7 @@ export class FamilyCalendar extends LitElement {
     this.newEventStart = formatForInput(info.startStr);
     this.newEventEnd = formatForInput(info.endStr);
     this.newEventTitle = '';
+    this.newEventCalendar = this.config.entities[0] || '';
     this.newEventRecurrence = '';
     
     this.showModal = true;
