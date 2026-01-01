@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Family Calendar Simulation</title>
+    <style>
+      body { 
+        /* Dezent und Modern: Soft Mesh Gradient */
+        background-color: #eef2f6;
+        background-image: 
+          radial-gradient(at 0% 0%, hsla(210, 100%, 93%, 1) 0, transparent 50%), 
+          radial-gradient(at 100% 0%, hsla(220, 100%, 96%, 1) 0, transparent 50%), 
+          radial-gradient(at 100% 100%, hsla(200, 100%, 94%, 1) 0, transparent 50%), 
+          radial-gradient(at 0% 100%, hsla(230, 100%, 96%, 1) 0, transparent 50%);
+        background-size: cover;
+        background-attachment: fixed;
+        
+        font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        padding: 40px; 
+        margin: 0;
+        min-height: 100vh;
+        box-sizing: border-box;
+      }
+      .container { 
+        max-width: 1400px; 
+        margin: 0 auto; 
+        height: 85vh;
+      }
+      h2 { 
+        color: #444; /* Dunklerer Text für besseren Kontrast auf hellem Grund */
+        text-align: center; 
+        font-weight: 300; 
+        margin-bottom: 30px;
+        letter-spacing: 0.5px;
+      }
+    </style>
+    <script type="module" src="/src/family-calendar.ts"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Lokale Simulation</h2>
+      <!-- Das Custom Element -->
+      <family-calendar id="dev-calendar"></family-calendar>
+    </div>
+
+    <script>
+      const calendar = document.getElementById('dev-calendar');
+
+      // 1. Mock Konfiguration (wie in YAML)
+      const mockConfig = {
+        entities: ['calendar.privat', 'calendar.arbeit'],
+        colors: {
+          'calendar.privat': '#0078d4', // Blau
+          'calendar.arbeit': '#d93025'  // Rot
+        }
+      };
+
+      // 2. Mock Home Assistant Objekt
+      const mockHass = {
+        // Simuliert die States (für friendly_name)
+        states: {
+          'calendar.privat': {
+            attributes: { friendly_name: 'Privat' }
+          },
+          'calendar.arbeit': {
+            attributes: { friendly_name: 'Arbeit' }
+          }
+        },
+        // Simuliert den WebSocket Aufruf
+        callWS: async (msg) => {
+          console.log('[SIMULATION] callWS aufgerufen:', msg);
+          
+          if (msg.type === 'calendar/event_list') {
+            const now = new Date();
+            const todayStr = now.toISOString().split('T')[0];
+            
+            // Generiere ein paar Dummy-Termine für "Heute"
+            if (msg.entity_id === 'calendar.privat') {
+              return [
+                {
+                  summary: 'Frühstück',
+                  start: { dateTime: `${todayStr}T08:00:00` },
+                  end: { dateTime: `${todayStr}T09:00:00` }
+                },
+                {
+                  summary: 'Sport',
+                  start: { dateTime: `${todayStr}T18:00:00` },
+                  end: { dateTime: `${todayStr}T19:30:00` }
+                }
+              ];
+            }
+            
+            if (msg.entity_id === 'calendar.arbeit') {
+              return [
+                {
+                  summary: 'Daily Meeting',
+                  start: { dateTime: `${todayStr}T09:30:00` },
+                  end: { dateTime: `${todayStr}T10:00:00` }
+                },
+                {
+                  summary: 'Projekt Fokus',
+                  start: { dateTime: `${todayStr}T13:00:00` },
+                  end: { dateTime: `${todayStr}T15:00:00` }
+                }
+              ];
+            }
+          }
+          return [];
+        }
+      };
+
+      // 3. Initialisierung simulieren
+      // Wir warten kurz, bis das Element geladen ist
+      setTimeout(() => {
+        console.log('[SIMULATION] Setze Config und Hass...');
+        calendar.setConfig(mockConfig);
+        calendar.hass = mockHass;
+        
+        // Erzwinge ein Update, da wir 'hass' von außen setzen
+        if(calendar.fetchEvents) calendar.fetchEvents();
+      }, 500);
+    </script>
+  </body>
+</html>
