@@ -45,8 +45,8 @@
         <h3 style="margin-top: 0;">Verbindung zu Home Assistant</h3>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
           <div>
-            <label style="display: block; margin-bottom: 5px;">HA URL (z.B. http://192.168.1.5:8123)</label>
-            <input type="text" id="ha-url" placeholder="http://homeassistant.local:8123" style="width: 100%; padding: 8px; box-sizing: border-box;">
+            <label style="display: block; margin-bottom: 5px;">HA URL (leer lassen für Proxy)</label>
+            <input type="text" id="ha-url" placeholder="Leer lassen um CORS zu umgehen" style="width: 100%; padding: 8px; box-sizing: border-box;">
           </div>
           <div>
             <label style="display: block; margin-bottom: 5px;">Long-Lived Access Token</label>
@@ -115,50 +115,62 @@
 
       btnConnect.addEventListener('click', async () => {
         let url = document.getElementById('ha-url').value.trim();
-        // Entferne trailing slash
         url = url.replace(/\/$/, '');
-        // Entferne /api am Ende falls der User es eingegeben hat
         url = url.replace(/\/api$/, '');
         
         const token = document.getElementById('ha-token').value.trim();
 
-        if (!url || !token) {
-          alert('Bitte URL und Token angeben');
+        if (!token) {
+          alert('Bitte Token angeben');
           return;
         }
 
-        // Speichern
         localStorage.setItem('ha-url', url);
         localStorage.setItem('ha-token', token);
 
         statusEl.textContent = 'Verbinde...';
 
         try {
-          // 1. Test Connection & Fetch States
-          const targetUrl = `${url}/api/states`;
-          console.log('Fetching:', targetUrl);
+          // 1. Basic API Check (GET /api/)
+          // Das ist der leichteste Check um zu sehen ob Auth & URL stimmen
+          const apiRoot = `${url}/api/`;
+          console.log('Checking API Root:', apiRoot);
           
-          const res = await fetch(targetUrl, {
+          const resRoot = await fetch(apiRoot, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
             }
           });
 
-          if (!res.ok) {
-            const text = await res.text();
-            console.error('Error Response:', text);
-            throw new Error(`HTTP Error ${res.status}: ${text.substring(0, 100)}...`);
+          if (!resRoot.ok) {
+            const text = await resRoot.text();
+            if (resRoot.status === 401) throw new Error('401 Unauthorized: Token ungültig?');
+            if (resRoot.status === 404) throw new Error('404 Not Found: URL falsch? (API nicht gefunden)');
+            throw new Error(`HTTP Error ${resRoot.status}: ${text.substring(0, 100)}`);
+          }
+
+          const rootText = await resRoot.text();
+          let rootMsg;
+          try {
+            rootMsg = JSON.parse(rootText);
+          } catch (e) {
+             console.error('Root Response was not JSON:', rootText);
+             throw new Error('Antwort war kein JSON. Wahrscheinlich falsche URL (Login-Seite?). Siehe Konsole.');
           }
           
-          const contentType = res.headers.get("content-type");
-          if (!contentType || !contentType.includes("application/json")) {
-            const text = await res.text();
-            console.error('Received non-JSON response:', text);
-            throw new Error(`Erwartete JSON, erhielt ${contentType}. Prüfe die URL. Antwort beginnt mit: ${text.substring(0, 50)}...`);
-          }
+          console.log('API Root OK:', rootMsg);
+
+          // 2. Fetch States
+          statusEl.textContent = 'Lade Kalender...';
+          const resStates = await fetch(`${url}/api/states`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
           
-          const states = await res.json();
+          const states = await resStates.json();
           const statesMap = {};
           const calendarEntities = [];
           
@@ -166,6 +178,7 @@
             statesMap[s.entity_id] = s;
             if (s.entity_id.startsWith('calendar.')) {
               calendarEntities.push(s.entity_id);
+              console.log(`Found Calendar: ${s.entity_id}`, s.attributes);
             }
           });
 
@@ -185,6 +198,8 @@
               };
               if (data) opts.body = JSON.stringify(data);
               
+              // path ist z.B. "calendars/calendar.xy?..."
+              // Wir müssen sicherstellen, dass wir /api/ davor hängen
               const r = await fetch(`${url}/api/${path}`, opts);
               if (!r.ok) {
                  const errText = await r.text();
@@ -193,7 +208,7 @@
               return r.json();
             },
             callService: async (domain, service, data) => {
-              console.log('[REAL] callService', domain, service, data);
+              console.log('[REAL] callService', domain, service, JSON.stringify(data));
               const r = await fetch(`${url}/api/services/${domain}/${service}`, {
                 method: 'POST',
                 headers: {
@@ -204,9 +219,76 @@
               });
               if (!r.ok) {
                  const errText = await r.text();
+                 console.error(`Service Error ${r.status} Details:`, errText);
                  throw new Error(`Service Error ${r.status}: ${errText}`);
               }
               return r.json();
+            },
+            callWS: async (msg) => {
+              console.log('[REAL] callWS (simulated)', msg);
+              
+              // Simulation von WS-Calls über REST API
+              if (msg.type === 'calendar/event/delete') {
+                const payload = {
+                  entity_id: msg.entity_id,
+                  uid: msg.uid
+                };
+                // Nur hinzufügen wenn definiert, sonst mag die API das vielleicht nicht
+                if (msg.recurrence_id) payload.recurrence_id = msg.recurrence_id;
+                if (msg.recurrence_range) payload.recurrence_range = msg.recurrence_range;
+
+                return realHass.callService('calendar', 'delete_event', payload);
+              }
+              
+              if (msg.type === 'calendar/event/create') {
+                // Mapping von WS-Format (dtstart) zu Service-Format (start_date_time)
+                const serviceData = {
+                  entity_id: msg.entity_id,
+                  summary: msg.event.summary,
+                  description: msg.event.description,
+                  location: msg.event.location
+                };
+                
+                if (msg.event.dtstart) serviceData.start_date_time = msg.event.dtstart;
+                if (msg.event.dtend) serviceData.end_date_time = msg.event.dtend;
+                if (msg.event.rrule) serviceData.recurrence_rule = msg.event.rrule;
+
+                return realHass.callService('calendar', 'create_event', serviceData);
+              }
+
+              if (msg.type === 'calendar/event/update') {
+                // Update ist komplex, da es keinen direkten Service gibt.
+                // Wir simulieren es durch Löschen + Erstellen (nicht atomar!)
+                console.warn('Simulating UPDATE via Delete + Create');
+                
+                try {
+                  const deletePayload = {
+                    entity_id: msg.entity_id,
+                    uid: msg.uid
+                  };
+                  if (msg.recurrence_id) deletePayload.recurrence_id = msg.recurrence_id;
+                  if (msg.recurrence_range) deletePayload.recurrence_range = msg.recurrence_range;
+
+                  await realHass.callService('calendar', 'delete_event', deletePayload);
+                } catch (e) {
+                  console.warn('Delete failed during update simulation', e);
+                }
+                
+                // Create new
+                const serviceData = {
+                  entity_id: msg.entity_id,
+                  summary: msg.event.summary,
+                  description: msg.event.description,
+                  location: msg.event.location
+                };
+                if (msg.event.dtstart) serviceData.start_date_time = msg.event.dtstart;
+                if (msg.event.dtend) serviceData.end_date_time = msg.event.dtend;
+                if (msg.event.rrule) serviceData.recurrence_rule = msg.event.rrule;
+
+                return realHass.callService('calendar', 'create_event', serviceData);
+              }
+
+              throw new Error(`WS Message type ${msg.type} not supported in Dev Mode`);
             }
           };
 

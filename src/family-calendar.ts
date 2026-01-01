@@ -21,6 +21,7 @@ export class FamilyCalendar extends LitElement {
   @state() showModal: boolean = false;
   @state() editMode: boolean = false;
   @state() currentEventId: string = '';
+  @state() currentRecurrenceId: string = '';
   @state() newEventTitle: string = '';
   @state() newEventCalendar: string = '';
   @state() newEventStart: string = '';
@@ -168,6 +169,7 @@ export class FamilyCalendar extends LitElement {
     this.showModal = false;
     this.editMode = false;
     this.currentEventId = '';
+    this.currentRecurrenceId = '';
     this.newEventTitle = '';
     this.newEventCalendar = '';
     this.newEventStart = '';
@@ -178,17 +180,26 @@ export class FamilyCalendar extends LitElement {
   async deleteEvent() {
     if (!confirm('Möchtest du diesen Termin wirklich löschen?')) return;
 
+    console.log('Deleting event via WS:', {
+      entity_id: this.newEventCalendar,
+      uid: this.currentEventId,
+      recurrence_id: this.currentRecurrenceId
+    });
+
     try {
-      await this.hass.callService('calendar', 'delete_event', {
+      await this.hass.callWS({
+        type: 'calendar/event/delete',
         entity_id: this.newEventCalendar,
-        uid: this.currentEventId
+        uid: this.currentEventId,
+        recurrence_id: this.currentRecurrenceId || undefined,
+        recurrence_range: this.currentRecurrenceId ? 'THISANDFUTURE' : undefined
       });
       
       this.closeModal();
       setTimeout(() => this.fetchEvents(), 500);
     } catch (e) {
       console.error('Fehler beim Löschen:', e);
-      alert('Fehler beim Löschen. Unterstützt dein Kalender das Löschen?');
+      alert(`Fehler beim Löschen: ${e.message || e}`);
     }
   }
 
@@ -204,36 +215,38 @@ export class FamilyCalendar extends LitElement {
     }
 
     try {
-      // Wenn wir bearbeiten, löschen wir zuerst den alten Termin
-      if (this.editMode && this.currentEventId) {
-        try {
-          await this.hass.callService('calendar', 'delete_event', {
-            entity_id: this.newEventCalendar,
-            uid: this.currentEventId
-          });
-          // Kurze Pause um sicherzugehen
-          await new Promise(r => setTimeout(r, 200));
-        } catch (e) {
-          console.warn('Konnte alten Termin nicht löschen (vielleicht nicht unterstützt?), erstelle trotzdem neuen.', e);
-        }
-      }
-
       const eventData: any = {
-        entity_id: this.newEventCalendar,
         summary: this.newEventTitle,
-        start_date_time: this.newEventStart,
-        end_date_time: this.newEventEnd
+        dtstart: this.newEventStart,
+        dtend: this.newEventEnd,
+        description: '', // Optional
+        location: ''     // Optional
       };
 
       if (this.newEventRecurrence && !this.editMode) {
-        eventData.recurrence_rule = `FREQ=${this.newEventRecurrence}`;
+        eventData.rrule = `FREQ=${this.newEventRecurrence}`;
       }
 
-      await this.hass.callService('calendar', 'create_event', eventData);
+      if (this.editMode && this.currentEventId) {
+        // Update via WS
+        await this.hass.callWS({
+          type: 'calendar/event/update',
+          entity_id: this.newEventCalendar,
+          uid: this.currentEventId,
+          recurrence_id: this.currentRecurrenceId || undefined,
+          recurrence_range: this.currentRecurrenceId ? 'THISANDFUTURE' : undefined,
+          event: eventData
+        });
+      } else {
+        // Create via WS
+        await this.hass.callWS({
+          type: 'calendar/event/create',
+          entity_id: this.newEventCalendar,
+          event: eventData
+        });
+      }
       
       this.closeModal();
-      
-      // Kurze Wartezeit, damit HA die Datenbank aktualisieren kann, dann neu laden
       setTimeout(() => this.fetchEvents(), 500);
       
     } catch (e) {
@@ -427,18 +440,31 @@ export class FamilyCalendar extends LitElement {
           `calendars/${entity_id}?start=${startEnc}&end=${endEnc}`
         );
 
+        if (events.length > 0) {
+           console.log(`Raw events for ${entity_id} (first one):`, events[0]);
+        }
+
         const color = this.config.colors?.[entity_id] || '#0078d4';
 
-        const mappedEvents = events.map(e => ({
-          id: e.uid || e.id, // Wichtig für Bearbeitung/Löschen
-          title: e.summary,
-          start: e.start.dateTime || e.start.date,
-          end: e.end.dateTime || e.end.date,
-          backgroundColor: color,
-          borderColor: color,
-          allDay: !e.start.dateTime,
-          extendedProps: { entityId: entity_id }
-        }));
+        const mappedEvents = events.map(e => {
+          if (!e.uid && !e.id) {
+             console.warn('Event ohne UID gefunden (Löschen wird nicht funktionieren):', e);
+          }
+          return {
+            id: e.uid || e.id, // Für FullCalendar
+            title: e.summary,
+            start: e.start.dateTime || e.start.date,
+            end: e.end.dateTime || e.end.date,
+            backgroundColor: color,
+            borderColor: color,
+            allDay: !e.start.dateTime,
+            extendedProps: { 
+              entityId: entity_id,
+              realUid: e.uid, // Explizit die UID speichern
+              recurrenceId: e.recurrence_id // Wiederholungs-ID speichern
+            }
+          };
+        });
 
         allEvents.push(...mappedEvents);
       } catch (err) {
@@ -490,7 +516,9 @@ export class FamilyCalendar extends LitElement {
     };
 
     this.editMode = true;
-    this.currentEventId = event.id;
+    // Wir nutzen die explizit gespeicherte UID, falls vorhanden, sonst die ID
+    this.currentEventId = event.extendedProps.realUid || event.id;
+    this.currentRecurrenceId = event.extendedProps.recurrenceId || '';
     this.newEventTitle = event.title;
     this.newEventCalendar = event.extendedProps.entityId;
     this.newEventStart = formatForInput(event.start);
