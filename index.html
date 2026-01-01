@@ -114,8 +114,13 @@
       });
 
       btnConnect.addEventListener('click', async () => {
-        const url = document.getElementById('ha-url').value.replace(/\/$/, '');
-        const token = document.getElementById('ha-token').value;
+        let url = document.getElementById('ha-url').value.trim();
+        // Entferne trailing slash
+        url = url.replace(/\/$/, '');
+        // Entferne /api am Ende falls der User es eingegeben hat
+        url = url.replace(/\/api$/, '');
+        
+        const token = document.getElementById('ha-token').value.trim();
 
         if (!url || !token) {
           alert('Bitte URL und Token angeben');
@@ -130,14 +135,28 @@
 
         try {
           // 1. Test Connection & Fetch States
-          const res = await fetch(`${url}/api/states`, {
+          const targetUrl = `${url}/api/states`;
+          console.log('Fetching:', targetUrl);
+          
+          const res = await fetch(targetUrl, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
             }
           });
 
-          if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
+          if (!res.ok) {
+            const text = await res.text();
+            console.error('Error Response:', text);
+            throw new Error(`HTTP Error ${res.status}: ${text.substring(0, 100)}...`);
+          }
+          
+          const contentType = res.headers.get("content-type");
+          if (!contentType || !contentType.includes("application/json")) {
+            const text = await res.text();
+            console.error('Received non-JSON response:', text);
+            throw new Error(`Erwartete JSON, erhielt ${contentType}. Prüfe die URL. Antwort beginnt mit: ${text.substring(0, 50)}...`);
+          }
           
           const states = await res.json();
           const statesMap = {};
@@ -167,7 +186,10 @@
               if (data) opts.body = JSON.stringify(data);
               
               const r = await fetch(`${url}/api/${path}`, opts);
-              if (!r.ok) throw new Error(`API Error ${r.status}`);
+              if (!r.ok) {
+                 const errText = await r.text();
+                 throw new Error(`API Error ${r.status}: ${errText}`);
+              }
               return r.json();
             },
             callService: async (domain, service, data) => {
@@ -180,7 +202,10 @@
                 },
                 body: JSON.stringify(data)
               });
-              if (!r.ok) throw new Error(`Service Error ${r.status}`);
+              if (!r.ok) {
+                 const errText = await r.text();
+                 throw new Error(`Service Error ${r.status}: ${errText}`);
+              }
               return r.json();
             }
           };
