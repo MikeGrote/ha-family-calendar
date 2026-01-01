@@ -192,7 +192,9 @@ export class FamilyCalendar extends LitElement {
       await this.hass.callService('calendar', 'create_event', eventData);
       
       this.closeModal();
-      await this.fetchEvents();
+      
+      // Kurze Wartezeit, damit HA die Datenbank aktualisieren kann, dann neu laden
+      setTimeout(() => this.fetchEvents(), 500);
       
     } catch (e) {
       console.error('Fehler beim Erstellen des Termins:', e);
@@ -266,6 +268,7 @@ export class FamilyCalendar extends LitElement {
         // Callback wenn sich der sichtbare Zeitraum ändert (z.B. "Nächste Woche")
         datesSet: (arg: DatesSetArg) => {
           this.adjustTimeRange(arg.start, arg.end);
+          this.fetchEvents(); // Events für den neuen Zeitraum laden
         },
         events: [] 
       } as any);
@@ -351,10 +354,21 @@ export class FamilyCalendar extends LitElement {
   async fetchEvents() {
     if (!this.hass || !this.config || !this.calendar) return;
 
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 7);
-    const endDate = new Date();
-    endDate.setDate(endDate.getDate() + 14);
+    let startDate = new Date();
+    let endDate = new Date();
+
+    // Wenn der Kalender bereit ist, nehmen wir den sichtbaren Bereich + Puffer
+    if (this.calendar && this.calendar.view) {
+      startDate = new Date(this.calendar.view.activeStart);
+      endDate = new Date(this.calendar.view.activeEnd);
+      // Puffer von 1 Woche davor und danach
+      startDate.setDate(startDate.getDate() - 7);
+      endDate.setDate(endDate.getDate() + 7);
+    } else {
+      // Fallback
+      startDate.setDate(startDate.getDate() - 7);
+      endDate.setDate(endDate.getDate() + 14);
+    }
 
     const start = startDate.toISOString();
     const end = endDate.toISOString();

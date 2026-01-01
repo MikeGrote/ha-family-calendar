@@ -10048,7 +10048,7 @@ let $ = class extends Fe {
         start_date_time: this.newEventStart,
         end_date_time: this.newEventEnd
       };
-      this.newEventRecurrence && (t.recurrence_rule = `FREQ=${this.newEventRecurrence}`), await this.hass.callService("calendar", "create_event", t), this.closeModal(), await this.fetchEvents();
+      this.newEventRecurrence && (t.recurrence_rule = `FREQ=${this.newEventRecurrence}`), await this.hass.callService("calendar", "create_event", t), this.closeModal(), setTimeout(() => this.fetchEvents(), 500);
     } catch (t) {
       console.error("Fehler beim Erstellen des Termins:", t), alert("Fehler beim Erstellen des Termins. Siehe Konsole.");
     }
@@ -10097,7 +10097,7 @@ let $ = class extends Fe {
       },
       // Callback wenn sich der sichtbare Zeitraum ändert (z.B. "Nächste Woche")
       datesSet: (t) => {
-        this.adjustTimeRange(t.start, t.end);
+        this.adjustTimeRange(t.start, t.end), this.fetchEvents();
       },
       events: []
     }), this.calendar.render(), this.hass && this.config && this.fetchEvents());
@@ -10135,10 +10135,8 @@ let $ = class extends Fe {
   }
   async fetchEvents() {
     if (!this.hass || !this.config || !this.calendar) return;
-    const t = /* @__PURE__ */ new Date();
-    t.setDate(t.getDate() - 7);
-    const e = /* @__PURE__ */ new Date();
-    e.setDate(e.getDate() + 14);
+    let t = /* @__PURE__ */ new Date(), e = /* @__PURE__ */ new Date();
+    this.calendar && this.calendar.view ? (t = new Date(this.calendar.view.activeStart), e = new Date(this.calendar.view.activeEnd), t.setDate(t.getDate() - 7), e.setDate(e.getDate() + 7)) : (t.setDate(t.getDate() - 7), e.setDate(e.getDate() + 14));
     const n = t.toISOString(), r = e.toISOString(), i = [];
     for (const s of this.config.entities)
       try {
