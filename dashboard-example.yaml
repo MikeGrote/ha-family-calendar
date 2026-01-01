@@ -1,0 +1,39 @@
+# Dies ist ein vollständiges Beispiel für ein Home Assistant Dashboard (Lovelace)
+# Du kannst diesen Code in deinen Dashboard-Editor (Raw Config Editor) kopieren.
+
+title: Familien Dashboard
+views:
+  - title: Übersicht
+    path: home
+    icon: mdi:home
+    cards:
+      - type: markdown
+        content: Willkommen zu Hause!
+
+  - title: Kalender
+    path: kalender
+    icon: mdi:calendar-clock
+    theme: backend-selected # Oder ein spezielles Theme
+    cards:
+      - type: vertical-stack
+        cards:
+          # Optional: Eine Überschrift
+          - type: markdown
+            content: |
+              ## 📅 Wochenplan
+              Hier sind alle Termine der Familie auf einen Blick.
+
+          # Die Family Calendar Karte
+          - type: custom:family-calendar
+            entities:
+              - calendar.privat
+              - calendar.arbeit
+              - calendar.schule
+              - calendar.geburtstage
+              - calendar.muellabfuhr
+            colors:
+              calendar.privat: "#0078d4"      # Blau
+              calendar.arbeit: "#d93025"      # Rot
+              calendar.schule: "#f1c40f"      # Gelb
+              calendar.geburtstage: "#9b59b6" # Lila
+              calendar.muellabfuhr: "#107c10" # Grün
