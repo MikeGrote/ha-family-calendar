@@ -1,5 +1,7 @@
 {
   "name": "Family Calendar",
+  "content_in_root": false,
+  "zip_release": false,
   "render_readme": true,
-  "filename": "family-calendar.js"
+  "homeassistant": "2023.1.0"
 }

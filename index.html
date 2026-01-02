@@ -182,7 +182,22 @@
             }
           });
 
-          statusEl.textContent = `Verbunden! ${calendarEntities.length} Kalender gefunden.`;
+          statusEl.innerHTML = `Verbunden! ${calendarEntities.length} Kalender gefunden.<br><br>`;
+          
+          calendarEntities.forEach(id => {
+            const entity = statesMap[id];
+            const features = entity.attributes.supported_features || 0;
+            const canDelete = (features & 2) === 2;
+            const canCreate = (features & 1) === 1;
+            
+            statusEl.innerHTML += `
+              <div style="margin-bottom: 5px; font-size: 0.9em; padding: 5px; background: #f0f0f0; border-radius: 4px;">
+                <strong>${entity.attributes.friendly_name || id}</strong> (${id})<br>
+                Features: ${features} 
+                ${canDelete ? '✅ Löschen erlaubt' : '❌ KEIN Löschen'} 
+                ${canCreate ? '✅ Erstellen erlaubt' : '❌ KEIN Erstellen'}
+              </div>`;
+          });
 
           // Real Hass Object
           const realHass = {
@@ -217,9 +232,11 @@
                 },
                 body: JSON.stringify(data)
               });
+              
               if (!r.ok) {
                  const errText = await r.text();
                  console.error(`Service Error ${r.status} Details:`, errText);
+                 console.error('Request Body was:', JSON.stringify(data));
                  throw new Error(`Service Error ${r.status}: ${errText}`);
               }
               return r.json();
@@ -229,15 +246,22 @@
               
               // Simulation von WS-Calls über REST API
               if (msg.type === 'calendar/event/delete') {
+                // Versuch 1: Modernes Format mit 'target'
                 const payload = {
-                  entity_id: msg.entity_id,
                   uid: msg.uid
                 };
-                // Nur hinzufügen wenn definiert, sonst mag die API das vielleicht nicht
                 if (msg.recurrence_id) payload.recurrence_id = msg.recurrence_id;
                 if (msg.recurrence_range) payload.recurrence_range = msg.recurrence_range;
 
-                return realHass.callService('calendar', 'delete_event', payload);
+                // Wir rufen callService auf, aber wir müssen tricksen, um 'target' zu übergeben
+                // Da unsere callService-Funktion oben einfach alles in den Body packt,
+                // bauen wir das hier manuell zusammen.
+                const serviceData = {
+                  ...payload,
+                  entity_id: msg.entity_id 
+                };
+                
+                return realHass.callService('calendar', 'delete_event', serviceData);
               }
               
               if (msg.type === 'calendar/event/create') {

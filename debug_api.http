@@ -1,0 +1,27 @@
+@url = http://homeassistant.local:8123
+@token = IHR_LANGLEBIGER_ZUGRIFFSTOKEN_HIER_EINFUEGEN
+
+### Test: Termin löschen (Manuell)
+# Ersetzen Sie die UID mit einer echten UID eines Termins, den Sie löschen wollen.
+# Sie finden die UID in der Browser-Konsole, wenn Sie im Kalender auf einen Termin klicken (wir loggen das).
+
+POST {{url}}/api/services/calendar/delete_event
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "entity_id": "calendar.family",
+    "uid": "HIER_UID_EINFUEGEN"
+}
+
+### Test: Termin erstellen (Gegenprobe)
+POST {{url}}/api/services/calendar/create_event
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "entity_id": "calendar.family",
+    "summary": "Test Termin API",
+    "start_date_time": "2026-01-02 10:00:00",
+    "end_date_time": "2026-01-02 11:00:00"
+}

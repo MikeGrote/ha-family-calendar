@@ -1,0 +1,29 @@
+delete_event:
+  name: Delete Event
+  description: Löscht ein Event aus einem Kalender (der dies unterstützt).
+  fields:
+    entity_id:
+      name: Entity
+      description: Die Kalender-Entity (z.B. calendar.privat).
+      required: true
+      selector:
+        entity:
+          domain: calendar
+    uid:
+      name: Event UID
+      description: Die eindeutige ID des Events.
+      required: true
+      selector:
+        text:
+    recurrence_id:
+      name: Recurrence ID
+      description: ID für eine spezifische Instanz eines wiederkehrenden Events.
+      required: false
+      selector:
+        text:
+    recurrence_range:
+      name: Recurrence range
+      description: Bereich der Wiederholung, der gelöscht werden soll.
+      required: false
+      selector:
+        text:

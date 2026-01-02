@@ -197,7 +197,7 @@ export class FamilyCalendar extends LitElement {
       
       this.closeModal();
       setTimeout(() => this.fetchEvents(), 500);
-    } catch (e) {
+    } catch (e: any) {
       console.error('Fehler beim Löschen:', e);
       alert(`Fehler beim Löschen: ${e.message || e}`);
     }

@@ -16,6 +16,8 @@ export default defineConfig({
       name: 'FamilyCalendar',
       fileName: 'family-calendar',
     },
+    outDir: 'custom_components/calendar_service_ext/www',
+    emptyOutDir: true,
     minify: true, 
     rollupOptions: {
       external: [], 
