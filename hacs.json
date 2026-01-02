@@ -1,7 +1,4 @@
 {
-  "name": "Family Calendar",
-  "content_in_root": false,
-  "zip_release": false,
-  "render_readme": true,
-  "homeassistant": "2023.1.0"
+  "name": "Calendar Service Extension",
+  "render_readme": true
 }
