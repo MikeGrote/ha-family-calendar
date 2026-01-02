@@ -187,8 +187,7 @@ export class FamilyCalendar extends LitElement {
     });
 
     try {
-      await this.hass.callWS({
-        type: 'calendar/event/delete',
+      await this.hass.callService('calendar_service_ext', 'delete_event', {
         entity_id: this.newEventCalendar,
         uid: this.currentEventId,
         recurrence_id: this.currentRecurrenceId || undefined,

@@ -10045,8 +10045,7 @@ let B = class extends Fe {
         recurrence_id: this.currentRecurrenceId
       });
       try {
-        await this.hass.callWS({
-          type: "calendar/event/delete",
+        await this.hass.callService("calendar_service_ext", "delete_event", {
           entity_id: this.newEventCalendar,
           uid: this.currentEventId,
           recurrence_id: this.currentRecurrenceId || void 0,

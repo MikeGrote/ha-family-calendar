@@ -3,6 +3,7 @@ import os
 import voluptuous as vol
 
 from homeassistant.core import HomeAssistant, ServiceCall
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers import config_validation as cv
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.components import frontend
@@ -13,38 +14,29 @@ DOMAIN = "calendar_service_ext"
 URL_BASE = "/calendar_service_ext_files"
 
 async def async_setup(hass: HomeAssistant, config: dict):
-    """Setzt die Integration auf."""
+    """Set up the component via YAML (legacy)."""
+    return True
+
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
+    """Set up from a config entry."""
     
     # 1. Statischen Pfad registrieren
     component_dir = os.path.dirname(__file__)
     www_dir = os.path.join(component_dir, "www")
     
-    hass.http.register_static_path(
-        URL_BASE,
-        www_dir,
-        cache_headers=False
-    )
+    try:
+        hass.http.register_static_path(
+            URL_BASE,
+            www_dir,
+            cache_headers=False
+        )
+    except ValueError:
+        pass # Pfad existiert evtl. schon
 
     # 2. JS-Resource für Dashboards verfügbar machen (damit es als Card genutzt werden kann)
     frontend.add_extra_js_url(hass, f"{URL_BASE}/family-calendar.js")
 
-    # 3. Panel registrieren (Optional: Falls du es auch in der Seitenleiste willst)
-    # Um das Panel auszublenden, einfach diesen Block auskommentieren oder löschen.
-    # frontend.async_register_panel(
-    #     hass,
-    #     component_name="custom",
-    #     sidebar_title="Family Calendar",
-    #     sidebar_icon="mdi:calendar-heart",
-    #     url_path="family-calendar",
-    #     config={
-    #         "_panel_custom": {
-    #             "name": "family-calendar",
-    #             "module_url": f"{URL_BASE}/family-calendar.js"
-    #         }
-    #     },
-    #     require_admin=False
-    # )
-    
+    # 3. Service registrieren
     async def handle_delete_event(call: ServiceCall):
         """Handle the service call."""
         entity_id = call.data.get("entity_id")
@@ -89,4 +81,8 @@ async def async_setup(hass: HomeAssistant, config: dict):
         handle_delete_event
     )
 
+    return True
+
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
+    """Unload a config entry."""
     return True
