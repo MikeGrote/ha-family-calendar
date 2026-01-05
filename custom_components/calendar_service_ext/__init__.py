@@ -19,6 +19,7 @@ async def async_setup(hass: HomeAssistant, config: dict):
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     """Set up from a config entry."""
+    _LOGGER.info("Initializing Calendar Service Extension")
     
     # 1. Statischen Pfad registrieren
     component_dir = os.path.dirname(__file__)
@@ -30,11 +31,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
             www_dir,
             cache_headers=False
         )
+        _LOGGER.info(f"Registered static path {URL_BASE} to {www_dir}")
     except ValueError:
-        pass # Pfad existiert evtl. schon
+        _LOGGER.warning(f"Static path {URL_BASE} already registered")
 
     # 2. JS-Resource für Dashboards verfügbar machen (damit es als Card genutzt werden kann)
-    frontend.add_extra_js_url(hass, f"{URL_BASE}/family-calendar.js")
+    js_url = f"{URL_BASE}/family-calendar.js"
+    frontend.add_extra_js_url(hass, js_url)
+    _LOGGER.info(f"Added extra JS URL: {js_url}")
 
     # 3. Service registrieren
     async def handle_delete_event(call: ServiceCall):
@@ -80,6 +84,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         "delete_event", 
         handle_delete_event
     )
+    _LOGGER.info("Service 'delete_event' registered successfully")
 
     return True
 
