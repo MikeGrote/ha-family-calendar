@@ -1,5 +1,5 @@
 {
-  "name": "Calendar Service Extension",
+  "name": "Family Calendar",
   "render_readme": true,
   "homeassistant": "2023.2.0"
 }
