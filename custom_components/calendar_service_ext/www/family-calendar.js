@@ -9947,6 +9947,10 @@ let P = class extends Ge {
             ${this.config?.links?.map((t) => this.renderLink(t))}
             ${this.config?.entities?.map((t) => this.renderFilterChip(t))}
             <div style="flex: 1"></div>
+            <button class="add-button" @click=${() => this.openNewEvent()}>
+              <ha-icon icon="mdi:plus"></ha-icon>
+              Termin
+            </button>
             <button
               class="filter-chip ${this.isCompact ? "active" : ""}"
               style="--chip-color: #666"
@@ -10224,6 +10228,18 @@ let P = class extends Ge {
   toggleAllDay(t) {
     t !== this.isAllDay && (this.isAllDay = t, this.newEventStart = this.reformat(this.newEventStart, t), this.newEventEnd = this.reformat(this.newEventEnd, t));
   }
+  /** Neuer Termin ueber den Knopf.
+  
+     * Auf einem Touchscreen ist das Aufziehen im Raster muehsam: Es verlangt
+     * einen langen Druck, und daneben gegriffen packt man einen bestehenden
+     * Termin. Der Knopf ist der verlaessliche Weg.
+     */
+  openNewEvent() {
+    const t = /* @__PURE__ */ new Date();
+    t.setMinutes(0, 0, 0), t.setHours(t.getHours() + 1);
+    const e = new Date(t.getTime() + 3600 * 1e3);
+    this.isAllDay = !1, this.newEventStart = this.formatForInput(t, !1), this.newEventEnd = this.formatForInput(e, !1), this.newEventTitle = "", this.newEventCalendar = this.config.entities[0] ?? "", this.newEventRecurrence = "", this.currentRrule = "", this.editMode = !1, this.confirmDelete = !1, this.showModal = !0;
+  }
   handleDateSelect(t) {
     t.view.calendar.unselect(), this.isAllDay = t.allDay, this.newEventStart = this.formatForInput(t.start, t.allDay), this.newEventEnd = this.formatForInput(t.end, t.allDay), this.newEventTitle = "", this.newEventCalendar = this.config.entities[0] ?? "", this.newEventRecurrence = "", this.currentRrule = "", this.editMode = !1, this.confirmDelete = !1, this.showModal = !0;
   }
@@ -10368,6 +10384,28 @@ let P = class extends Ge {
 P.styles = [
   Uh,
   Dl`
+      .add-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        min-height: 34px;
+        padding: 0 14px 0 8px;
+        border: none;
+        border-radius: 17px;
+        background: var(--accent-color);
+        color: white;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+        transition: filter 0.2s;
+      }
+      .add-button:hover {
+        filter: brightness(1.08);
+      }
+      .add-button ha-icon {
+        --mdc-icon-size: 20px;
+      }
       .readonly-value {
         margin: 0;
         padding: 10px 0;

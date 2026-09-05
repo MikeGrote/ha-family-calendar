@@ -88,6 +88,10 @@ export class FamilyCalendar extends LitElement {
             ${this.config?.links?.map((link) => this.renderLink(link))}
             ${this.config?.entities?.map((entityId) => this.renderFilterChip(entityId))}
             <div style="flex: 1"></div>
+            <button class="add-button" @click=${() => this.openNewEvent()}>
+              <ha-icon icon="mdi:plus"></ha-icon>
+              Termin
+            </button>
             <button
               class="filter-chip ${this.isCompact ? 'active' : ''}"
               style="--chip-color: #666"
@@ -464,6 +468,30 @@ export class FamilyCalendar extends LitElement {
     this.newEventEnd = this.reformat(this.newEventEnd, checked);
   }
 
+  /** Neuer Termin ueber den Knopf.
+
+   * Auf einem Touchscreen ist das Aufziehen im Raster muehsam: Es verlangt
+   * einen langen Druck, und daneben gegriffen packt man einen bestehenden
+   * Termin. Der Knopf ist der verlaessliche Weg.
+   */
+  private openNewEvent(): void {
+    const start = new Date();
+    start.setMinutes(0, 0, 0);
+    start.setHours(start.getHours() + 1);
+    const end = new Date(start.getTime() + 60 * 60 * 1000);
+
+    this.isAllDay = false;
+    this.newEventStart = this.formatForInput(start, false);
+    this.newEventEnd = this.formatForInput(end, false);
+    this.newEventTitle = '';
+    this.newEventCalendar = this.config.entities[0] ?? '';
+    this.newEventRecurrence = '';
+    this.currentRrule = '';
+    this.editMode = false;
+    this.confirmDelete = false;
+    this.showModal = true;
+  }
+
   private handleDateSelect(info: DateSelectArg): void {
     info.view.calendar.unselect();
     this.isAllDay = info.allDay;
@@ -702,6 +730,28 @@ export class FamilyCalendar extends LitElement {
   static styles = [
     calendarStyles,
     css`
+      .add-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        min-height: 34px;
+        padding: 0 14px 0 8px;
+        border: none;
+        border-radius: 17px;
+        background: var(--accent-color);
+        color: white;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+        transition: filter 0.2s;
+      }
+      .add-button:hover {
+        filter: brightness(1.08);
+      }
+      .add-button ha-icon {
+        --mdc-icon-size: 20px;
+      }
       .readonly-value {
         margin: 0;
         padding: 10px 0;
