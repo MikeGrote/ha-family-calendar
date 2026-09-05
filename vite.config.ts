@@ -11,7 +11,7 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: 'src/family-calendar.ts',
+      entry: 'src/index.ts',
       formats: ['es'],
       name: 'FamilyCalendar',
       fileName: 'family-calendar',

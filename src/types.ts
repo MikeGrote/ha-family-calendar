@@ -58,3 +58,23 @@ export type RecurrenceFrequency = '' | 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY'
 export type HassWithApi = HomeAssistant & {
   callApi: <T>(method: 'GET' | 'POST', path: string) => Promise<T>;
 };
+
+/** Ein Eintrag der Seitenleiste. */
+export interface NavItem {
+  /** Material-Design-Symbol, z. B. "mdi:calendar-month". */
+  icon: string;
+  /** Beschriftung unter oder neben dem Symbol. */
+  name: string;
+  /** Ziel innerhalb von Home Assistant, z. B. "/dashboard-wand/kalender". */
+  path: string;
+  /** Sichtbar, aber noch ohne Ziel - fuer geplante Bereiche. */
+  disabled?: boolean;
+}
+
+/** Konfiguration der Seitenleiste. */
+export interface NavConfig {
+  type?: string;
+  items: NavItem[];
+  /** Nur Symbole ohne Beschriftung. Standard: mit Beschriftung. */
+  compact?: boolean;
+}
