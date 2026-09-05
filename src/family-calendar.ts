@@ -1,81 +1,88 @@
-import { LitElement, html, PropertyValues } from 'lit';
-import { customElement, property, query, state } from 'lit/decorators.js';
-import { HomeAssistant } from 'custom-card-helpers';
-import { Calendar, DatesSetArg } from '@fullcalendar/core';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
+import {
+  Calendar,
+  type DateSelectArg,
+  type DatesSetArg,
+  type EventClickArg,
+  type EventInput,
+} from '@fullcalendar/core';
 import deLocale from '@fullcalendar/core/locales/de';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import type { HomeAssistant } from 'custom-card-helpers';
+import { css, html, LitElement, type PropertyValues, type TemplateResult } from 'lit';
+import { customElement, property, query, state } from 'lit/decorators.js';
+
 import { calendarStyles } from './styles';
-import { CalendarConfig } from './types';
+import type {
+  CalendarConfig,
+  CalendarEventPayload,
+  EventExtendedProps,
+  HassCalendarEvent,
+  RecurrenceFrequency,
+} from './types';
+
+const DEFAULT_COLOR = '#0078d4';
+const DEFAULT_DEBOUNCE_MS = 500;
+const SLOT_MIN_FALLBACK = '06:00:00';
+const SLOT_MAX_FALLBACK = '22:00:00';
+/** Puffer in Tagen, der ueber den sichtbaren Bereich hinaus geladen wird. */
+const FETCH_BUFFER_DAYS = 7;
 
 @customElement('family-calendar')
 export class FamilyCalendar extends LitElement {
   @property({ attribute: false }) hass!: HomeAssistant;
-  @property() config!: CalendarConfig;
+  @property({ attribute: false }) config!: CalendarConfig;
 
-  @state() activeCalendars: string[] = [];
-  @state() isCompact: boolean = false;
-  
-  // Modal State
-  @state() showModal: boolean = false;
-  @state() editMode: boolean = false;
-  @state() currentEventId: string = '';
-  @state() currentRecurrenceId: string = '';
-  @state() newEventTitle: string = '';
-  @state() newEventCalendar: string = '';
-  @state() newEventStart: string = '';
-  @state() newEventEnd: string = '';
-  @state() newEventRecurrence: string = '';
+  @state() private activeCalendars: string[] = [];
+  @state() private isCompact = false;
 
-  private allFetchedEvents: any[] = [];
+  @state() private showModal = false;
+  @state() private editMode = false;
+  @state() private confirmDelete = false;
+  @state() private isAllDay = false;
+  @state() private currentEventId = '';
+  @state() private currentRecurrenceId = '';
+  @state() private newEventTitle = '';
+  @state() private newEventCalendar = '';
+  @state() private newEventStart = '';
+  @state() private newEventEnd = '';
+  @state() private newEventRecurrence: RecurrenceFrequency = '';
 
-  @query('#calendar') calendarEl!: HTMLElement;
-  
-  calendar: Calendar | null = null;
-  events: any[] = [];
+  @query('#calendar') private calendarEl!: HTMLElement;
 
-  setConfig(config: CalendarConfig) {
-    if (!config.entities) {
-      throw new Error('Bitte Kalender-Entitäten angeben!');
+  private calendar: Calendar | null = null;
+  private allFetchedEvents: EventInput[] = [];
+  private visibleEvents: EventInput[] = [];
+  /** Signatur der beobachteten Kalender-Entities beim letzten Fetch. */
+  private lastEntitySignature = '';
+  private refreshTimer?: number;
+
+  setConfig(config: CalendarConfig): void {
+    if (!config.entities?.length) {
+      throw new Error('Bitte mindestens eine Kalender-Entität angeben!');
     }
     this.config = config;
-    // Standardmäßig alle aktiv
     this.activeCalendars = [...config.entities];
   }
 
-  getCardSize() {
+  getCardSize(): number {
     return 10;
   }
 
-  render() {
+  // ---------------------------------------------------------------- Rendering
+
+  render(): TemplateResult {
     return html`
       <ha-card>
         <div class="header">
           <div class="filters">
-            ${this.config?.entities?.map((entityId: string) => {
-              const color = this.config.colors?.[entityId] || '#0078d4';
-              const isActive = this.activeCalendars.includes(entityId);
-              const name = this.hass?.states[entityId]?.attributes?.friendly_name || entityId;
-              
-              return html`
-                <button 
-                  class="filter-chip ${isActive ? 'active' : ''}"
-                  style="--chip-color: ${color}"
-                  @click=${() => this.toggleCalendar(entityId)}
-                >
-                  <span class="dot"></span>
-                  ${name}
-                </button>
-              `;
-            })}
-            
+            ${this.config?.entities?.map((entityId) => this.renderFilterChip(entityId))}
             <div style="flex: 1"></div>
-            
-            <button 
+            <button
               class="filter-chip ${this.isCompact ? 'active' : ''}"
               style="--chip-color: #666"
-              @click=${this.toggleCompact}
+              @click=${() => this.toggleCompact()}
             >
               <span class="dot"></span>
               Kompakt
@@ -88,62 +95,90 @@ export class FamilyCalendar extends LitElement {
     `;
   }
 
-  renderModal() {
+  private renderFilterChip(entityId: string): TemplateResult {
+    const color = this.config.colors?.[entityId] ?? DEFAULT_COLOR;
+    const isActive = this.activeCalendars.includes(entityId);
+    return html`
+      <button
+        class="filter-chip ${isActive ? 'active' : ''}"
+        style="--chip-color: ${color}"
+        @click=${() => this.toggleCalendar(entityId)}
+      >
+        <span class="dot"></span>
+        ${this.friendlyName(entityId)}
+      </button>
+    `;
+  }
+
+  private renderModal(): TemplateResult {
     if (!this.showModal) return html``;
 
+    const dateType = this.isAllDay ? 'date' : 'datetime-local';
+
     return html`
-      <div class="modal-overlay" @click=${this.closeModal}>
+      <div class="modal-overlay" @click=${() => this.closeModal()}>
         <div class="modal-content" @click=${(e: Event) => e.stopPropagation()}>
           <h3>${this.editMode ? 'Termin bearbeiten' : 'Neuer Termin'}</h3>
-          
+
           <div class="form-group">
             <label>Titel</label>
-            <input 
-              type="text" 
-              .value=${this.newEventTitle} 
-              @input=${(e: any) => this.newEventTitle = e.target.value}
+            <input
+              type="text"
+              .value=${this.newEventTitle}
+              @input=${(e: Event) => (this.newEventTitle = (e.target as HTMLInputElement).value)}
               placeholder="Termin Titel"
               autofocus
-            >
+            />
           </div>
 
           <div class="form-group">
             <label>Kalender</label>
-            <select 
+            <select
               .value=${this.newEventCalendar}
-              @change=${(e: any) => this.newEventCalendar = e.target.value}
+              @change=${(e: Event) => (this.newEventCalendar = (e.target as HTMLSelectElement).value)}
               ?disabled=${this.editMode}
             >
-              ${this.config.entities.map(entityId => {
-                const name = this.hass?.states[entityId]?.attributes?.friendly_name || entityId;
-                return html`<option value="${entityId}">${name}</option>`;
-              })}
+              ${this.config.entities.map(
+                (entityId) => html`<option value=${entityId}>${this.friendlyName(entityId)}</option>`,
+              )}
             </select>
+          </div>
+
+          <div class="form-group form-group--inline">
+            <label>
+              <input
+                type="checkbox"
+                .checked=${this.isAllDay}
+                @change=${(e: Event) => this.toggleAllDay((e.target as HTMLInputElement).checked)}
+              />
+              Ganztägig
+            </label>
           </div>
 
           <div class="form-group">
             <label>Von</label>
-            <input 
-              type="datetime-local" 
+            <input
+              type=${dateType}
               .value=${this.newEventStart}
-              @input=${(e: any) => this.newEventStart = e.target.value}
-            >
+              @input=${(e: Event) => (this.newEventStart = (e.target as HTMLInputElement).value)}
+            />
           </div>
 
           <div class="form-group">
             <label>Bis</label>
-            <input 
-              type="datetime-local" 
+            <input
+              type=${dateType}
               .value=${this.newEventEnd}
-              @input=${(e: any) => this.newEventEnd = e.target.value}
-            >
+              @input=${(e: Event) => (this.newEventEnd = (e.target as HTMLInputElement).value)}
+            />
           </div>
 
           <div class="form-group">
             <label>Wiederholung</label>
-            <select 
+            <select
               .value=${this.newEventRecurrence}
-              @change=${(e: any) => this.newEventRecurrence = e.target.value}
+              @change=${(e: Event) =>
+                (this.newEventRecurrence = (e.target as HTMLSelectElement).value as RecurrenceFrequency)}
               ?disabled=${this.editMode}
             >
               <option value="">Keine</option>
@@ -154,20 +189,234 @@ export class FamilyCalendar extends LitElement {
           </div>
 
           <div class="modal-actions">
-            ${this.editMode ? html`
-              <button class="btn-delete" style="background-color: #d93025; color: white; margin-right: auto;" @click=${this.deleteEvent}>Löschen</button>
-            ` : ''}
-            <button class="btn-cancel" @click=${this.closeModal}>Abbrechen</button>
-            <button class="btn-save" @click=${this.saveEvent}>${this.editMode ? 'Aktualisieren' : 'Speichern'}</button>
+            ${this.editMode ? this.renderDeleteButton() : ''}
+            <button class="btn-cancel" @click=${() => this.closeModal()}>Abbrechen</button>
+            <button class="btn-save" @click=${() => void this.saveEvent()}>
+              ${this.editMode ? 'Aktualisieren' : 'Speichern'}
+            </button>
           </div>
         </div>
       </div>
     `;
   }
 
-  closeModal() {
+  /** Zweistufiges Loeschen statt confirm(): erst Klick, dann Bestaetigung. */
+  private renderDeleteButton(): TemplateResult {
+    if (!this.confirmDelete) {
+      return html`
+        <button class="btn-delete" @click=${() => (this.confirmDelete = true)}>Löschen</button>
+      `;
+    }
+    return html`
+      <button class="btn-delete btn-delete--confirm" @click=${() => void this.deleteEvent()}>
+        Wirklich löschen?
+      </button>
+    `;
+  }
+
+  // ------------------------------------------------------------- Lebenszyklus
+
+  firstUpdated(): void {
+    if (!this.calendarEl) return;
+
+    this.calendar = new Calendar(this.calendarEl, {
+      plugins: [timeGridPlugin, dayGridPlugin, interactionPlugin],
+      initialView: 'timeGridWeek',
+      locale: deLocale,
+      selectable: true,
+      selectMirror: true,
+      select: (info: DateSelectArg) => this.handleDateSelect(info),
+      eventClick: (info: EventClickArg) => this.handleEventClick(info),
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'timeGridWeek,dayGridMonth',
+      },
+      height: '85vh',
+      allDaySlot: true,
+      slotMinTime: SLOT_MIN_FALLBACK,
+      slotMaxTime: SLOT_MAX_FALLBACK,
+      slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
+      eventTimeFormat: { hour: '2-digit', minute: '2-digit', meridiem: false },
+      datesSet: (arg: DatesSetArg) => {
+        this.adjustTimeRange(arg.start, arg.end);
+        this.scheduleFetch();
+      },
+      events: [],
+    });
+    this.calendar.render();
+  }
+
+  updated(changedProps: PropertyValues): void {
+    if (!changedProps.has('hass')) return;
+
+    // hass wird bei JEDER Zustandsaenderung im System neu zugewiesen. Ohne
+    // diesen Vergleich wuerde die Karte dutzende Male pro Minute alle
+    // Kalender neu laden.
+    const signature = this.entitySignature();
+    if (signature === this.lastEntitySignature) return;
+    this.lastEntitySignature = signature;
+    this.scheduleFetch();
+  }
+
+  disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.clearRefreshTimer();
+    this.calendar?.destroy();
+    this.calendar = null;
+  }
+
+  /** Aendert sich nur, wenn einer der konfigurierten Kalender sich meldet. */
+  private entitySignature(): string {
+    if (!this.hass || !this.config?.entities) return '';
+    return this.config.entities
+      .map((id) => this.hass.states[id]?.last_updated ?? 'missing')
+      .join('|');
+  }
+
+  private scheduleFetch(): void {
+    this.clearRefreshTimer();
+    const delay = this.config?.refreshDebounceMs ?? DEFAULT_DEBOUNCE_MS;
+    this.refreshTimer = window.setTimeout(() => {
+      this.refreshTimer = undefined;
+      void this.fetchEvents();
+    }, delay);
+  }
+
+  private clearRefreshTimer(): void {
+    if (this.refreshTimer !== undefined) {
+      clearTimeout(this.refreshTimer);
+      this.refreshTimer = undefined;
+    }
+  }
+
+  // ------------------------------------------------------------------- Daten
+
+  private async fetchEvents(): Promise<void> {
+    if (!this.hass || !this.config || !this.calendar) return;
+
+    const { start, end } = this.fetchWindow();
+    const collected: EventInput[] = [];
+
+    for (const entityId of this.config.entities) {
+      try {
+        const events = await this.hass.callApi<HassCalendarEvent[]>(
+          'GET',
+          `calendars/${entityId}?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`,
+        );
+        collected.push(...events.map((event) => this.toEventInput(event, entityId)));
+      } catch (err) {
+        console.error('Family Calendar: Laden fehlgeschlagen für', entityId, err);
+        this.notify(`Kalender ${this.friendlyName(entityId)} konnte nicht geladen werden.`);
+      }
+    }
+
+    this.allFetchedEvents = collected;
+    this.applyFilters();
+  }
+
+  private fetchWindow(): { start: string; end: string } {
+    const view = this.calendar?.view;
+    const start = view ? new Date(view.activeStart) : new Date();
+    const end = view ? new Date(view.activeEnd) : new Date();
+    if (!view) end.setDate(end.getDate() + 14);
+    start.setDate(start.getDate() - FETCH_BUFFER_DAYS);
+    end.setDate(end.getDate() + FETCH_BUFFER_DAYS);
+    return { start: start.toISOString(), end: end.toISOString() };
+  }
+
+  private toEventInput(event: HassCalendarEvent, entityId: string): EventInput {
+    const color = this.config.colors?.[entityId] ?? DEFAULT_COLOR;
+    const extendedProps: EventExtendedProps = {
+      entityId,
+      uid: event.uid ?? '',
+      recurrenceId: event.recurrence_id ?? '',
+    };
+    return {
+      id: event.uid,
+      title: event.summary,
+      start: event.start.dateTime ?? event.start.date,
+      end: event.end.dateTime ?? event.end.date,
+      backgroundColor: color,
+      borderColor: color,
+      allDay: !event.start.dateTime,
+      extendedProps,
+    };
+  }
+
+  private applyFilters(): void {
+    if (!this.calendar) return;
+
+    this.visibleEvents = this.allFetchedEvents.filter((event) =>
+      this.activeCalendars.includes((event.extendedProps as EventExtendedProps).entityId),
+    );
+
+    // removeAllEvents() laesst die Event-Sources stehen - ohne das hier
+    // sammeln sich bei jedem Refresh neue Sources an.
+    this.calendar.removeAllEventSources();
+    this.calendar.addEventSource(this.visibleEvents);
+
+    const view = this.calendar.view;
+    this.adjustTimeRange(view.activeStart, view.activeEnd);
+  }
+
+  // -------------------------------------------------------------- Interaktion
+
+  private toggleCompact(): void {
+    this.isCompact = !this.isCompact;
+    this.calendar?.changeView(this.isCompact ? 'dayGridWeek' : 'timeGridWeek');
+  }
+
+  private toggleCalendar(entityId: string): void {
+    this.activeCalendars = this.activeCalendars.includes(entityId)
+      ? this.activeCalendars.filter((id) => id !== entityId)
+      : [...this.activeCalendars, entityId];
+    this.applyFilters();
+  }
+
+  private toggleAllDay(checked: boolean): void {
+    if (checked === this.isAllDay) return;
+    this.isAllDay = checked;
+    // Format der beiden Felder umstellen, ohne das gewaehlte Datum zu verlieren.
+    this.newEventStart = this.reformat(this.newEventStart, checked);
+    this.newEventEnd = this.reformat(this.newEventEnd, checked);
+  }
+
+  private handleDateSelect(info: DateSelectArg): void {
+    info.view.calendar.unselect();
+    this.isAllDay = info.allDay;
+    this.newEventStart = this.formatForInput(info.start, info.allDay);
+    this.newEventEnd = this.formatForInput(info.end, info.allDay);
+    this.newEventTitle = '';
+    this.newEventCalendar = this.config.entities[0] ?? '';
+    this.newEventRecurrence = '';
+    this.editMode = false;
+    this.confirmDelete = false;
+    this.showModal = true;
+  }
+
+  private handleEventClick(info: EventClickArg): void {
+    const event = info.event;
+    const props = event.extendedProps as EventExtendedProps;
+
+    this.editMode = true;
+    this.confirmDelete = false;
+    this.isAllDay = event.allDay;
+    this.currentEventId = props.uid || (event.id ?? '');
+    this.currentRecurrenceId = props.recurrenceId;
+    this.newEventTitle = event.title;
+    this.newEventCalendar = props.entityId;
+    this.newEventStart = this.formatForInput(event.start, event.allDay);
+    this.newEventEnd = this.formatForInput(event.end ?? event.start, event.allDay);
+    this.newEventRecurrence = '';
+    this.showModal = true;
+  }
+
+  private closeModal(): void {
     this.showModal = false;
     this.editMode = false;
+    this.confirmDelete = false;
+    this.isAllDay = false;
     this.currentEventId = '';
     this.currentRecurrenceId = '';
     this.newEventTitle = '';
@@ -177,355 +426,192 @@ export class FamilyCalendar extends LitElement {
     this.newEventRecurrence = '';
   }
 
-  async deleteEvent() {
-    if (!confirm('Möchtest du diesen Termin wirklich löschen?')) return;
+  private async saveEvent(): Promise<void> {
+    if (!this.newEventTitle.trim()) return this.notify('Bitte einen Titel eingeben.');
+    if (!this.newEventCalendar) return this.notify('Bitte einen Kalender auswählen.');
+    if (!this.newEventStart || !this.newEventEnd) return this.notify('Bitte Start und Ende angeben.');
 
-    console.log('Deleting event via WS:', {
-      entity_id: this.newEventCalendar,
-      uid: this.currentEventId,
-      recurrence_id: this.currentRecurrenceId
-    });
-
-    try {
-      await this.hass.callService('calendar_service_ext', 'delete_event', {
-        entity_id: this.newEventCalendar,
-        uid: this.currentEventId,
-        recurrence_id: this.currentRecurrenceId || undefined,
-        recurrence_range: this.currentRecurrenceId ? 'THISANDFUTURE' : undefined
-      });
-      
-      this.closeModal();
-      setTimeout(() => this.fetchEvents(), 500);
-    } catch (e: any) {
-      console.error('Fehler beim Löschen:', e);
-      alert(`Fehler beim Löschen: ${e.message || e}`);
-    }
-  }
-
-  async saveEvent() {
-    if (!this.newEventTitle) {
-      alert('Bitte einen Titel eingeben');
-      return;
-    }
-
-    if (!this.newEventCalendar) {
-      alert('Bitte einen Kalender auswählen');
-      return;
+    const event: CalendarEventPayload = {
+      summary: this.newEventTitle.trim(),
+      dtstart: this.newEventStart,
+      dtend: this.newEventEnd,
+    };
+    if (this.newEventRecurrence && !this.editMode) {
+      event.rrule = `FREQ=${this.newEventRecurrence}`;
     }
 
     try {
-      const eventData: any = {
-        summary: this.newEventTitle,
-        dtstart: this.newEventStart,
-        dtend: this.newEventEnd,
-        description: '', // Optional
-        location: ''     // Optional
-      };
-
-      if (this.newEventRecurrence && !this.editMode) {
-        eventData.rrule = `FREQ=${this.newEventRecurrence}`;
-      }
-
       if (this.editMode && this.currentEventId) {
-        // Update via WS
         await this.hass.callWS({
           type: 'calendar/event/update',
           entity_id: this.newEventCalendar,
           uid: this.currentEventId,
-          recurrence_id: this.currentRecurrenceId || undefined,
-          recurrence_range: this.currentRecurrenceId ? 'THISANDFUTURE' : undefined,
-          event: eventData
+          ...this.recurrenceScope(),
+          event,
         });
       } else {
-        // Create via WS
         await this.hass.callWS({
           type: 'calendar/event/create',
           entity_id: this.newEventCalendar,
-          event: eventData
+          event,
         });
       }
-      
       this.closeModal();
-      setTimeout(() => this.fetchEvents(), 500);
-      
-    } catch (e) {
-      console.error('Fehler beim Speichern des Termins:', e);
-      alert('Fehler beim Speichern des Termins. Siehe Konsole.');
+      this.scheduleFetch();
+    } catch (err) {
+      console.error('Family Calendar: Speichern fehlgeschlagen', err);
+      this.notify(`Termin konnte nicht gespeichert werden: ${this.errorText(err)}`);
     }
   }
 
-  toggleCompact() {
-    this.isCompact = !this.isCompact;
-    // Wir wechseln zwischen Zeit-Raster (Stundenplan) und Block-Ansicht (Kompakt)
-    const view = this.isCompact ? 'dayGridWeek' : 'timeGridWeek';
-    this.calendar?.changeView(view);
-  }
-
-  toggleCalendar(entityId: string) {
-    if (this.activeCalendars.includes(entityId)) {
-      this.activeCalendars = this.activeCalendars.filter(id => id !== entityId);
-    } else {
-      this.activeCalendars = [...this.activeCalendars, entityId];
+  private async deleteEvent(): Promise<void> {
+    try {
+      // calendar/event/delete kommt aus Home Assistant Core - dafuer wird
+      // keine eigene Integration gebraucht.
+      await this.hass.callWS({
+        type: 'calendar/event/delete',
+        entity_id: this.newEventCalendar,
+        uid: this.currentEventId,
+        ...this.recurrenceScope(),
+      });
+      this.closeModal();
+      this.scheduleFetch();
+    } catch (err) {
+      console.error('Family Calendar: Löschen fehlgeschlagen', err);
+      this.notify(`Termin konnte nicht gelöscht werden: ${this.errorText(err)}`);
+      this.confirmDelete = false;
     }
-    this.applyFilters();
   }
 
-  applyFilters() {
-    if (!this.calendar) return;
-    
-    const filtered = this.allFetchedEvents.filter(e => 
-      this.activeCalendars.includes(e.extendedProps.entityId)
+  /** Nur mitschicken, wenn es sich wirklich um eine Serieninstanz handelt. */
+  private recurrenceScope(): Record<string, string> {
+    if (!this.currentRecurrenceId) return {};
+    return {
+      recurrence_id: this.currentRecurrenceId,
+      recurrence_range: 'THISANDFUTURE',
+    };
+  }
+
+  // ------------------------------------------------------------------ Zeiten
+
+  private adjustTimeRange(viewStart: Date, viewEnd: Date): void {
+    if (!this.calendar || this.calendar.view.type !== 'timeGridWeek') return;
+
+    const timed = this.visibleEvents.filter((event) => {
+      if (event.allDay) return false;
+      const start = new Date(event.start as string);
+      const end = new Date(event.end as string);
+      return end > viewStart && start < viewEnd;
+    });
+
+    if (timed.length === 0) {
+      this.calendar.setOption('slotMinTime', SLOT_MIN_FALLBACK);
+      this.calendar.setOption('slotMaxTime', SLOT_MAX_FALLBACK);
+      return;
+    }
+
+    let min = 24 * 60;
+    let max = 0;
+    for (const event of timed) {
+      const start = new Date(event.start as string);
+      const end = new Date(event.end as string);
+      min = Math.min(min, start.getHours() * 60 + start.getMinutes());
+      max = Math.max(max, end.getHours() * 60 + end.getMinutes());
+    }
+
+    this.calendar.setOption('slotMinTime', this.toTimeString(Math.max(0, min - 60)));
+    this.calendar.setOption('slotMaxTime', this.toTimeString(Math.min(24 * 60, max + 60)));
+  }
+
+  private toTimeString(minutes: number): string {
+    const h = String(Math.floor(minutes / 60)).padStart(2, '0');
+    const m = String(minutes % 60).padStart(2, '0');
+    return `${h}:${m}:00`;
+  }
+
+  /** Datum fuer <input type="date"> bzw. <input type="datetime-local">. */
+  private formatForInput(date: Date | null, allDay: boolean): string {
+    if (!date) return '';
+    const local = new Date(date);
+    local.setMinutes(local.getMinutes() - local.getTimezoneOffset());
+    const iso = local.toISOString();
+    return allDay ? iso.slice(0, 10) : iso.slice(0, 16);
+  }
+
+  private reformat(value: string, toAllDay: boolean): string {
+    if (!value) return '';
+    return toAllDay ? value.slice(0, 10) : `${value.slice(0, 10)}T09:00`;
+  }
+
+  // ------------------------------------------------------------------ Helfer
+
+  private friendlyName(entityId: string): string {
+    return this.hass?.states[entityId]?.attributes?.friendly_name ?? entityId;
+  }
+
+  private errorText(err: unknown): string {
+    if (err instanceof Error) return err.message;
+    if (typeof err === 'object' && err !== null && 'message' in err) {
+      return String((err).message);
+    }
+    return 'Unbekannter Fehler';
+  }
+
+  /** Meldung als Home-Assistant-Toast statt als Browser-alert(). */
+  private notify(message: string): void {
+    this.dispatchEvent(
+      new CustomEvent('hass-notification', {
+        detail: { message },
+        bubbles: true,
+        composed: true,
+      }),
     );
-
-    this.calendar.removeAllEvents();
-    this.calendar.addEventSource(filtered);
-    
-    // Events für adjustTimeRange aktualisieren
-    this.events = filtered;
-    
-    if (this.calendar.view) {
-      this.adjustTimeRange(this.calendar.view.activeStart, this.calendar.view.activeEnd);
-    }
   }
 
-  firstUpdated() {
-    if (this.calendarEl) {
-      this.calendar = new Calendar(this.calendarEl, {
-        plugins: [timeGridPlugin, dayGridPlugin, interactionPlugin],
-        initialView: 'timeGridWeek',
-        locale: deLocale,
-        selectable: true,
-        selectMirror: true,
-        select: (info: any) => this.handleDateSelect(info),
-        eventClick: (info: any) => this.handleEventClick(info),
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'timeGridWeek,dayGridMonth'
-        },
-        height: '85vh',
-        allDaySlot: true,
-        slotMinTime: '06:00:00',
-        slotMaxTime: '22:00:00',
-        
-        slotLabelFormat: {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false
-        },
-        eventTimeFormat: {
-           hour: '2-digit',
-           minute: '2-digit',
-           meridiem: false
-        },
-        // Callback wenn sich der sichtbare Zeitraum ändert (z.B. "Nächste Woche")
-        datesSet: (arg: DatesSetArg) => {
-          this.adjustTimeRange(arg.start, arg.end);
-          this.fetchEvents(); // Events für den neuen Zeitraum laden
-        },
-        events: [] 
-      } as any);
-      this.calendar.render();
-      
-      // Falls hass schon gesetzt wurde (z.B. durch Mock), lade Events
-      if (this.hass && this.config) {
-        this.fetchEvents();
+  static styles = [
+    calendarStyles,
+    css`
+      .form-group--inline label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
       }
-    }
-  }
-
-  updated(changedProps: PropertyValues) {
-    if (changedProps.has('hass')) {
-      this.fetchEvents();
-    }
-  }
-
-  // Berechnet die sichtbaren Zeiten dynamisch
-  adjustTimeRange(viewStart: Date, viewEnd: Date) {
-    if (!this.calendar) return;
-    
-    // In der Block-Ansicht (dayGrid) gibt es keine Zeitleiste zum Anpassen
-    if (this.calendar.view.type === 'dayGridWeek') return;
-
-    if (this.events.length === 0) {
-      this.calendar.setOption('slotMinTime', '06:00:00');
-      this.calendar.setOption('slotMaxTime', '22:00:00');
-      return;
-    }
-
-    let minTime = 24 * 60; // Start mit Max-Wert
-    let maxTime = 0;       // Start mit Min-Wert
-    let hasEvents = false;
-
-    // Filtere Events im aktuellen View
-    const visibleEvents = this.events.filter(e => {
-      const eStart = new Date(e.start);
-      const eEnd = new Date(e.end);
-      return eEnd > viewStart && eStart < viewEnd;
-    });
-
-    if (visibleEvents.length === 0) {
-      // Standardwerte wenn keine Termine
-      this.calendar.setOption('slotMinTime', '06:00:00');
-      this.calendar.setOption('slotMaxTime', '22:00:00');
-      return;
-    }
-
-    visibleEvents.forEach(e => {
-      const eStart = new Date(e.start);
-      const eEnd = new Date(e.end);
-      
-      // Nur die Uhrzeit betrachten (in Minuten)
-      const startMinutes = eStart.getHours() * 60 + eStart.getMinutes();
-      const endMinutes = eEnd.getHours() * 60 + eEnd.getMinutes();
-
-      // Sonderfall: Ganztägige Events ignorieren für die Zeit-Skalierung
-      if (!e.allDay) {
-        if (startMinutes < minTime) minTime = startMinutes;
-        if (endMinutes > maxTime) maxTime = endMinutes;
-        hasEvents = true;
+      .form-group--inline input[type='checkbox'] {
+        width: auto;
+        margin: 0;
       }
-    });
-
-    if (hasEvents) {
-      // Puffer hinzufügen (z.B. 1 Stunde davor/danach)
-      minTime = Math.max(0, minTime - 60);
-      maxTime = Math.min(24 * 60, maxTime + 60);
-
-      // In HH:MM:SS Format wandeln
-      const formatTime = (minutes: number) => {
-        const h = Math.floor(minutes / 60).toString().padStart(2, '0');
-        const m = (minutes % 60).toString().padStart(2, '0');
-        return `${h}:${m}:00`;
-      };
-
-      this.calendar.setOption('slotMinTime', formatTime(minTime));
-      this.calendar.setOption('slotMaxTime', formatTime(maxTime));
-    }
-  }
-
-  async fetchEvents() {
-    if (!this.hass || !this.config || !this.calendar) return;
-
-    let startDate = new Date();
-    let endDate = new Date();
-
-    // Wenn der Kalender bereit ist, nehmen wir den sichtbaren Bereich + Puffer
-    if (this.calendar && this.calendar.view) {
-      startDate = new Date(this.calendar.view.activeStart);
-      endDate = new Date(this.calendar.view.activeEnd);
-      // Puffer von 1 Woche davor und danach
-      startDate.setDate(startDate.getDate() - 7);
-      endDate.setDate(endDate.getDate() + 7);
-    } else {
-      // Fallback
-      startDate.setDate(startDate.getDate() - 7);
-      endDate.setDate(endDate.getDate() + 14);
-    }
-
-    const start = startDate.toISOString();
-    const end = endDate.toISOString();
-
-    const allEvents: any[] = [];
-
-    for (const entity_id of this.config.entities) {
-      try {
-        // Wir nutzen die REST API, da callWS('calendar/event_list') bei manchen Usern Probleme macht
-        const startEnc = encodeURIComponent(start);
-        const endEnc = encodeURIComponent(end);
-        
-        const events = await this.hass.callApi<any[]>(
-          'GET', 
-          `calendars/${entity_id}?start=${startEnc}&end=${endEnc}`
-        );
-
-        if (events.length > 0) {
-           console.log(`Raw events for ${entity_id} (first one):`, events[0]);
-        }
-
-        const color = this.config.colors?.[entity_id] || '#0078d4';
-
-        const mappedEvents = events.map(e => {
-          if (!e.uid && !e.id) {
-             console.warn('Event ohne UID gefunden (Löschen wird nicht funktionieren):', e);
-          }
-          return {
-            id: e.uid || e.id, // Für FullCalendar
-            title: e.summary,
-            start: e.start.dateTime || e.start.date,
-            end: e.end.dateTime || e.end.date,
-            backgroundColor: color,
-            borderColor: color,
-            allDay: !e.start.dateTime,
-            extendedProps: { 
-              entityId: entity_id,
-              realUid: e.uid, // Explizit die UID speichern
-              recurrenceId: e.recurrence_id // Wiederholungs-ID speichern
-            }
-          };
-        });
-
-        allEvents.push(...mappedEvents);
-      } catch (err) {
-        console.error("Fehler beim Laden von", entity_id, err);
+      .btn-delete {
+        background-color: #d93025;
+        color: white;
+        margin-right: auto;
       }
-    }
-
-    // Alle Events speichern (ungefiltert)
-    this.allFetchedEvents = allEvents;
-    
-    // Filter anwenden (das aktualisiert auch den Kalender)
-    this.applyFilters();
-  }
-
-  async handleDateSelect(info: any) {
-    // Nur in der Wochen/Tagesansicht erlauben, nicht in der Monatsansicht (optional)
-    // if (info.view.type === 'dayGridMonth') return;
-
-    const calendarApi = info.view.calendar;
-    calendarApi.unselect(); // Auswahl aufheben
-
-    // Formatieren für datetime-local input (YYYY-MM-DDTHH:mm)
-    // FullCalendar liefert ISO Strings, wir müssen sie evtl. anpassen
-    const formatForInput = (dateStr: string) => {
-      const date = new Date(dateStr);
-      // Lokale Zeit berücksichtigen (einfacher Hack für datetime-local)
-      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-      return date.toISOString().slice(0, 16);
-    };
-
-    this.newEventStart = formatForInput(info.startStr);
-    this.newEventEnd = formatForInput(info.endStr);
-    this.newEventTitle = '';
-    this.newEventCalendar = this.config.entities[0] || '';
-    this.newEventRecurrence = '';
-    
-    this.showModal = true;
-  }
-
-  handleEventClick(info: any) {
-    const event = info.event;
-    
-    // Formatieren für datetime-local input
-    const formatForInput = (date: Date) => {
-      if (!date) return '';
-      const d = new Date(date);
-      d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-      return d.toISOString().slice(0, 16);
-    };
-
-    this.editMode = true;
-    // Wir nutzen die explizit gespeicherte UID, falls vorhanden, sonst die ID
-    this.currentEventId = event.extendedProps.realUid || event.id;
-    this.currentRecurrenceId = event.extendedProps.recurrenceId || '';
-    this.newEventTitle = event.title;
-    this.newEventCalendar = event.extendedProps.entityId;
-    this.newEventStart = formatForInput(event.start);
-    this.newEventEnd = formatForInput(event.end || event.start); // End kann null sein bei Moment-Events
-    this.newEventRecurrence = ''; // Wiederholungserkennung ist komplex, lassen wir erstmal leer
-
-    this.showModal = true;
-  }
-
-  static styles = calendarStyles;
+      .btn-delete--confirm {
+        background-color: #8c1d16;
+      }
+    `,
+  ];
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'family-calendar': FamilyCalendar;
+  }
+  interface Window {
+    customCards?: {
+      type: string;
+      name: string;
+      description: string;
+      preview?: boolean;
+    }[];
+  }
+}
+
+// Macht die Karte im Lovelace-Kartenauswahldialog sichtbar.
+window.customCards = window.customCards ?? [];
+window.customCards.push({
+  type: 'family-calendar',
+  name: 'Family Calendar',
+  description: 'Wochen- und Monatsansicht über mehrere Kalender, mit Anlegen und Bearbeiten.',
+  preview: false,
+});
