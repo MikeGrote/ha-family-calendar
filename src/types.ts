@@ -61,20 +61,30 @@ export type HassWithApi = HomeAssistant & {
 
 /** Ein Eintrag der Seitenleiste. */
 export interface NavItem {
+  /** Eindeutige Kennung des Bereichs. */
+  id: string;
   /** Material-Design-Symbol, z. B. "mdi:calendar-month". */
   icon: string;
-  /** Beschriftung unter oder neben dem Symbol. */
+  /** Beschriftung neben dem Symbol. */
   name: string;
-  /** Ziel innerhalb von Home Assistant, z. B. "/dashboard-wand/kalender". */
-  path: string;
-  /** Sichtbar, aber noch ohne Ziel - fuer geplante Bereiche. */
+  /** Sichtbar, aber noch ohne Inhalt - fuer geplante Bereiche. */
   disabled?: boolean;
 }
 
-/** Konfiguration der Seitenleiste. */
-export interface NavConfig {
+/** Ein Bereich der Huellkarte. */
+export interface ShellArea extends NavItem {
+  /** Die Karte, die den Bereich fuellt. Fehlt sie, ist er noch leer. */
+  card?: Record<string, unknown>;
+  /** Statt umzuschalten dorthin wechseln - fuer Ziele ausserhalb des Panels. */
+  path?: string;
+}
+
+/** Konfiguration der Huellkarte. */
+export interface ShellConfig {
   type?: string;
-  items: NavItem[];
+  areas: ShellArea[];
+  /** Bereich, der beim Laden gezeigt wird. Standard: der erste. */
+  initial?: string;
   /** Nur Symbole ohne Beschriftung. Standard: mit Beschriftung. */
   compact?: boolean;
 }

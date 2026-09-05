@@ -35,6 +35,13 @@ invitations into calendar entries.
 *   Works with any IMAP mailbox — no calendar API, no admin consent, and only
     what you deliberately invite ever reaches the screen.
 
+**Overview and shell**
+
+*   **Agenda card** — the next days as a list rather than a grid: what is on
+    today and tomorrow, without reading a timetable.
+*   **Shell card** — a sidebar plus areas that stay mounted. Switching between
+    areas is instant and nothing reloads.
+
 ### Requirements
 
 *   Home Assistant 2025.7 or newer.
@@ -80,6 +87,38 @@ colors:
   calendar.familie: "#107c10"
 # Optional: refresh debounce in milliseconds (default 500)
 refreshDebounceMs: 500
+```
+
+#### The shell
+
+One view holds everything; the sidebar switches between areas without
+reloading them.
+
+```yaml
+type: custom:family-shell
+initial: kalender
+areas:
+  - id: kalender
+    icon: mdi:calendar-month
+    name: Calendar
+    card:
+      type: custom:family-calendar
+      entities: [calendar.privat]
+  - id: agenda
+    icon: mdi:view-agenda-outline
+    name: Overview
+    card:
+      type: custom:family-agenda
+      entities: [calendar.privat]
+      days: 7
+  - id: tasks
+    icon: mdi:check-circle-outline
+    name: Tasks
+    disabled: true          # visible, not yet filled
+  - id: settings
+    icon: mdi:cog-outline
+    name: Settings
+    path: /config/dashboard # leaves the panel instead of switching
 ```
 
 #### Invitation sync
@@ -174,6 +213,13 @@ Besprechungsanfragen in Kalendereinträge verwandelt.
 *   Funktioniert mit jedem IMAP-Postfach — ohne Kalender-Schnittstelle, ohne
     Administratorfreigabe, und es landet nur, was du bewusst einlädst.
 
+**Übersicht und Hülle**
+
+*   **Übersichtskarte** — die nächsten Tage als Liste statt als Raster: was
+    heute und morgen ansteht, ohne einen Stundenplan lesen zu müssen.
+*   **Hüllkarte** — Seitenleiste mit Bereichen, die geladen bleiben. Das
+    Umschalten geht ohne Verzögerung, es wird nichts neu aufgebaut.
+
 ### Voraussetzungen
 
 *   Home Assistant 2025.7 oder neuer.
@@ -220,6 +266,38 @@ colors:
   calendar.familie: "#107c10"
 # Optional: Entprellung der Aktualisierung in Millisekunden (Standard 500)
 refreshDebounceMs: 500
+```
+
+#### Die Hülle
+
+Eine Ansicht trägt alles; die Seitenleiste schaltet zwischen den Bereichen um,
+ohne sie neu zu laden.
+
+```yaml
+type: custom:family-shell
+initial: kalender
+areas:
+  - id: kalender
+    icon: mdi:calendar-month
+    name: Kalender
+    card:
+      type: custom:family-calendar
+      entities: [calendar.privat]
+  - id: uebersicht
+    icon: mdi:view-agenda-outline
+    name: Übersicht
+    card:
+      type: custom:family-agenda
+      entities: [calendar.privat]
+      days: 7
+  - id: aufgaben
+    icon: mdi:check-circle-outline
+    name: Aufgaben
+    disabled: true          # sichtbar, noch ohne Inhalt
+  - id: einstellungen
+    icon: mdi:cog-outline
+    name: Einstellungen
+    path: /config/dashboard # verlässt das Panel statt umzuschalten
 ```
 
 #### Einladungs-Abgleich
