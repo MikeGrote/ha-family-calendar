@@ -1,0 +1,107 @@
+# ==============================================================================
+#  ROUTINEN - wiederkehrende Aufgaben
+# ==============================================================================
+#  Die Aufgaben-Schnittstelle von Home Assistant kennt keine
+#  Wiederholungsregel: Anders als bei Kalenderterminen gibt es kein rrule.
+#  Wiederkehrendes muss deshalb zum passenden Zeitpunkt neu angelegt werden.
+#
+#  Das Skript unten uebernimmt das und verhindert Doppelanlagen - sonst
+#  entstuenden bei jedem Neustart oder erneuten Auslösen weitere Kopien
+#  derselben Aufgabe.
+#
+#  Eigene Routinen: Die Beispiel-Automation kopieren, Zeitpunkt, Liste und
+#  Aufgabentext anpassen.
+# ==============================================================================
+
+script:
+  routine_aufgabe_anlegen:
+    alias: Routine-Aufgabe anlegen
+    description: >-
+      Legt eine Aufgabe an, sofern sie nicht bereits offen auf der Liste steht.
+    mode: queued
+    max: 10
+    fields:
+      liste:
+        name: Liste
+        description: Die Aufgabenliste, z. B. todo.aufgaben_kjell
+        required: true
+        selector:
+          entity:
+            domain: todo
+      aufgabe:
+        name: Aufgabe
+        description: Der Text, der auf der Liste erscheint
+        required: true
+        selector:
+          text:
+      faellig_in_tagen:
+        name: Fällig in Tagen
+        description: 0 heißt heute, 1 morgen. Leer lassen für ohne Fälligkeit.
+        required: false
+        selector:
+          number:
+            min: 0
+            max: 30
+            mode: box
+    sequence:
+      - alias: Offene Einträge der Liste holen
+        action: todo.get_items
+        target:
+          entity_id: "{{ liste }}"
+        data:
+          status: needs_action
+        response_variable: offene
+
+      - alias: Nur anlegen, wenn die Aufgabe noch nicht offen ist
+        condition: template
+        value_template: >-
+          {{ aufgabe not in (offene[liste]['items'] | map(attribute='summary') | list) }}
+
+      - alias: Aufgabe anlegen
+        choose:
+          - alias: Mit Fälligkeit
+            conditions:
+              - condition: template
+                value_template: "{{ faellig_in_tagen is defined and faellig_in_tagen != none }}"
+            sequence:
+              - action: todo.add_item
+                target:
+                  entity_id: "{{ liste }}"
+                data:
+                  item: "{{ aufgabe }}"
+                  due_date: >-
+                    {{ (now() + timedelta(days=faellig_in_tagen | int(0))).strftime('%Y-%m-%d') }}
+        default:
+          - alias: Ohne Fälligkeit
+            action: todo.add_item
+            target:
+              entity_id: "{{ liste }}"
+            data:
+              item: "{{ aufgabe }}"
+
+automation:
+  # --------------------------------------------------------------------------
+  #  BEISPIEL - zum Kopieren und Anpassen.
+  #  Standardmäßig ausgeschaltet, damit hier nichts anläuft, was niemand
+  #  bestellt hat. Zum Verwenden: initial_state entfernen, Zeit, Liste und
+  #  Text anpassen, dann in den Einstellungen einschalten.
+  # --------------------------------------------------------------------------
+  - id: routine_beispiel_muell
+    alias: "Routine: Beispiel (ausgeschaltet)"
+    description: >-
+      Vorlage für eine wöchentliche Routine. Kopieren, anpassen, einschalten.
+    initial_state: false
+    mode: single
+    triggers:
+      - trigger: time
+        at: "18:00:00"
+    conditions:
+      - condition: time
+        weekday:
+          - tue
+    actions:
+      - action: script.routine_aufgabe_anlegen
+        data:
+          liste: todo.aufgaben_kjell
+          aufgabe: Müll rausbringen
+          faellig_in_tagen: 0

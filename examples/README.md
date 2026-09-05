@@ -28,3 +28,25 @@ Mod angelegt.
 ## `dashboard-example.yaml`
 
 Siehe `../tests/dashboard-example.yaml` für die Karte selbst.
+
+## `routinen_package.yaml`
+
+Wiederkehrende Aufgaben. Die Aufgaben-Schnittstelle von Home Assistant kennt
+keine Wiederholungsregel — anders als bei Kalenderterminen gibt es kein
+`rrule`. Wiederkehrendes muss deshalb zum passenden Zeitpunkt neu angelegt
+werden.
+
+Das Skript `script.routine_aufgabe_anlegen` übernimmt das und prüft vorher,
+ob die Aufgabe schon offen auf der Liste steht. Ohne diese Prüfung entstünden
+bei jedem Neustart oder erneuten Auslösen weitere Kopien.
+
+```yaml
+action: script.routine_aufgabe_anlegen
+data:
+  liste: todo.aufgaben_kjell
+  aufgabe: Müll rausbringen
+  faellig_in_tagen: 0      # weglassen für ohne Fälligkeit
+```
+
+Die enthaltene Beispiel-Automation ist bewusst ausgeschaltet. Zum Verwenden
+kopieren, Zeitpunkt und Text anpassen, dann in den Einstellungen einschalten.

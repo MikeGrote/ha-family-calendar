@@ -120,3 +120,24 @@ export interface AgendaDay {
   label: string;
   entries: AgendaEntry[];
 }
+
+/** Eine Liste in der Aufgaben- oder Listenkarte. */
+export interface TodoListConfig {
+  entity: string;
+  /** Ueberschrift der Spalte. Standard: Name der Entity. */
+  name?: string;
+  /** Farbe des Kopfes. Standard: Akzentfarbe. */
+  color?: string;
+}
+
+/** Konfiguration der Aufgaben- und Listenkarte. */
+export interface TasksConfig {
+  type?: string;
+  lists: TodoListConfig[];
+  /** Erledigte Eintraege mitzeigen. Standard: false. */
+  showCompleted?: boolean;
+  /** Faelligkeiten anzeigen und beim Anlegen abfragen. Standard: true. */
+  showDue?: boolean;
+  /** Ueberschrift ueber allen Spalten. */
+  title?: string;
+}
