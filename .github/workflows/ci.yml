@@ -73,6 +73,7 @@ jobs:
       - uses: hacs/action@main
         with:
           category: integration
+          comment: false
           # brands: Ein Eintrag in home-assistant/brands ist fuer ein
           #   eigenes Repo weder vorhanden noch vorgesehen.
           # topics: Besser waere, auf GitHub echte Topics zu setzen

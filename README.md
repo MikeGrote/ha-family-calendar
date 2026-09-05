@@ -11,8 +11,6 @@
 
 A modern, powerful calendar card for Home Assistant, inspired by modern calendar apps.
 
-![Preview](https://via.placeholder.com/800x400?text=Family+Calendar+Preview)
-
 ### Features ✨
 
 *   **Real Week View:** Timetable grid instead of a simple list.
@@ -97,8 +95,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 > ⚠️ **Hinweis:** Dies ist eine sehr frühe **Alpha-Version**. Sie kann Fehler enthalten und sich jederzeit ändern. Die Nutzung erfolgt auf eigene Gefahr.
 
 Eine moderne, leistungsstarke Kalender-Karte für Home Assistant, inspiriert von modernen Kalender-Apps.
-
-![Preview](https://via.placeholder.com/800x400?text=Family+Calendar+Preview)
 
 ### Features ✨
 
