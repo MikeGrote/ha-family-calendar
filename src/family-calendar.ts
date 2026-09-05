@@ -3,8 +3,10 @@ import {
   type DateSelectArg,
   type DatesSetArg,
   type EventClickArg,
+  type EventDropArg,
   type EventInput,
 } from '@fullcalendar/core';
+import type { EventResizeDoneArg } from '@fullcalendar/interaction';
 import deLocale from '@fullcalendar/core/locales/de';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -16,6 +18,7 @@ import { customElement, property, query, state } from 'lit/decorators.js';
 import { calendarStyles } from './styles';
 import type {
   CalendarConfig,
+  CardLink,
   CalendarEventPayload,
   EventExtendedProps,
   HassCalendarEvent,
@@ -81,6 +84,7 @@ export class FamilyCalendar extends LitElement {
       <ha-card>
         <div class="header">
           <div class="filters">
+            ${this.config?.links?.map((link) => this.renderLink(link))}
             ${this.config?.entities?.map((entityId) => this.renderFilterChip(entityId))}
             <div style="flex: 1"></div>
             <button
@@ -97,6 +101,28 @@ export class FamilyCalendar extends LitElement {
         ${this.renderModal()}
       </ha-card>
     `;
+  }
+
+  /** Kleine Symbolschaltflaeche, etwa zu einer anderen Ansicht. */
+  private renderLink(link: CardLink): TemplateResult {
+    return html`
+      <button
+        class="link-button"
+        title=${link.name ?? link.path}
+        aria-label=${link.name ?? link.path}
+        @click=${() => this.navigate(link.path)}
+      >
+        <ha-icon .icon=${link.icon}></ha-icon>
+      </button>
+    `;
+  }
+
+  /** Wechselt die Ansicht, ohne die Seite neu zu laden. */
+  private navigate(path: string): void {
+    history.pushState(null, '', path);
+    window.dispatchEvent(
+      new CustomEvent('location-changed', { bubbles: true, composed: true }),
+    );
   }
 
   private renderFilterChip(entityId: string): TemplateResult {
@@ -229,6 +255,10 @@ export class FamilyCalendar extends LitElement {
       locale: deLocale,
       selectable: true,
       selectMirror: true,
+      editable: true,
+      eventDurationEditable: true,
+      eventDrop: (info: EventDropArg) => void this.handleEventMoved(info),
+      eventResize: (info: EventResizeDoneArg) => void this.handleEventMoved(info),
       select: (info: DateSelectArg) => this.handleDateSelect(info),
       eventClick: (info: EventClickArg) => this.handleEventClick(info),
       headerToolbar: {
@@ -449,6 +479,52 @@ export class FamilyCalendar extends LitElement {
     this.showModal = true;
   }
 
+  /** Termin wurde gezogen oder in der Dauer geaendert. */
+  private async handleEventMoved(info: EventDropArg | EventResizeDoneArg): Promise<void> {
+    const event = info.event;
+    const props = event.extendedProps as EventExtendedProps;
+
+    if (!props.uid) {
+      info.revert();
+      this.notify('Dieser Termin hat keine Kennung und lässt sich nicht verschieben.');
+      return;
+    }
+
+    const payload: CalendarEventPayload = {
+      summary: event.title,
+      dtstart: this.formatForApi(event.start, event.allDay),
+      dtend: this.formatForApi(event.end ?? event.start, event.allDay),
+    };
+
+    try {
+      await this.hass.callWS({
+        type: 'calendar/event/update',
+        entity_id: props.entityId,
+        uid: props.uid,
+        // Beim Ziehen wird genau diese Instanz verschoben, nicht die ganze
+        // Serie - deshalb ohne recurrence_range.
+        ...(props.recurrenceId ? { recurrence_id: props.recurrenceId } : {}),
+        event: payload,
+      });
+      this.scheduleFetch();
+    } catch (err) {
+      // Ohne revert() bliebe der Termin optisch an der neuen Stelle stehen,
+      // obwohl der Server ihn nicht uebernommen hat.
+      info.revert();
+      console.error('Family Calendar: Verschieben fehlgeschlagen', err);
+      this.notify(`Termin konnte nicht verschoben werden: ${this.errorText(err)}`);
+    }
+  }
+
+  /** Zeitangabe fuer die Kalender-Schnittstelle: lokal, ohne Zeitzone. */
+  private formatForApi(date: Date | null, allDay: boolean): string {
+    if (!date) return '';
+    const local = new Date(date);
+    local.setMinutes(local.getMinutes() - local.getTimezoneOffset());
+    const iso = local.toISOString();
+    return allDay ? iso.slice(0, 10) : iso.slice(0, 19);
+  }
+
   private closeModal(): void {
     this.showModal = false;
     this.editMode = false;
@@ -608,6 +684,27 @@ export class FamilyCalendar extends LitElement {
   static styles = [
     calendarStyles,
     css`
+      .link-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.55);
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s;
+      }
+      .link-button:hover {
+        background: rgba(255, 255, 255, 0.9);
+        color: var(--text-primary);
+      }
+      .link-button ha-icon {
+        --mdc-icon-size: 20px;
+      }
       .form-group--inline label {
         display: flex;
         align-items: center;

@@ -1,5 +1,5 @@
 var Pt, S, Mi, ki, Ie, pe, hr, Ii, Ni, vt = {}, Oi = [], kl = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;
-function ie(t, e) {
+function se(t, e) {
   for (var n in e) t[n] = e[n];
   return t;
 }
@@ -17,7 +17,7 @@ function dt(t, e, n, r, i) {
   var s = { type: t, props: e, key: n, ref: r, __k: null, __: null, __b: 0, __e: null, __d: void 0, __c: null, __h: null, constructor: void 0, __v: i ?? ++Mi };
   return i == null && S.vnode != null && S.vnode(s), s;
 }
-function $() {
+function U() {
   return { current: null };
 }
 function x(t) {
@@ -93,7 +93,7 @@ function yt() {
   var t, e, n, r, i, s, l, o;
   for (pe.sort(function(a, d) {
     return a.__v.__b - d.__v.__b;
-  }); t = pe.shift(); ) t.__d && (e = pe.length, r = void 0, i = void 0, l = (s = (n = t).__v).__e, (o = n.__P) && (r = [], (i = ie({}, s)).__v = s.__v + 1, _n(o, s, i, n.__n, o.ownerSVGElement !== void 0, s.__h != null ? [l] : null, r, l ?? qe(s), s.__h), zi(r, s), s.__e != l && Hi(s)), pe.length > e && pe.sort(function(a, d) {
+  }); t = pe.shift(); ) t.__d && (e = pe.length, r = void 0, i = void 0, l = (s = (n = t).__v).__e, (o = n.__P) && (r = [], (i = se({}, s)).__v = s.__v + 1, _n(o, s, i, n.__n, o.ownerSVGElement !== void 0, s.__h != null ? [l] : null, r, l ?? qe(s), s.__h), zi(r, s), s.__e != l && Hi(s)), pe.length > e && pe.sort(function(a, d) {
     return a.__v.__b - d.__v.__b;
   }));
   yt.__r = 0;
@@ -109,13 +109,13 @@ function Bi(t, e, n, r, i, s, l, o, a, d) {
       }
       h = null;
     }
-    _n(t, u, h = h || vt, i, s, l, o, a, d), p = u.__e, (f = u.ref) && h.ref != f && (b || (b = []), h.ref && b.push(h.ref, null, u), b.push(f, u.__c || p, u)), p != null ? (v == null && (v = p), typeof u.type == "function" && u.__k === h.__k ? u.__d = a = Li(u, a, t) : a = Ui(t, u, h, y, p, a), typeof n.type == "function" && (n.__d = a)) : a && h.__e == a && a.parentNode != t && (a = qe(h));
+    _n(t, u, h = h || vt, i, s, l, o, a, d), p = u.__e, (f = u.ref) && h.ref != f && (b || (b = []), h.ref && b.push(h.ref, null, u), b.push(f, u.__c || p, u)), p != null ? (v == null && (v = p), typeof u.type == "function" && u.__k === h.__k ? u.__d = a = Li(u, a, t) : a = $i(t, u, h, y, p, a), typeof n.type == "function" && (n.__d = a)) : a && h.__e == a && a.parentNode != t && (a = qe(h));
   }
-  for (n.__e = v, c = E; c--; ) y[c] != null && (typeof n.type == "function" && y[c].__e != null && y[c].__e == n.__d && (n.__d = $i(r).nextSibling), ji(y[c], y[c]));
+  for (n.__e = v, c = E; c--; ) y[c] != null && (typeof n.type == "function" && y[c].__e != null && y[c].__e == n.__d && (n.__d = Ui(r).nextSibling), ji(y[c], y[c]));
   if (b) for (c = 0; c < b.length; c++) Fi(b[c], b[++c], b[++c]);
 }
 function Li(t, e, n) {
-  for (var r, i = t.__k, s = 0; i && s < i.length; s++) (r = i[s]) && (r.__ = t, e = typeof r.type == "function" ? Li(r, e, n) : Ui(n, r, r, i, r.__e, e));
+  for (var r, i = t.__k, s = 0; i && s < i.length; s++) (r = i[s]) && (r.__ = t, e = typeof r.type == "function" ? Li(r, e, n) : $i(n, r, r, i, r.__e, e));
   return e;
 }
 function Et(t, e) {
@@ -123,7 +123,7 @@ function Et(t, e) {
     Et(n, e);
   }) : e.push(t)), e;
 }
-function Ui(t, e, n, r, i, s) {
+function $i(t, e, n, r, i, s) {
   var l, o, a;
   if (e.__d !== void 0) l = e.__d, e.__d = void 0;
   else if (n == null || i != s || i.parentNode == null) e: if (s == null || s.parentNode !== t) t.appendChild(i), l = null;
@@ -133,11 +133,11 @@ function Ui(t, e, n, r, i, s) {
   }
   return l !== void 0 ? l : i.nextSibling;
 }
-function $i(t) {
+function Ui(t) {
   var e, n, r;
   if (t.type == null || typeof t.type == "string") return t.__e;
   if (t.__k) {
-    for (e = t.__k.length - 1; e >= 0; e--) if ((n = t.__k[e]) && (r = $i(n))) return r;
+    for (e = t.__k.length - 1; e >= 0; e--) if ((n = t.__k[e]) && (r = Ui(n))) return r;
   }
   return null;
 }
@@ -147,7 +147,7 @@ function _n(t, e, n, r, i, s, l, o, a) {
   n.__h != null && (a = n.__h, o = e.__e = n.__e, e.__h = null, s = [o]), (d = S.__b) && d(e);
   try {
     e: if (typeof _ == "function") {
-      if (b = e.props, y = (d = _.contextType) && r[d.__c], E = d ? y ? y.props.value : d.__ : r, n.__c ? v = (c = e.__c = n.__c).__ = c.__E : ("prototype" in _ && _.prototype.render ? e.__c = c = new _(b, E) : (e.__c = c = new F(b, E), c.constructor = _, c.render = Pl), y && y.sub(c), c.props = b, c.state || (c.state = {}), c.context = E, c.__n = r, f = c.__d = !0, c.__h = [], c._sb = []), c.__s == null && (c.__s = c.state), _.getDerivedStateFromProps != null && (c.__s == c.state && (c.__s = ie({}, c.__s)), ie(c.__s, _.getDerivedStateFromProps(b, c.__s))), h = c.props, u = c.state, c.__v = e, f) _.getDerivedStateFromProps == null && c.componentWillMount != null && c.componentWillMount(), c.componentDidMount != null && c.__h.push(c.componentDidMount);
+      if (b = e.props, y = (d = _.contextType) && r[d.__c], E = d ? y ? y.props.value : d.__ : r, n.__c ? v = (c = e.__c = n.__c).__ = c.__E : ("prototype" in _ && _.prototype.render ? e.__c = c = new _(b, E) : (e.__c = c = new F(b, E), c.constructor = _, c.render = Pl), y && y.sub(c), c.props = b, c.state || (c.state = {}), c.context = E, c.__n = r, f = c.__d = !0, c.__h = [], c._sb = []), c.__s == null && (c.__s = c.state), _.getDerivedStateFromProps != null && (c.__s == c.state && (c.__s = se({}, c.__s)), se(c.__s, _.getDerivedStateFromProps(b, c.__s))), h = c.props, u = c.state, c.__v = e, f) _.getDerivedStateFromProps == null && c.componentWillMount != null && c.componentWillMount(), c.componentDidMount != null && c.__h.push(c.componentDidMount);
       else {
         if (_.getDerivedStateFromProps == null && b !== h && c.componentWillReceiveProps != null && c.componentWillReceiveProps(b, E), !c.__e && c.shouldComponentUpdate != null && c.shouldComponentUpdate(b, c.__s, E) === !1 || e.__v === n.__v) {
           for (e.__v !== n.__v && (c.props = b, c.state = c.__s, c.__d = !1), e.__e = n.__e, e.__k = n.__k, e.__k.forEach(function(ne) {
@@ -166,7 +166,7 @@ function _n(t, e, n, r, i, s, l, o, a) {
       } else do
         c.__d = !1, D && D(e), d = c.render(c.props, c.state, c.context), c.state = c.__s;
       while (c.__d && ++O < 25);
-      c.state = c.__s, c.getChildContext != null && (r = ie(ie({}, r), c.getChildContext())), f || c.getSnapshotBeforeUpdate == null || (p = c.getSnapshotBeforeUpdate(h, u)), k = d != null && d.type === x && d.key == null ? d.props.children : d, Bi(t, Array.isArray(k) ? k : [k], e, n, r, i, s, l, o, a), c.base = e.__e, e.__h = null, c.__h.length && l.push(c), v && (c.__E = c.__ = null), c.__e = !1;
+      c.state = c.__s, c.getChildContext != null && (r = se(se({}, r), c.getChildContext())), f || c.getSnapshotBeforeUpdate == null || (p = c.getSnapshotBeforeUpdate(h, u)), k = d != null && d.type === x && d.key == null ? d.props.children : d, Bi(t, Array.isArray(k) ? k : [k], e, n, r, i, s, l, o, a), c.base = e.__e, e.__h = null, c.__h.length && l.push(c), v && (c.__E = c.__ = null), c.__e = !1;
     } else s == null && e.__v === n.__v ? (e.__k = n.__k, e.__e = n.__e) : e.__e = Ol(n.__e, e, n, r, i, s, l, a);
     (d = S.diffed) && d(e);
   } catch (ne) {
@@ -267,7 +267,7 @@ Pt = Oi.slice, S = { __e: function(t, e, n, r) {
   return t != null && t.constructor === void 0;
 }, Ie = !1, F.prototype.setState = function(t, e) {
   var n;
-  n = this.__s != null && this.__s !== this.state ? this.__s : this.__s = ie({}, this.state), typeof t == "function" && (t = t(ie({}, n), this.props)), t && ie(n, t), t != null && this.__v && (e && this._sb.push(e), un(this));
+  n = this.__s != null && this.__s !== this.state ? this.__s : this.__s = se({}, this.state), typeof t == "function" && (t = t(se({}, n), this.props)), t && se(n, t), t != null && this.__v && (e && this._sb.push(e), un(this));
 }, F.prototype.forceUpdate = function(t) {
   this.__v && (this.__e = !0, t && this.__h.push(t), un(this));
 }, F.prototype.render = x, pe = [], Ii = typeof Promise == "function" ? Promise.prototype.then.bind(Promise.resolve()) : setTimeout, yt.__r = 0, Ni = 0;
@@ -331,7 +331,7 @@ function fn(t) {
   var e = Y;
   t.__c = t.__(), Y = e;
 }
-function Ul(t, e) {
+function $l(t, e) {
   for (var n in e) t[n] = e[n];
   return t;
 }
@@ -350,18 +350,18 @@ var _r = S.__b;
 S.__b = function(t) {
   t.type && t.type.__f && t.ref && (t.props.ref = t.ref, t.ref = null), _r && _r(t);
 };
-var $l = S.__e;
+var Ul = S.__e;
 S.__e = function(t, e, n, r) {
   if (t.then) {
     for (var i, s = e; s = s.__; ) if ((i = s.__c) && i.__c) return e.__e == null && (e.__e = n.__e, e.__k = n.__k), i.__c(t, e);
   }
-  $l(t, e, n, r);
+  Ul(t, e, n, r);
 };
 var Rr = S.unmount;
 function Vi(t, e, n) {
   return t && (t.__c && t.__c.__H && (t.__c.__H.__.forEach(function(r) {
     typeof r.__c == "function" && r.__c();
-  }), t.__c.__H = null), (t = Ul({}, t)).__c != null && (t.__c.__P === n && (t.__c.__P = e), t.__c = null), t.__k = t.__k && t.__k.map(function(r) {
+  }), t.__c.__H = null), (t = $l({}, t)).__c != null && (t.__c.__P === n && (t.__c.__P = e), t.__c = null), t.__k = t.__k && t.__k.map(function(r) {
     return Vi(r, e, n);
   })), t;
 }
@@ -596,7 +596,7 @@ class Tn {
 function xn(t) {
   t.parentNode && t.parentNode.removeChild(t);
 }
-function U(t, e) {
+function $(t, e) {
   if (t.closest)
     return t.closest(e);
   if (!document.documentElement.contains(t))
@@ -641,7 +641,7 @@ function Bt(t) {
 }
 function so(t, e) {
   return (n) => {
-    let r = U(n.target, t);
+    let r = $(n.target, t);
     r && e.call(r, n, r);
   };
 }
@@ -854,7 +854,7 @@ function pn(t) {
   }
   return t.days ? t.specifiedWeeks && t.days % 7 === 0 ? { unit: "week", value: t.days / 7 } : { unit: "day", value: t.days } : t.months ? { unit: "month", value: t.months } : t.years ? { unit: "year", value: t.years } : { unit: "millisecond", value: 0 };
 }
-function ae(t, e, n) {
+function ce(t, e, n) {
   if (t === e)
     return !0;
   let r = t.length, i;
@@ -867,15 +867,15 @@ function ae(t, e, n) {
 }
 const _o = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 function Lr(t, e) {
-  let n = se(t);
+  let n = le(t);
   return n[2] += e * 7, z(n);
 }
 function B(t, e) {
-  let n = se(t);
+  let n = le(t);
   return n[2] += e, z(n);
 }
-function ce(t, e) {
-  let n = se(t);
+function de(t, e) {
+  let n = le(t);
   return n[6] += e, z(n);
 }
 function Ro(t, e) {
@@ -907,7 +907,7 @@ function Io(t, e) {
   return n !== null && n % 7 === 0 ? n / 7 : null;
 }
 function St(t, e) {
-  return le(t) === le(e) ? Math.round(De(t, e)) : null;
+  return oe(t) === oe(e) ? Math.round(De(t, e)) : null;
 }
 function M(t) {
   return z([
@@ -958,7 +958,7 @@ function Bo(t, e, n) {
   let r = 7 + e - n;
   return -((7 + z([t, 0, r]).getUTCDay() - e) % 7) + r - 1;
 }
-function Ur(t) {
+function $r(t) {
   return [
     t.getFullYear(),
     t.getMonth(),
@@ -969,7 +969,7 @@ function Ur(t) {
     t.getMilliseconds()
   ];
 }
-function $r(t) {
+function Ur(t) {
   return new Date(
     t[0],
     t[1] || 0,
@@ -980,7 +980,7 @@ function $r(t) {
     t[5] || 0
   );
 }
-function se(t) {
+function le(t) {
   return [
     t.getUTCFullYear(),
     t.getUTCMonth(),
@@ -997,7 +997,7 @@ function z(t) {
 function ns(t) {
   return !isNaN(t.valueOf());
 }
-function le(t) {
+function oe(t) {
   return t.getUTCHours() * 1e3 * 60 * 60 + t.getUTCMinutes() * 1e3 * 60 + t.getUTCSeconds() * 1e3 + t.getUTCMilliseconds();
 }
 function rs(t, e, n = !1) {
@@ -1010,7 +1010,7 @@ function Nn(t) {
 function Lo(t) {
   return t.toISOString().match(/^\d{4}-\d{2}/)[0];
 }
-function Uo(t) {
+function $o(t) {
   return xe(t.getUTCHours(), 2) + ":" + xe(t.getUTCMinutes(), 2) + ":" + xe(t.getUTCSeconds(), 2);
 }
 function On(t, e = !1) {
@@ -1022,7 +1022,7 @@ function A(t, e, n) {
   return function(...s) {
     if (!r)
       i = t.apply(this, s);
-    else if (!ae(r, s)) {
+    else if (!ce(r, s)) {
       let l = t.apply(this, s);
       (!e || !e(l, i)) && (i = l);
     }
@@ -1049,7 +1049,7 @@ const Zt = {
   hour: 1,
   minute: 1,
   second: 1
-}, it = /\s*([ap])\.?m\.?/i, $o = /,/g, zo = /\s+/g, Fo = /\u200e/g, jo = /UTC|GMT/;
+}, it = /\s*([ap])\.?m\.?/i, Uo = /,/g, zo = /\s+/g, Fo = /\u200e/g, jo = /UTC|GMT/;
 class Wo {
   constructor(e) {
     let n = {}, r = {}, i = 9;
@@ -1115,7 +1115,7 @@ function qo(t, e, n, r, i) {
   return t = t.replace(Fo, ""), n.timeZoneName === "short" && (t = Yo(t, i.timeZone === "UTC" || e.timeZoneOffset == null ? "UTC" : (
     // important to normalize for IE, which does "GMT"
     On(e.timeZoneOffset)
-  ))), r.omitCommas && (t = t.replace($o, "").trim()), r.omitZeroMinute && (t = t.replace(":00", "")), r.meridiem === !1 ? t = t.replace(it, "").trim() : r.meridiem === "narrow" ? t = t.replace(it, (s, l) => l.toLocaleLowerCase()) : r.meridiem === "short" ? t = t.replace(it, (s, l) => `${l.toLocaleLowerCase()}m`) : r.meridiem === "lowercase" && (t = t.replace(it, (s) => s.toLocaleLowerCase())), t = t.replace(zo, " "), t = t.trim(), t;
+  ))), r.omitCommas && (t = t.replace(Uo, "").trim()), r.omitZeroMinute && (t = t.replace(":00", "")), r.meridiem === !1 ? t = t.replace(it, "").trim() : r.meridiem === "narrow" ? t = t.replace(it, (s, l) => l.toLocaleLowerCase()) : r.meridiem === "short" ? t = t.replace(it, (s, l) => `${l.toLocaleLowerCase()}m`) : r.meridiem === "lowercase" && (t = t.replace(it, (s) => s.toLocaleLowerCase())), t = t.replace(zo, " "), t = t.trim(), t;
 }
 function Yo(t, e) {
   let n = !1;
@@ -1126,7 +1126,7 @@ function Qo(t, e, n, r, i) {
   return i === "long" ? s.push(n) : (i === "short" || i === "narrow") && s.push(e), (i === "long" || i === "short") && s.push(" "), s.push(r.simpleNumberFormat.format(t)), r.options.direction === "rtl" && s.reverse(), s.join("");
 }
 function Zo(t, e, n) {
-  return n.getMarkerYear(t) !== n.getMarkerYear(e) ? 5 : n.getMarkerMonth(t) !== n.getMarkerMonth(e) ? 4 : n.getMarkerDay(t) !== n.getMarkerDay(e) ? 2 : le(t) !== le(e) ? 1 : 0;
+  return n.getMarkerYear(t) !== n.getMarkerYear(e) ? 5 : n.getMarkerMonth(t) !== n.getMarkerMonth(e) ? 4 : n.getMarkerDay(t) !== n.getMarkerDay(e) ? 2 : oe(t) !== oe(e) ? 1 : 0;
 }
 function Xo(t, e) {
   let n = {};
@@ -1483,7 +1483,7 @@ function ge(t, e) {
   return typeof t == "object" && typeof e == "object" && t && e ? q(t, e) : t === e;
 }
 function st(t, e) {
-  return Array.isArray(t) && Array.isArray(e) ? ae(t, e) : t === e;
+  return Array.isArray(t) && Array.isArray(e) ? ce(t, e) : t === e;
 }
 const ta = {
   type: String,
@@ -1631,7 +1631,7 @@ class ca {
     return z(e);
   }
   markerToArray(e) {
-    return se(e);
+    return le(e);
   }
 }
 oa("gregory", ca);
@@ -1662,7 +1662,7 @@ class fa {
     return n === null ? null : n.marker;
   }
   createNowMarker() {
-    return this.canComputeOffset ? this.timestampToMarker((/* @__PURE__ */ new Date()).valueOf()) : z(Ur(/* @__PURE__ */ new Date()));
+    return this.canComputeOffset ? this.timestampToMarker((/* @__PURE__ */ new Date()).valueOf()) : z($r(/* @__PURE__ */ new Date()));
   }
   createMarkerMeta(e) {
     if (typeof e == "string")
@@ -1707,11 +1707,11 @@ class fa {
   // Diffing Whole Units
   diffWholeYears(e, n) {
     let { calendarSystem: r } = this;
-    return le(e) === le(n) && r.getMarkerDay(e) === r.getMarkerDay(n) && r.getMarkerMonth(e) === r.getMarkerMonth(n) ? r.getMarkerYear(n) - r.getMarkerYear(e) : null;
+    return oe(e) === oe(n) && r.getMarkerDay(e) === r.getMarkerDay(n) && r.getMarkerMonth(e) === r.getMarkerMonth(n) ? r.getMarkerYear(n) - r.getMarkerYear(e) : null;
   }
   diffWholeMonths(e, n) {
     let { calendarSystem: r } = this;
-    return le(e) === le(n) && r.getMarkerDay(e) === r.getMarkerDay(n) ? r.getMarkerMonth(n) - r.getMarkerMonth(e) + (r.getMarkerYear(n) - r.getMarkerYear(e)) * 12 : null;
+    return oe(e) === oe(n) && r.getMarkerDay(e) === r.getMarkerDay(n) ? r.getMarkerMonth(n) - r.getMarkerMonth(e) + (r.getMarkerYear(n) - r.getMarkerYear(e)) * 12 : null;
   }
   // Range / Duration
   greatestWholeUnit(e, n) {
@@ -1757,7 +1757,7 @@ class fa {
     }, this);
   }
   formatRange(e, n, r, i = {}) {
-    return i.isEndExclusive && (n = ce(n, -1)), r.formatRange({
+    return i.isEndExclusive && (n = de(n, -1)), r.formatRange({
       marker: e,
       timeZoneOffset: i.forcedStartTzo != null ? i.forcedStartTzo : this.offsetForMarker(e)
     }, {
@@ -1775,14 +1775,14 @@ class fa {
   }
   // TimeZone
   timestampToMarker(e) {
-    return this.timeZone === "local" ? z(Ur(new Date(e))) : this.timeZone === "UTC" || !this.namedTimeZoneImpl ? new Date(e) : z(this.namedTimeZoneImpl.timestampToArray(e));
+    return this.timeZone === "local" ? z($r(new Date(e))) : this.timeZone === "UTC" || !this.namedTimeZoneImpl ? new Date(e) : z(this.namedTimeZoneImpl.timestampToArray(e));
   }
   offsetForMarker(e) {
-    return this.timeZone === "local" ? -$r(se(e)).getTimezoneOffset() : this.timeZone === "UTC" ? 0 : this.namedTimeZoneImpl ? this.namedTimeZoneImpl.offsetForArray(se(e)) : null;
+    return this.timeZone === "local" ? -Ur(le(e)).getTimezoneOffset() : this.timeZone === "UTC" ? 0 : this.namedTimeZoneImpl ? this.namedTimeZoneImpl.offsetForArray(le(e)) : null;
   }
   // Conversion
   toDate(e, n) {
-    return this.timeZone === "local" ? $r(se(e)) : this.timeZone === "UTC" ? new Date(e.valueOf()) : this.namedTimeZoneImpl ? new Date(e.valueOf() - this.namedTimeZoneImpl.offsetForArray(se(e)) * 1e3 * 60) : new Date(e.valueOf() - (n || 0));
+    return this.timeZone === "local" ? Ur(le(e)) : this.timeZone === "UTC" ? new Date(e.valueOf()) : this.namedTimeZoneImpl ? new Date(e.valueOf() - this.namedTimeZoneImpl.offsetForArray(le(e)) * 1e3 * 60) : new Date(e.valueOf() - (n || 0));
   }
 }
 class Je {
@@ -1996,7 +1996,7 @@ class Ln extends R {
   }
   applyQueueudDomNodes() {
     const { queuedDomNodes: e, currentDomNodes: n } = this, r = this.base;
-    if (!ae(e, n)) {
+    if (!ce(e, n)) {
       n.forEach(xn);
       for (let i of e)
         r.appendChild(i);
@@ -2005,7 +2005,7 @@ class Ln extends R {
   }
 }
 Ln.addPropsEquality({
-  elClasses: ae,
+  elClasses: ce,
   elStyle: q,
   elAttrs: ra,
   renderProps: q
@@ -2089,7 +2089,7 @@ function Ee(t, e) {
 function wa(t, e) {
   return (t.start === null ? null : t.start.valueOf()) === (e.start === null ? null : e.start.valueOf()) && (t.end === null ? null : t.end.valueOf()) === (e.end === null ? null : e.end.valueOf());
 }
-function Un(t, e) {
+function $n(t, e) {
   return (t.end === null || e.start === null || t.end > e.start) && (t.start === null || e.end === null || t.start < e.end);
 }
 function Lt(t, e) {
@@ -2146,7 +2146,7 @@ class fs {
   // from its previous value. decremented = -1, incremented = 1 (default).
   build(e, n, r = !0) {
     let { props: i } = this, s, l, o, a, d, c;
-    return s = this.buildValidRange(), s = this.trimHiddenDays(s), r && (e = Da(e, s)), l = this.buildCurrentRangeInfo(e, n), o = /^(year|month|week|day)$/.test(l.unit), a = this.buildRenderRange(this.trimHiddenDays(l.range), l.unit, o), a = this.trimHiddenDays(a), d = a, i.showNonCurrentDates || (d = Ee(d, l.range)), d = this.adjustActiveRange(d), d = Ee(d, s), c = Un(l.range, s), K(a, e) || (e = a.start), {
+    return s = this.buildValidRange(), s = this.trimHiddenDays(s), r && (e = Da(e, s)), l = this.buildCurrentRangeInfo(e, n), o = /^(year|month|week|day)$/.test(l.unit), a = this.buildRenderRange(this.trimHiddenDays(l.range), l.unit, o), a = this.trimHiddenDays(a), d = a, i.showNonCurrentDates || (d = Ee(d, l.range)), d = this.adjustActiveRange(d), d = Ee(d, s), c = $n(l.range, s), K(a, e) || (e = a.start), {
       currentDate: e,
       // constraint for where prev/next operations can go and where events can be dragged/resized to.
       // an object with optional start and end properties.
@@ -2278,7 +2278,7 @@ class fs {
     return e;
   }
 }
-function $n(t, e, n, r) {
+function Un(t, e, n, r) {
   return {
     instanceId: we(),
     defId: t,
@@ -2312,7 +2312,7 @@ function Se(t, e, n) {
       c || (c = d.allDay ? s.defaultAllDayEventDuration : s.defaultTimedEventDuration);
       let f = _a(d, c, e, r, i.recurringTypes);
       for (let h of f) {
-        let u = $n(a, {
+        let u = Un(a, {
           start: h,
           end: r.add(h, c)
         });
@@ -2353,7 +2353,7 @@ function gs(t, e, n, r, i = zn(n), s, l) {
   }
   let f = Ta(o, d, n, r);
   if (f) {
-    let h = vn(o, a, e ? e.sourceId : "", f.allDay, f.hasEnd, n, s), u = $n(h.defId, f.range, f.forcedStartTzo, f.forcedEndTzo);
+    let h = vn(o, a, e ? e.sourceId : "", f.allDay, f.hasEnd, n, s), u = Un(h.defId, f.range, f.forcedStartTzo, f.forcedEndTzo);
     return l && h.publicId && l[h.publicId] && (u.instanceId = l[h.publicId]), { def: h, instance: u };
   }
   return null;
@@ -2415,7 +2415,7 @@ function bn(t, e = j()) {
 function Fn(t, e) {
   let n = t.instances[e];
   if (n) {
-    let r = t.defs[n.defId], i = Ut(t, (s) => Ma(r, s));
+    let r = t.defs[n.defId], i = $t(t, (s) => Ma(r, s));
     return i.defs[r.defId] = r, i.instances[n.instanceId] = n, i;
   }
   return j();
@@ -2432,7 +2432,7 @@ function jn(t, e) {
     instances: Object.assign(Object.assign({}, t.instances), e.instances)
   };
 }
-function Ut(t, e) {
+function $t(t, e) {
   let n = ye(t.defs, e), r = ye(t.instances, (i) => n[i.defId]);
   return { defs: n, instances: r };
 }
@@ -2565,9 +2565,9 @@ function Ba(t, e, n, r, i) {
     case "RECEIVE_EVENTS":
       return La(t, n[e.sourceId], e.fetchId, e.fetchRange, e.rawEvents, i);
     case "RESET_RAW_EVENTS":
-      return Ua(t, n[e.sourceId], e.rawEvents, r.activeRange, i);
+      return $a(t, n[e.sourceId], e.rawEvents, r.activeRange, i);
     case "ADD_EVENTS":
-      return $a(
+      return Ua(
         t,
         e.eventStore,
         // new ones
@@ -2589,7 +2589,7 @@ function Ba(t, e, n, r, i) {
     case "REMOVE_EVENT_SOURCE":
       return Es(t, e.sourceId);
     case "REMOVE_ALL_EVENT_SOURCES":
-      return Ut(t, (s) => !s.sourceId);
+      return $t(t, (s) => !s.sourceId);
     case "REMOVE_ALL_EVENTS":
       return j();
     default:
@@ -2604,7 +2604,7 @@ function La(t, e, n, r, i, s) {
   }
   return t;
 }
-function Ua(t, e, n, r, i) {
+function $a(t, e, n, r, i) {
   const { defIdMap: s, instanceIdMap: l } = Fa(t);
   let o = Qe(ys(n, e, i), e, i, !1, s, l);
   return Se(o, r, i);
@@ -2626,7 +2626,7 @@ function Yr(t, e) {
   }
   return n;
 }
-function $a(t, e, n, r) {
+function Ua(t, e, n, r) {
   return n && (e = Se(e, n, r)), jn(t, e);
 }
 function Qr(t, e, n) {
@@ -2637,7 +2637,7 @@ function Qr(t, e, n) {
   return { defs: r, instances: i };
 }
 function Es(t, e) {
-  return Ut(t, (n) => n.sourceId !== e);
+  return $t(t, (n) => n.sourceId !== e);
 }
 function za(t, e) {
   return {
@@ -2657,7 +2657,7 @@ function Fa(t) {
   }
   return { defIdMap: r, instanceIdMap: i };
 }
-class $t {
+class Ut {
   constructor() {
     this.handlers = {}, this.thisContext = null;
   }
@@ -3123,7 +3123,7 @@ function tc(t, e) {
 function Cs(t, e, n, r, i, s, l) {
   let { dateEnv: o, options: a } = n, { displayEventTime: d, displayEventEnd: c } = a, f = t.eventRange.def, h = t.eventRange.instance;
   d == null && (d = r !== !1), c == null && (c = i !== !1);
-  let u = h.range.start, p = h.range.end, v = t.start || t.eventRange.range.start, b = t.end || t.eventRange.range.end, y = M(u).valueOf() === M(v).valueOf(), E = M(ce(p, -1)).valueOf() === M(ce(b, -1)).valueOf();
+  let u = h.range.start, p = h.range.end, v = t.start || t.eventRange.range.start, b = t.end || t.eventRange.range.end, y = M(u).valueOf() === M(v).valueOf(), E = M(de(p, -1)).valueOf() === M(de(b, -1)).valueOf();
   return d && !f.allDay && (y || E) ? (v = y ? u : v, b = E ? p : b, c && f.hasEnd ? o.formatRange(v, b, e, {
     forcedStartTzo: h.forcedStartTzo,
     forcedEndTzo: h.forcedEndTzo
@@ -3132,7 +3132,7 @@ function Cs(t, e, n, r, i, s, l) {
     // nooooo, same
   })) : "";
 }
-function oe(t, e, n) {
+function ae(t, e, n) {
   let r = t.eventRange.range;
   return {
     isPast: r.end <= (n || e.start),
@@ -3224,7 +3224,7 @@ function cc(t, e, n) {
   return {
     def: i,
     ui: ws(i, e),
-    instance: $n(i.defId, t.range),
+    instance: Un(i.defId, t.range),
     range: t.range,
     isStart: !0,
     isEnd: !0
@@ -4044,12 +4044,12 @@ class Z extends R {
   isValidSegDownEl(e) {
     return !this.props.eventDrag && // HACK
     !this.props.eventResize && // HACK
-    !U(e, ".fc-event-mirror");
+    !$(e, ".fc-event-mirror");
   }
   isValidDateDownEl(e) {
-    return !U(e, ".fc-event:not(.fc-bg-event)") && !U(e, ".fc-more-link") && // a "more.." link
-    !U(e, "a[data-navlink]") && // a clickable nav link
-    !U(e, ".fc-popover");
+    return !$(e, ".fc-event:not(.fc-bg-event)") && !$(e, ".fc-more-link") && // a "more.." link
+    !$(e, "a[data-navlink]") && // a clickable nav link
+    !$(e, ".fc-popover");
   }
 }
 class Ps {
@@ -4195,7 +4195,7 @@ function Sn(t, e, n) {
 }
 class Hc {
   constructor(e, n) {
-    this.emitter = new $t();
+    this.emitter = new Ut();
   }
   destroy() {
   }
@@ -4217,7 +4217,7 @@ function Bs(t) {
 class Lc extends R {
   render() {
     let { dateEnv: e, options: n, theme: r, viewApi: i } = this.context, { props: s } = this, { date: l, dateProfile: o } = s, a = Is(l, s.todayRange, null, o), d = [Hs].concat(qn(a, r)), c = e.format(l, s.dayHeaderFormat), f = !a.isDisabled && s.colCnt > 1 ? Mt(this.context, l) : {}, h = e.toDate(l);
-    e.namedTimeZoneImpl && (h = ce(h, 36e5));
+    e.namedTimeZoneImpl && (h = de(h, 36e5));
     let u = Object.assign(Object.assign(Object.assign({ date: h, view: i }, s.extraRenderProps), { text: c }), a);
     return g(W, { elTag: "th", elClasses: d, elAttrs: Object.assign({ role: "columnheader", colSpan: s.colSpan, "data-date": a.isDisabled ? void 0 : Nn(l) }, s.extraDataAttrs), renderProps: u, generatorName: "dayHeaderContent", customGenerator: n.dayHeaderContent, defaultGenerator: Bs, classNameGenerator: n.dayHeaderClassNames, didMount: n.dayHeaderDidMount, willUnmount: n.dayHeaderWillUnmount }, (p) => g("div", { className: "fc-scrollgrid-sync-inner" }, !a.isDisabled && g(p, { elTag: "a", elAttrs: f, elClasses: [
       "fc-col-header-cell-cushion",
@@ -4225,8 +4225,8 @@ class Lc extends R {
     ] })));
   }
 }
-const Uc = N({ weekday: "long" });
-class $c extends R {
+const $c = N({ weekday: "long" });
+class Uc extends R {
   render() {
     let { props: e } = this, { dateEnv: n, theme: r, viewApi: i, options: s } = this.context, l = B(/* @__PURE__ */ new Date(2592e5), e.dow), o = {
       dow: e.dow,
@@ -4250,7 +4250,7 @@ class $c extends R {
         "fc-col-header-cell-cushion",
         e.isSticky && "fc-sticky"
       ], elAttrs: {
-        "aria-label": n.format(l, Uc)
+        "aria-label": n.format(l, $c)
       } })
     ));
   }
@@ -4265,14 +4265,14 @@ class Ls extends R {
       "tr",
       { role: "row" },
       s && s("day"),
-      n.map((d) => i ? g(Lc, { key: d.toISOString(), date: d, dateProfile: r, todayRange: a, colCnt: n.length, dayHeaderFormat: l }) : g($c, { key: d.getUTCDay(), dow: d.getUTCDay(), dayHeaderFormat: l }))
+      n.map((d) => i ? g(Lc, { key: d.toISOString(), date: d, dateProfile: r, todayRange: a, colCnt: n.length, dayHeaderFormat: l }) : g(Uc, { key: d.getUTCDay(), dow: d.getUTCDay(), dayHeaderFormat: l }))
     ));
   }
 }
 function zc(t, e, n) {
   return t || Bc(e, n);
 }
-class Us {
+class $s {
   constructor(e, n) {
     let r = e.start, { end: i } = e, s = [], l = [], o = -1;
     for (; r < i; )
@@ -4298,7 +4298,7 @@ class Us {
     return r < 0 ? n[0] - 1 : r >= n.length ? n[n.length - 1] + 1 : n[r];
   }
 }
-class $s {
+class Us {
   constructor(e, n) {
     let { dates: r } = e, i, s, l;
     if (n) {
@@ -4368,7 +4368,7 @@ class zs {
   }
   sliceNowDate(e, n, r, i, ...s) {
     return this._sliceDateSpan(
-      { range: { start: e, end: ce(e, 1) }, allDay: !1 },
+      { range: { start: e, end: de(e, 1) }, allDay: !1 },
       // add 1 ms, protect against null range
       n,
       r,
@@ -4440,8 +4440,8 @@ class zs {
 function ot(t, e) {
   let n = t.activeRange;
   return e ? n : {
-    start: ce(n.start, t.slotMinTime.milliseconds),
-    end: ce(n.end, t.slotMaxTime.milliseconds - 864e5)
+    start: de(n.start, t.slotMinTime.milliseconds),
+    end: de(n.end, t.slotMaxTime.milliseconds - 864e5)
     // 864e5 = ms in a day
   };
 }
@@ -4473,7 +4473,7 @@ function Wc(t, e, n, r) {
     let { eventOverlap: w } = e.options, D = typeof w == "function" ? w : null;
     for (let T in h) {
       let k = h[T];
-      if (Un(b, k.range) && (u[k.defId].overlap === !1 && s.isEvent || y.overlap === !1 || D && !D(
+      if ($n(b, k.range) && (u[k.defId].overlap === !1 && s.isEvent || y.overlap === !1 || D && !D(
         new I(e, f[k.defId], k),
         // still event
         new I(e, E, v)
@@ -4482,8 +4482,8 @@ function Wc(t, e, n, r) {
     }
     let O = i.eventStore;
     for (let T of y.allows) {
-      let k = Object.assign(Object.assign({}, n), { range: v.range, allDay: E.allDay }), _ = O.defs[E.defId], ne = O.instances[p], Ue;
-      if (_ ? Ue = new I(e, _, ne) : Ue = new I(e, E), !T(Wn(k, e), Ue))
+      let k = Object.assign(Object.assign({}, n), { range: v.range, allDay: E.allDay }), _ = O.defs[E.defId], ne = O.instances[p], $e;
+      if (_ ? $e = new I(e, _, ne) : $e = new I(e, E), !T(Wn(k, e), $e))
         return !1;
     }
   }
@@ -4496,7 +4496,7 @@ function Vc(t, e, n, r) {
   let { selectOverlap: c } = e.options, f = typeof c == "function" ? c : null;
   for (let h in l) {
     let u = l[h];
-    if (Un(a, u.range) && (d.overlap === !1 || f && !f(new I(e, s[u.defId], u), null)))
+    if ($n(a, u.range) && (d.overlap === !1 || f && !f(new I(e, s[u.defId], u), null)))
       return !1;
   }
   for (let h of d.allows) {
@@ -4513,7 +4513,7 @@ function Ws(t, e, n, r, i) {
   return !0;
 }
 function Gc(t, e, n, r, i) {
-  return t === "businessHours" ? sn(Se(r, e, i)) : typeof t == "string" ? sn(Ut(n, (s) => s.groupId === t)) : typeof t == "object" && t ? sn(Se(t, e, i)) : [];
+  return t === "businessHours" ? sn(Se(r, e, i)) : typeof t == "string" ? sn($t(n, (s) => s.groupId === t)) : typeof t == "object" && t ? sn(Se(t, e, i)) : [];
 }
 function sn(t) {
   let { instances: e } = t, n = [];
@@ -4628,7 +4628,7 @@ function Xc(t, e, n, r) {
   }, typeof e.rowContent == "function" ? e.rowContent(n) : e.rowContent));
 }
 function Kc(t, e) {
-  return ae(t, e, q);
+  return ce(t, e, q);
 }
 function Jc(t, e) {
   let n = [];
@@ -4958,7 +4958,7 @@ class dd extends R {
   updateSize() {
     let { isRtl: e } = this.context, { alignmentEl: n, alignGridTop: r } = this.props, { rootEl: i } = this, s = kc(n);
     if (s) {
-      let l = i.getBoundingClientRect(), o = r ? U(n, ".fc-scrollgrid").getBoundingClientRect().top : s.top, a = e ? s.right - l.width : s.left;
+      let l = i.getBoundingClientRect(), o = r ? $(n, ".fc-scrollgrid").getBoundingClientRect().top : s.top, a = e ? s.right - l.width : s.left;
       o = Math.max(o, ln), a = Math.min(a, document.documentElement.clientWidth - ln - l.width), a = Math.max(a, ln);
       let d = i.offsetParent.getBoundingClientRect();
       Fe(i, {
@@ -5064,7 +5064,7 @@ class Zs extends R {
     this.updateParentEl();
   }
   updateParentEl() {
-    this.linkEl && (this.parentEl = U(this.linkEl, ".fc-view-harness"));
+    this.linkEl && (this.parentEl = $(this.linkEl, ".fc-view-harness"));
   }
 }
 function fd(t) {
@@ -5265,7 +5265,7 @@ function Ed(t, e) {
 }
 function Sd() {
   let t = [], e = [], n;
-  return (r, i) => ((!n || !ae(r, t) || !ae(i, e)) && (n = Ed(r, i)), t = r, e = i, n);
+  return (r, i) => ((!n || !ce(r, t) || !ce(i, e)) && (n = Ed(r, i)), t = r, e = i, n);
 }
 function Ad(t, e) {
   return {
@@ -5307,32 +5307,32 @@ function Ad(t, e) {
 function wd(t, e) {
   return t === void 0 ? e : e === void 0 ? t : new Date(Math.max(t.valueOf(), e.valueOf()));
 }
-class de extends Je {
+class ue extends Je {
 }
-de.prototype.classes = {
+ue.prototype.classes = {
   root: "fc-theme-standard",
   tableCellShaded: "fc-cell-shaded",
   buttonGroup: "fc-button-group",
   button: "fc-button fc-button-primary",
   buttonActive: "fc-button-active"
 };
-de.prototype.baseIconClass = "fc-icon";
-de.prototype.iconClasses = {
+ue.prototype.baseIconClass = "fc-icon";
+ue.prototype.iconClasses = {
   close: "fc-icon-x",
   prev: "fc-icon-chevron-left",
   next: "fc-icon-chevron-right",
   prevYear: "fc-icon-chevrons-left",
   nextYear: "fc-icon-chevrons-right"
 };
-de.prototype.rtlIconClasses = {
+ue.prototype.rtlIconClasses = {
   prev: "fc-icon-chevron-right",
   next: "fc-icon-chevron-left",
   prevYear: "fc-icon-chevrons-right",
   nextYear: "fc-icon-chevrons-left"
 };
-de.prototype.iconOverrideOption = "buttonIcons";
-de.prototype.iconOverrideCustomButtonOption = "icon";
-de.prototype.iconOverridePrefix = "fc-icon-";
+ue.prototype.iconOverrideOption = "buttonIcons";
+ue.prototype.iconOverrideCustomButtonOption = "icon";
+ue.prototype.iconOverridePrefix = "fc-icon-";
 function Dd(t, e) {
   let n = {}, r;
   for (r in t)
@@ -5497,9 +5497,9 @@ function Ld(t, e) {
   return ye(t, (n) => n.sourceId !== e);
 }
 function il(t, e, n) {
-  return ir(t, ye(t, (r) => Ud(r, e, n)), e, !1, n);
+  return ir(t, ye(t, (r) => $d(r, e, n)), e, !1, n);
 }
-function Ud(t, e, n) {
+function $d(t, e, n) {
   return ll(t, n) ? !n.options.lazyFetching || !t.fetchRange || t.isFetching || // always cancel outdated in-progress fetches
   e.start < t.fetchRange.start || e.end > t.fetchRange.end : !t.latestFetchId;
 }
@@ -5507,11 +5507,11 @@ function ir(t, e, n, r, i) {
   let s = {};
   for (let l in t) {
     let o = t[l];
-    e[l] ? s[l] = $d(o, n, r, i) : s[l] = o;
+    e[l] ? s[l] = Ud(o, n, r, i) : s[l] = o;
   }
   return s;
 }
-function $d(t, e, n, r) {
+function Ud(t, e, n, r) {
   let { options: i, calendarApi: s } = r, l = r.pluginHooks.eventSourceDefs[t.sourceDefId], o = we();
   return l.fetch({
     eventSource: t,
@@ -5920,7 +5920,7 @@ class li {
 }
 class pu {
   constructor(e) {
-    this.computeCurrentViewData = A(this._computeCurrentViewData), this.organizeRawLocales = A(vd), this.buildLocale = A(el), this.buildPluginHooks = Sd(), this.buildDateEnv = A(mu), this.buildTheme = A(vu), this.parseToolbars = A(qd), this.buildViewSpecs = A(Rd), this.buildDateProfileGenerator = ht(bu), this.buildViewApi = A(yu), this.buildViewUiProps = ht(Au), this.buildEventUiBySource = A(Eu, q), this.buildEventUiBases = A(Su), this.parseContextBusinessHours = ht(wu), this.buildTitle = A(hu), this.nowManager = new li(), this.emitter = new $t(), this.actionRunner = new fu(this._handleAction.bind(this), this.updateData.bind(this)), this.currentCalendarOptionsInput = {}, this.currentCalendarOptionsRefined = {}, this.currentViewOptionsInput = {}, this.currentViewOptionsRefined = {}, this.currentCalendarOptionsRefiners = {}, this.optionsForRefining = [], this.optionsForHandling = [], this.getCurrentData = () => this.data, this.dispatch = (h) => {
+    this.computeCurrentViewData = A(this._computeCurrentViewData), this.organizeRawLocales = A(vd), this.buildLocale = A(el), this.buildPluginHooks = Sd(), this.buildDateEnv = A(mu), this.buildTheme = A(vu), this.parseToolbars = A(qd), this.buildViewSpecs = A(Rd), this.buildDateProfileGenerator = ht(bu), this.buildViewApi = A(yu), this.buildViewUiProps = ht(Au), this.buildEventUiBySource = A(Eu, q), this.buildEventUiBases = A(Su), this.parseContextBusinessHours = ht(wu), this.buildTitle = A(hu), this.nowManager = new li(), this.emitter = new Ut(), this.actionRunner = new fu(this._handleAction.bind(this), this.updateData.bind(this)), this.currentCalendarOptionsInput = {}, this.currentCalendarOptionsRefined = {}, this.currentViewOptionsInput = {}, this.currentViewOptionsRefined = {}, this.currentCalendarOptionsRefiners = {}, this.optionsForRefining = [], this.optionsForHandling = [], this.getCurrentData = () => this.data, this.dispatch = (h) => {
       this.actionRunner.request(h);
     }, this.props = e, this.actionRunner.pause(), this.nowManager = new li();
     let n = {}, r = this.computeOptionsData(e.optionOverrides, n, e.calendarApi), i = r.calendarOptions.initialView || r.pluginHooks.initialView, s = this.computeCurrentViewData(i, r, e.optionOverrides, n);
@@ -6111,7 +6111,7 @@ function mu(t, e, n, r, i, s, l, o) {
   });
 }
 function vu(t, e) {
-  let n = e.themeClasses[t.themeSystem] || de;
+  let n = e.themeClasses[t.themeSystem] || ue;
   return new n(t);
 }
 function bu(t) {
@@ -6247,7 +6247,7 @@ class _u extends Be {
       let { component: i } = this, { context: s } = i, l = Ne(r);
       if (l && // might be the <div> surrounding the more link
       i.isValidSegDownEl(n.target)) {
-        let o = U(n.target, ".fc-event-forced-url"), a = o ? o.querySelector("a[href]").href : "";
+        let o = $(n.target, ".fc-event-forced-url"), a = o ? o.querySelector("a[href]").href : "";
         s.emitter.trigger("eventClick", {
           el: r,
           event: new I(i.context, l.eventRange.def, l.eventRange.instance),
@@ -6295,7 +6295,7 @@ class Ru extends Be {
 }
 class Tu extends Ce {
   constructor() {
-    super(...arguments), this.buildViewContext = A(pa), this.buildViewPropTransformers = A(Mu), this.buildToolbarProps = A(xu), this.headerRef = $(), this.footerRef = $(), this.interactionsStore = {}, this.state = {
+    super(...arguments), this.buildViewContext = A(pa), this.buildViewPropTransformers = A(Mu), this.buildToolbarProps = A(xu), this.headerRef = U(), this.footerRef = U(), this.interactionsStore = {}, this.state = {
       viewLabelId: Ht()
     }, this.registerInteractiveComponent = (e, n) => {
       let r = gc(e, n), l = [
@@ -6454,7 +6454,7 @@ class ku extends mc {
     this.currentDataManager.resetOptions(e, n);
   }
   setClassNames(e) {
-    if (!ae(e, this.currentClassNames)) {
+    if (!ce(e, this.currentClassNames)) {
       let { classList: n } = this.el;
       for (let r of this.currentClassNames)
         n.remove(r);
@@ -6518,7 +6518,7 @@ var Iu = {
 };
 class Nu extends Z {
   constructor() {
-    super(...arguments), this.headerElRef = $();
+    super(...arguments), this.headerElRef = U();
   }
   renderSimpleLayout(e, n) {
     let { props: r, context: i } = this, s = [], l = kt(i.options);
@@ -6657,7 +6657,7 @@ class Pu extends R {
         let l = s.eventRange.instance.instanceId;
         return g("div", { className: "fc-daygrid-event-harness", key: l, style: {
           visibility: i[l] ? "hidden" : ""
-        } }, al(s) ? g(dl, Object.assign({ seg: s, isDragging: !1, isSelected: l === e.eventSelection, defaultDisplayEventEnd: !1 }, oe(s, e.todayRange))) : g(cl, Object.assign({ seg: s, isDragging: !1, isResizing: !1, isDateSelecting: !1, isSelected: l === e.eventSelection, defaultDisplayEventEnd: !1 }, oe(s, e.todayRange))));
+        } }, al(s) ? g(dl, Object.assign({ seg: s, isDragging: !1, isSelected: l === e.eventSelection, defaultDisplayEventEnd: !1 }, ae(s, e.todayRange))) : g(cl, Object.assign({ seg: s, isDragging: !1, isResizing: !1, isDateSelecting: !1, isSelected: l === e.eventSelection, defaultDisplayEventEnd: !1 }, ae(s, e.todayRange))));
       }));
     } });
   }
@@ -6671,7 +6671,7 @@ function Hu(t) {
 const Bu = N({ week: "narrow" });
 class Lu extends Z {
   constructor() {
-    super(...arguments), this.rootElRef = $(), this.state = {
+    super(...arguments), this.rootElRef = U(), this.state = {
       dayNumberId: Ht()
     }, this.handleRootEl = (e) => {
       Q(this.rootElRef, e), Q(this.props.elRef, e);
@@ -6679,11 +6679,11 @@ class Lu extends Z {
   }
   render() {
     let { context: e, props: n, state: r, rootElRef: i } = this, { options: s, dateEnv: l } = e, { date: o, dateProfile: a } = n;
-    const d = n.showDayNumber && $u(o, a.currentRange, l);
+    const d = n.showDayNumber && Uu(o, a.currentRange, l);
     return g(nr, { elTag: "td", elRef: this.handleRootEl, elClasses: [
       "fc-daygrid-day",
       ...n.extraClassNames || []
-    ], elAttrs: Object.assign(Object.assign(Object.assign({}, n.extraDataAttrs), n.showDayNumber ? { "aria-labelledby": r.dayNumberId } : {}), { role: "gridcell" }), defaultGenerator: Uu, date: o, dateProfile: a, todayRange: n.todayRange, showDayNumber: n.showDayNumber, isMonthStart: d, extraRenderProps: n.extraRenderProps }, (c, f) => g(
+    ], elAttrs: Object.assign(Object.assign(Object.assign({}, n.extraDataAttrs), n.showDayNumber ? { "aria-labelledby": r.dayNumberId } : {}), { role: "gridcell" }), defaultGenerator: $u, date: o, dateProfile: a, todayRange: n.todayRange, showDayNumber: n.showDayNumber, isMonthStart: d, extraRenderProps: n.extraRenderProps }, (c, f) => g(
       "div",
       { ref: n.innerElRef, className: "fc-daygrid-day-frame fc-scrollgrid-sync-inner", style: { minHeight: n.minHeight } },
       n.showWeekNumber && g(Qs, { elTag: "a", elClasses: ["fc-daygrid-week-number"], elAttrs: Mt(e, o, "week"), date: o, defaultFormat: Bu }),
@@ -6716,11 +6716,11 @@ class Lu extends Z {
     ));
   }
 }
-function Uu(t) {
+function $u(t) {
   return t.dayNumberText || g(x, null, " ");
 }
-function $u(t, e, n) {
-  const { start: r, end: i } = e, s = ce(i, -1), l = n.getYear(r), o = n.getMonth(r), a = n.getYear(s), d = n.getMonth(s);
+function Uu(t, e, n) {
+  const { start: r, end: i } = e, s = de(i, -1), l = n.getYear(r), o = n.getMonth(r), a = n.getYear(s), d = n.getMonth(s);
   return !(l === a && o === d) && // first date in current view?
   (t.valueOf() === r.valueOf() || // a month-start that's within the current range?
   n.getDay(t) === 1 && t.valueOf() < i.valueOf());
@@ -6876,7 +6876,7 @@ class Wu extends Ps {
 }
 class hl extends Z {
   constructor() {
-    super(...arguments), this.cellElRefs = new X(), this.frameElRefs = new X(), this.fgElRefs = new X(), this.segHarnessRefs = new X(), this.rootElRef = $(), this.state = {
+    super(...arguments), this.cellElRefs = new X(), this.frameElRefs = new X(), this.fgElRefs = new X(), this.segHarnessRefs = new X(), this.rootElRef = U(), this.state = {
       framePositions: null,
       maxContentHeight: null,
       segHeights: {}
@@ -6945,7 +6945,7 @@ class hl extends Z {
           top: E ? p.absoluteTop : "",
           left: w,
           right: D
-        } }, al(v) ? g(dl, Object.assign({ seg: v, isDragging: s, isSelected: b === d, defaultDisplayEventEnd: f }, oe(v, r))) : g(cl, Object.assign({ seg: v, isDragging: s, isResizing: l, isDateSelecting: o, isSelected: b === d, defaultDisplayEventEnd: f }, oe(v, r)))));
+        } }, al(v) ? g(dl, Object.assign({ seg: v, isDragging: s, isSelected: b === d, defaultDisplayEventEnd: f }, ae(v, r))) : g(cl, Object.assign({ seg: v, isDragging: s, isResizing: l, isDateSelecting: o, isSelected: b === d, defaultDisplayEventEnd: f }, ae(v, r)))));
       }
     return u;
   }
@@ -6960,7 +6960,7 @@ class hl extends Z {
           left: 0,
           right: s.rights[o.firstCol] - s.rights[o.lastCol]
         };
-        l.push(g("div", { key: _s(o.eventRange), className: "fc-daygrid-bg-harness", style: a }, n === "bg-event" ? g(qs, Object.assign({ seg: o }, oe(o, i))) : Ys(n)));
+        l.push(g("div", { key: _s(o.eventRange), className: "fc-daygrid-bg-harness", style: a }, n === "bg-event" ? g(qs, Object.assign({ seg: o }, ae(o, i))) : Ys(n)));
       }
     return g(x, {}, ...l);
   }
@@ -7138,7 +7138,7 @@ function Qu(t) {
 }
 class Zu extends Z {
   constructor() {
-    super(...arguments), this.elRef = $(), this.needsScrollReset = !1;
+    super(...arguments), this.elRef = U(), this.needsScrollReset = !1;
   }
   render() {
     let { props: e } = this, { dayMaxEventRows: n, dayMaxEvents: r, expandRows: i } = e, s = r === !0 || n === !0;
@@ -7207,7 +7207,7 @@ class Ku extends zs {
 }
 class gl extends Z {
   constructor() {
-    super(...arguments), this.slicer = new Ku(), this.tableRef = $();
+    super(...arguments), this.slicer = new Ku(), this.tableRef = U();
   }
   render() {
     let { props: e, context: n } = this;
@@ -7216,7 +7216,7 @@ class gl extends Z {
 }
 class Ju extends Nu {
   constructor() {
-    super(...arguments), this.buildDayTableModel = A(ef), this.headerRef = $(), this.tableRef = $();
+    super(...arguments), this.buildDayTableModel = A(ef), this.headerRef = U(), this.tableRef = U();
   }
   render() {
     let { options: e, dateProfileGenerator: n } = this.context, { props: r } = this, i = this.buildDayTableModel(r.dateProfile, n), s = e.dayHeaders && g(Ls, { ref: this.headerRef, dateProfile: r.dateProfile, dates: i.headerDates, datesRepDistinctDays: i.rowCnt === 1 }), l = (o) => g(gl, { ref: this.tableRef, dateProfile: r.dateProfile, dayTableModel: i, businessHours: r.businessHours, dateSelection: r.dateSelection, eventStore: r.eventStore, eventUiBases: r.eventUiBases, eventSelection: r.eventSelection, eventDrag: r.eventDrag, eventResize: r.eventResize, nextDayThreshold: e.nextDayThreshold, colGroupNode: o.tableColGroupNode, tableMinWidth: o.tableMinWidth, dayMaxEvents: e.dayMaxEvents, dayMaxEventRows: e.dayMaxEventRows, showWeekNumbers: e.weekNumbers, expandRows: !r.isHeightAuto, headerAlignElRef: this.headerElRef, clientWidth: o.clientWidth, clientHeight: o.clientHeight, forPrint: r.forPrint });
@@ -7224,8 +7224,8 @@ class Ju extends Nu {
   }
 }
 function ef(t, e) {
-  let n = new Us(t.renderRange, e);
-  return new $s(n, /year|month|week/.test(t.currentRangeUnit));
+  let n = new $s(t.renderRange, e);
+  return new Us(n, /year|month|week/.test(t.currentRangeUnit));
 }
 class tf extends fs {
   // Computes the date range that will be rendered
@@ -7324,20 +7324,20 @@ class pl {
           deltaY: i - this.origPageY
         });
       }
-    }, this.containerEl = e, this.emitter = new $t(), e.addEventListener("mousedown", this.handleMouseDown), e.addEventListener("touchstart", this.handleTouchStart, { passive: !0 }), af();
+    }, this.containerEl = e, this.emitter = new Ut(), e.addEventListener("mousedown", this.handleMouseDown), e.addEventListener("touchstart", this.handleTouchStart, { passive: !0 }), af();
   }
   destroy() {
     this.containerEl.removeEventListener("mousedown", this.handleMouseDown), this.containerEl.removeEventListener("touchstart", this.handleTouchStart, { passive: !0 }), cf();
   }
   tryStart(e) {
     let n = this.querySubjectEl(e), r = e.target;
-    return n && (!this.handleSelector || U(r, this.handleSelector)) ? (this.subjectEl = n, this.isDragging = !0, this.wasTouchScroll = !1, !0) : !1;
+    return n && (!this.handleSelector || $(r, this.handleSelector)) ? (this.subjectEl = n, this.isDragging = !0, this.wasTouchScroll = !1, !0) : !1;
   }
   cleanup() {
     Cn = !1, this.isDragging = !1, this.subjectEl = null, this.destroyScrollWatch();
   }
   querySubjectEl(e) {
-    return this.selector ? U(e.target, this.selector) : this.containerEl;
+    return this.selector ? $(e.target, this.selector) : this.containerEl;
   }
   shouldIgnoreMouse() {
     return Dn || this.isTouchDragging;
@@ -7699,7 +7699,7 @@ class zt {
       this.releaseHits(), this.emitter.trigger("pointerup", r);
     }, this.handleDragEnd = (r) => {
       this.movingHit && this.emitter.trigger("hitupdate", null, !0, r), this.finalHit = this.movingHit, this.movingHit = null, this.emitter.trigger("dragend", r);
-    }, this.droppableStore = n, e.emitter.on("pointerdown", this.handlePointerDown), e.emitter.on("dragstart", this.handleDragStart), e.emitter.on("dragmove", this.handleDragMove), e.emitter.on("pointerup", this.handlePointerUp), e.emitter.on("dragend", this.handleDragEnd), this.dragging = e, this.emitter = new $t();
+    }, this.droppableStore = n, e.emitter.on("pointerdown", this.handlePointerDown), e.emitter.on("dragstart", this.handleDragStart), e.emitter.on("dragmove", this.handleDragMove), e.emitter.on("pointerup", this.handlePointerUp), e.emitter.on("dragend", this.handleDragEnd), this.dragging = e, this.emitter = new Ut();
   }
   // sets initialHit
   // sets coordAdjust
@@ -7848,8 +7848,8 @@ class tt extends Be {
       this.subjectEl = l.subjectEl;
       let u = this.subjectSeg = Ne(l.subjectEl), v = (this.eventRange = u.eventRange).instance.instanceId;
       this.relevantEvents = Fn(h.getCurrentData().eventStore, v), d.minDistance = l.isTouch ? 0 : f.eventDragMinDistance, d.delay = // only do a touch delay if touch and this event hasn't been selected yet
-      l.isTouch && v !== a.props.eventSelection ? Sf(a) : null, f.fixedMirrorParent ? c.parentNode = f.fixedMirrorParent : c.parentNode = U(o, ".fc"), c.revertDuration = f.dragRevertDuration;
-      let b = a.isValidSegDownEl(o) && !U(o, ".fc-event-resizer");
+      l.isTouch && v !== a.props.eventSelection ? Sf(a) : null, f.fixedMirrorParent ? c.parentNode = f.fixedMirrorParent : c.parentNode = $(o, ".fc"), c.revertDuration = f.dragRevertDuration;
+      let b = a.isValidSegDownEl(o) && !$(o, ".fc-event-resizer");
       d.setIgnoreMove(!b), this.isDragging = b && l.subjectEl.classList.contains("fc-event-draggable");
     }, this.handleDragStart = (l) => {
       let o = this.component.context, a = this.eventRange, d = a.instance.instanceId;
@@ -8056,7 +8056,7 @@ class Af extends Be {
     this.dragging.destroy();
   }
   querySegEl(e) {
-    return U(e.subjectEl, ".fc-event");
+    return $(e.subjectEl, ".fc-event");
   }
 }
 function wf(t, e, n, r) {
@@ -8074,7 +8074,7 @@ class Df {
       r.jsEvent && (this.isRecentPointerDateSelect = !0);
     }, this.onDocumentPointerDown = (r) => {
       let i = this.context.options.unselectCancel, s = Ki(r.origEvent);
-      this.matchesCancel = !!U(s, i), this.matchesEvent = !!U(s, tt.SELECTOR);
+      this.matchesCancel = !!$(s, i), this.matchesEvent = !!$(s, tt.SELECTOR);
     }, this.onDocumentPointerUp = (r) => {
       let { context: i } = this, { documentPointer: s } = this, l = i.getCurrentData();
       if (!s.wasTouchScroll) {
@@ -8184,7 +8184,7 @@ class kf extends R {
 const If = N({ week: "short" }), Nf = 5;
 class Of extends Z {
   constructor() {
-    super(...arguments), this.allDaySplitter = new Tf(), this.headerElRef = $(), this.rootElRef = $(), this.scrollerElRef = $(), this.state = {
+    super(...arguments), this.allDaySplitter = new Tf(), this.headerElRef = U(), this.rootElRef = U(), this.scrollerElRef = U(), this.state = {
       slatCoords: null
     }, this.handleScrollTopRequest = (e) => {
       let n = this.scrollerElRef.current;
@@ -8463,7 +8463,7 @@ class Bf extends R {
 }
 class Lf extends R {
   constructor() {
-    super(...arguments), this.rootElRef = $(), this.slatElRefs = new X();
+    super(...arguments), this.rootElRef = U(), this.slatElRefs = new X();
   }
   render() {
     let { props: e, context: n } = this;
@@ -8493,13 +8493,13 @@ class Lf extends R {
   }
   updateSizing() {
     let { context: e, props: n } = this;
-    n.onCoords && n.clientWidth !== null && this.rootElRef.current.offsetHeight && n.onCoords(new Hf(new Oe(this.rootElRef.current, Uf(this.slatElRefs.currentMap, n.slatMetas), !1, !0), this.props.dateProfile, e.options.slotDuration));
+    n.onCoords && n.clientWidth !== null && this.rootElRef.current.offsetHeight && n.onCoords(new Hf(new Oe(this.rootElRef.current, $f(this.slatElRefs.currentMap, n.slatMetas), !1, !0), this.props.dateProfile, e.options.slotDuration));
   }
 }
-function Uf(t, e) {
+function $f(t, e) {
   return e.map((n) => t[n.key]);
 }
-function $e(t, e) {
+function Ue(t, e) {
   let n = [], r;
   for (r = 0; r < e; r += 1)
     n.push([]);
@@ -8524,7 +8524,7 @@ function ui(t, e) {
       n[r] = null;
   return n;
 }
-class $f extends R {
+class Uf extends R {
   render() {
     let { props: e } = this;
     return g(Zs, { elClasses: ["fc-timegrid-more-link"], elStyle: {
@@ -8727,11 +8727,11 @@ class Xf extends R {
       null,
       this.renderHiddenGroups(w, e),
       E.map((D) => {
-        let { seg: O, rect: T } = D, k = O.eventRange.instance.instanceId, _ = b || !!(!n[k] && T), ne = cn(T && T.span), Ue = !b && T ? this.computeSegHStyle(T) : { left: 0, right: 0 }, xl = !!T && T.stackForward > 0, Ml = !!T && T.span.end - T.span.start < a;
+        let { seg: O, rect: T } = D, k = O.eventRange.instance.instanceId, _ = b || !!(!n[k] && T), ne = cn(T && T.span), $e = !b && T ? this.computeSegHStyle(T) : { left: 0, right: 0 }, xl = !!T && T.stackForward > 0, Ml = !!T && T.span.end - T.span.start < a;
         return g(
           "div",
-          { className: "fc-timegrid-event-harness" + (xl ? " fc-timegrid-event-harness-inset" : ""), key: l || k, style: Object.assign(Object.assign({ visibility: _ ? "" : "hidden" }, ne), Ue) },
-          g(Sl, Object.assign({ seg: O, isDragging: r, isResizing: i, isDateSelecting: s, isSelected: k === u, isShort: Ml }, oe(O, p, v)))
+          { className: "fc-timegrid-event-harness" + (xl ? " fc-timegrid-event-harness-inset" : ""), key: l || k, style: Object.assign(Object.assign({ visibility: _ ? "" : "hidden" }, ne), $e) },
+          g(Sl, Object.assign({ seg: O, isDragging: r, isResizing: i, isDateSelecting: s, isSelected: k === u, isShort: Ml }, ae(O, p, v)))
         );
       })
     );
@@ -8741,13 +8741,13 @@ class Xf extends R {
     let { extraDateSpan: r, dateProfile: i, todayRange: s, nowDate: l, eventSelection: o, eventDrag: a, eventResize: d } = this.props;
     return g(x, null, e.map((c) => {
       let f = cn(c.span), h = Kf(c.entries, n);
-      return g($f, { key: rs(Xs(h)), hiddenSegs: h, top: f.top, bottom: f.bottom, extraDateSpan: r, dateProfile: i, todayRange: s, nowDate: l, eventSelection: o, eventDrag: a, eventResize: d });
+      return g(Uf, { key: rs(Xs(h)), hiddenSegs: h, top: f.top, bottom: f.bottom, extraDateSpan: r, dateProfile: i, todayRange: s, nowDate: l, eventSelection: o, eventDrag: a, eventResize: d });
     }));
   }
   renderFillSegs(e, n) {
     let { props: r, context: i } = this, l = hi(e, r.date, r.slatCoords, i.options.eventMinHeight).map((o, a) => {
       let d = e[a];
-      return g("div", { key: _s(d.eventRange), className: "fc-timegrid-bg-harness", style: cn(o) }, n === "bg-event" ? g(qs, Object.assign({ seg: d }, oe(d, r.todayRange, r.nowDate))) : Ys(n));
+      return g("div", { key: _s(d.eventRange), className: "fc-timegrid-bg-harness", style: cn(o) }, n === "bg-event" ? g(qs, Object.assign({ seg: d }, ae(d, r.todayRange, r.nowDate))) : Ys(n));
     });
     return g(x, null, l);
   }
@@ -8785,7 +8785,7 @@ function Al(t, { todayRange: e, nowDate: n, eventSelection: r, eventDrag: i, eve
     return g(
       "div",
       { key: a, style: { visibility: l[a] ? "hidden" : "" } },
-      g(Sl, Object.assign({ seg: o, isDragging: !1, isResizing: !1, isDateSelecting: !1, isSelected: a === r, isShort: !1 }, oe(o, e, n)))
+      g(Sl, Object.assign({ seg: o, isDragging: !1, isResizing: !1, isDateSelecting: !1, isSelected: a === r, isShort: !1 }, ae(o, e, n)))
     );
   }));
 }
@@ -8800,7 +8800,7 @@ function Kf(t, e) {
 }
 class Jf extends R {
   constructor() {
-    super(...arguments), this.splitFgEventSegs = A($e), this.splitBgEventSegs = A($e), this.splitBusinessHourSegs = A($e), this.splitNowIndicatorSegs = A($e), this.splitDateSelectionSegs = A($e), this.splitEventDrag = A(ui), this.splitEventResize = A(ui), this.rootElRef = $(), this.cellElRefs = new X();
+    super(...arguments), this.splitFgEventSegs = A(Ue), this.splitBgEventSegs = A(Ue), this.splitBusinessHourSegs = A(Ue), this.splitNowIndicatorSegs = A(Ue), this.splitDateSelectionSegs = A(Ue), this.splitEventDrag = A(ui), this.splitEventResize = A(ui), this.rootElRef = U(), this.cellElRefs = new X();
   }
   render() {
     let { props: e, context: n } = this, r = n.options.nowIndicator && e.slatCoords && e.slatCoords.safeComputeTop(e.nowDate), i = e.cells.length, s = this.splitFgEventSegs(e.fgEventSegs, i), l = this.splitBgEventSegs(e.bgEventSegs, i), o = this.splitBusinessHourSegs(e.businessHourSegs, i), a = this.splitNowIndicatorSegs(e.nowIndicatorSegs, i), d = this.splitDateSelectionSegs(e.dateSelectionSegs, i), c = this.splitEventDrag(e.eventDrag, i), f = this.splitEventResize(e.eventResize, i);
@@ -8945,7 +8945,7 @@ class rh extends zs {
 }
 class ih extends Z {
   constructor() {
-    super(...arguments), this.buildDayRanges = A(sh), this.slicer = new rh(), this.timeColsRef = $();
+    super(...arguments), this.buildDayRanges = A(sh), this.slicer = new rh(), this.timeColsRef = U();
   }
   render() {
     let { props: e, context: n } = this, { dateProfile: r, dayTableModel: i } = e, { nowIndicator: s, nextDayThreshold: l } = n.options, o = this.buildDayRanges(i, r, n.dateEnv);
@@ -8976,7 +8976,7 @@ function lh(t, e, n, r, i) {
       date: c,
       time: l,
       key: c.toISOString(),
-      isoTimeStr: Uo(c),
+      isoTimeStr: $o(c),
       isLabeled: f
     }), l = gn(l, r), o = gn(o, r);
   }
@@ -8999,8 +8999,8 @@ class ah extends Of {
   }
 }
 function ch(t, e) {
-  let n = new Us(t.renderRange, e);
-  return new $s(n, !1);
+  let n = new $s(t.renderRange, e);
+  return new Us(n, !1);
 }
 var dh = '.fc-v-event{background-color:var(--fc-event-bg-color);border:1px solid var(--fc-event-border-color);display:block}.fc-v-event .fc-event-main{color:var(--fc-event-text-color);height:100%}.fc-v-event .fc-event-main-frame{display:flex;flex-direction:column;height:100%}.fc-v-event .fc-event-time{flex-grow:0;flex-shrink:0;max-height:100%;overflow:hidden}.fc-v-event .fc-event-title-container{flex-grow:1;flex-shrink:1;min-height:0}.fc-v-event .fc-event-title{bottom:0;max-height:100%;overflow:hidden;top:0}.fc-v-event:not(.fc-event-start){border-top-left-radius:0;border-top-right-radius:0;border-top-width:0}.fc-v-event:not(.fc-event-end){border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom-width:0}.fc-v-event.fc-event-selected:before{left:-10px;right:-10px}.fc-v-event .fc-event-resizer-start{cursor:n-resize}.fc-v-event .fc-event-resizer-end{cursor:s-resize}.fc-v-event:not(.fc-event-selected) .fc-event-resizer{height:var(--fc-event-resizer-thickness);left:0;right:0}.fc-v-event:not(.fc-event-selected) .fc-event-resizer-start{top:calc(var(--fc-event-resizer-thickness)/-2)}.fc-v-event:not(.fc-event-selected) .fc-event-resizer-end{bottom:calc(var(--fc-event-resizer-thickness)/-2)}.fc-v-event.fc-event-selected .fc-event-resizer{left:50%;margin-left:calc(var(--fc-event-resizer-dot-total-width)/-2)}.fc-v-event.fc-event-selected .fc-event-resizer-start{top:calc(var(--fc-event-resizer-dot-total-width)/-2)}.fc-v-event.fc-event-selected .fc-event-resizer-end{bottom:calc(var(--fc-event-resizer-dot-total-width)/-2)}.fc .fc-timegrid .fc-daygrid-body{z-index:2}.fc .fc-timegrid-divider{padding:0 0 2px}.fc .fc-timegrid-body{min-height:100%;position:relative;z-index:1}.fc .fc-timegrid-axis-chunk{position:relative}.fc .fc-timegrid-axis-chunk>table,.fc .fc-timegrid-slots{position:relative;z-index:1}.fc .fc-timegrid-slot{border-bottom:0;height:1.5em}.fc .fc-timegrid-slot:empty:before{content:"\\00a0"}.fc .fc-timegrid-slot-minor{border-top-style:dotted}.fc .fc-timegrid-slot-label-cushion{display:inline-block;white-space:nowrap}.fc .fc-timegrid-slot-label{vertical-align:middle}.fc .fc-timegrid-axis-cushion,.fc .fc-timegrid-slot-label-cushion{padding:0 4px}.fc .fc-timegrid-axis-frame-liquid{height:100%}.fc .fc-timegrid-axis-frame{align-items:center;display:flex;justify-content:flex-end;overflow:hidden}.fc .fc-timegrid-axis-cushion{flex-shrink:0;max-width:60px}.fc-direction-ltr .fc-timegrid-slot-label-frame{text-align:right}.fc-direction-rtl .fc-timegrid-slot-label-frame{text-align:left}.fc-liquid-hack .fc-timegrid-axis-frame-liquid{bottom:0;height:auto;left:0;position:absolute;right:0;top:0}.fc .fc-timegrid-col.fc-day-today{background-color:var(--fc-today-bg-color)}.fc .fc-timegrid-col-frame{min-height:100%;position:relative}.fc-media-screen.fc-liquid-hack .fc-timegrid-col-frame{bottom:0;height:auto;left:0;position:absolute;right:0;top:0}.fc-media-screen .fc-timegrid-cols{bottom:0;left:0;position:absolute;right:0;top:0}.fc-media-screen .fc-timegrid-cols>table{height:100%}.fc-media-screen .fc-timegrid-col-bg,.fc-media-screen .fc-timegrid-col-events,.fc-media-screen .fc-timegrid-now-indicator-container{left:0;position:absolute;right:0;top:0}.fc .fc-timegrid-col-bg{z-index:2}.fc .fc-timegrid-col-bg .fc-non-business{z-index:1}.fc .fc-timegrid-col-bg .fc-bg-event{z-index:2}.fc .fc-timegrid-col-bg .fc-highlight{z-index:3}.fc .fc-timegrid-bg-harness{left:0;position:absolute;right:0}.fc .fc-timegrid-col-events{z-index:3}.fc .fc-timegrid-now-indicator-container{bottom:0;overflow:hidden}.fc-direction-ltr .fc-timegrid-col-events{margin:0 2.5% 0 2px}.fc-direction-rtl .fc-timegrid-col-events{margin:0 2px 0 2.5%}.fc-timegrid-event-harness{position:absolute}.fc-timegrid-event-harness>.fc-timegrid-event{bottom:0;left:0;position:absolute;right:0;top:0}.fc-timegrid-event-harness-inset .fc-timegrid-event,.fc-timegrid-event.fc-event-mirror,.fc-timegrid-more-link{box-shadow:0 0 0 1px var(--fc-page-bg-color)}.fc-timegrid-event,.fc-timegrid-more-link{border-radius:3px;font-size:var(--fc-small-font-size)}.fc-timegrid-event{margin-bottom:1px}.fc-timegrid-event .fc-event-main{padding:1px 1px 0}.fc-timegrid-event .fc-event-time{font-size:var(--fc-small-font-size);margin-bottom:1px;white-space:nowrap}.fc-timegrid-event-short .fc-event-main-frame{flex-direction:row;overflow:hidden}.fc-timegrid-event-short .fc-event-time:after{content:"\\00a0-\\00a0"}.fc-timegrid-event-short .fc-event-title{font-size:var(--fc-small-font-size)}.fc-timegrid-more-link{background:var(--fc-more-link-bg-color);color:var(--fc-more-link-text-color);cursor:pointer;margin-bottom:1px;position:absolute;z-index:9999}.fc-timegrid-more-link-inner{padding:3px 2px;top:0}.fc-direction-ltr .fc-timegrid-more-link{right:0}.fc-direction-rtl .fc-timegrid-more-link{left:0}.fc .fc-timegrid-now-indicator-arrow,.fc .fc-timegrid-now-indicator-line{pointer-events:none}.fc .fc-timegrid-now-indicator-line{border-color:var(--fc-now-indicator-color);border-style:solid;border-width:1px 0 0;left:0;position:absolute;right:0;z-index:4}.fc .fc-timegrid-now-indicator-arrow{border-color:var(--fc-now-indicator-color);border-style:solid;margin-top:-5px;position:absolute;z-index:4}.fc-direction-ltr .fc-timegrid-now-indicator-arrow{border-bottom-color:transparent;border-top-color:transparent;border-width:5px 0 5px 6px;left:0}.fc-direction-rtl .fc-timegrid-now-indicator-arrow{border-bottom-color:transparent;border-top-color:transparent;border-width:5px 6px 5px 0;right:0}';
 Rn(dh);
@@ -9279,9 +9279,9 @@ let Re = class extends HTMLElement {
   }
 };
 Re.elementStyles = [], Re.shadowRootOptions = { mode: "open" }, Re[Ve("elementProperties")] = /* @__PURE__ */ new Map(), Re[Ve("finalized")] = /* @__PURE__ */ new Map(), Ah?.({ ReactiveElement: Re }), (jt.reactiveElementVersions ??= []).push("2.1.2");
-const cr = globalThis, yi = (t) => t, Ot = cr.trustedTypes, Ei = Ot ? Ot.createPolicy("lit-html", { createHTML: (t) => t }) : void 0, Cl = "$lit$", re = `lit$${Math.random().toFixed(9).slice(2)}$`, _l = "?" + re, wh = `<${_l}>`, Ae = document, Ze = () => Ae.createComment(""), Xe = (t) => t === null || typeof t != "object" && typeof t != "function", dr = Array.isArray, Dh = (t) => dr(t) || typeof t?.[Symbol.iterator] == "function", dn = `[ 	
-\f\r]`, ze = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, Si = /-->/g, Ai = />/g, ue = RegExp(`>|${dn}(?:([^\\s"'>=/]+)(${dn}*=${dn}*(?:[^ 	
-\f\r"'\`<>=]|("|')|))|$)`, "g"), wi = /'/g, Di = /"/g, Rl = /^(?:script|style|textarea|title)$/i, Ch = (t) => (e, ...n) => ({ _$litType$: t, strings: e, values: n }), fe = Ch(1), Pe = /* @__PURE__ */ Symbol.for("lit-noChange"), H = /* @__PURE__ */ Symbol.for("lit-nothing"), Ci = /* @__PURE__ */ new WeakMap(), me = Ae.createTreeWalker(Ae, 129);
+const cr = globalThis, yi = (t) => t, Ot = cr.trustedTypes, Ei = Ot ? Ot.createPolicy("lit-html", { createHTML: (t) => t }) : void 0, Cl = "$lit$", ie = `lit$${Math.random().toFixed(9).slice(2)}$`, _l = "?" + ie, wh = `<${_l}>`, Ae = document, Ze = () => Ae.createComment(""), Xe = (t) => t === null || typeof t != "object" && typeof t != "function", dr = Array.isArray, Dh = (t) => dr(t) || typeof t?.[Symbol.iterator] == "function", dn = `[ 	
+\f\r]`, ze = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, Si = /-->/g, Ai = />/g, fe = RegExp(`>|${dn}(?:([^\\s"'>=/]+)(${dn}*=${dn}*(?:[^ 	
+\f\r"'\`<>=]|("|')|))|$)`, "g"), wi = /'/g, Di = /"/g, Rl = /^(?:script|style|textarea|title)$/i, Ch = (t) => (e, ...n) => ({ _$litType$: t, strings: e, values: n }), re = Ch(1), Pe = /* @__PURE__ */ Symbol.for("lit-noChange"), H = /* @__PURE__ */ Symbol.for("lit-nothing"), Ci = /* @__PURE__ */ new WeakMap(), me = Ae.createTreeWalker(Ae, 129);
 function Tl(t, e) {
   if (!dr(t) || !t.hasOwnProperty("raw")) throw Error("invalid template strings array");
   return Ei !== void 0 ? Ei.createHTML(e) : e;
@@ -9292,9 +9292,9 @@ const _h = (t, e) => {
   for (let o = 0; o < n; o++) {
     const a = t[o];
     let d, c, f = -1, h = 0;
-    for (; h < a.length && (l.lastIndex = h, c = l.exec(a), c !== null); ) h = l.lastIndex, l === ze ? c[1] === "!--" ? l = Si : c[1] !== void 0 ? l = Ai : c[2] !== void 0 ? (Rl.test(c[2]) && (i = RegExp("</" + c[2], "g")), l = ue) : c[3] !== void 0 && (l = ue) : l === ue ? c[0] === ">" ? (l = i ?? ze, f = -1) : c[1] === void 0 ? f = -2 : (f = l.lastIndex - c[2].length, d = c[1], l = c[3] === void 0 ? ue : c[3] === '"' ? Di : wi) : l === Di || l === wi ? l = ue : l === Si || l === Ai ? l = ze : (l = ue, i = void 0);
-    const u = l === ue && t[o + 1].startsWith("/>") ? " " : "";
-    s += l === ze ? a + wh : f >= 0 ? (r.push(d), a.slice(0, f) + Cl + a.slice(f) + re + u) : a + re + (f === -2 ? o : u);
+    for (; h < a.length && (l.lastIndex = h, c = l.exec(a), c !== null); ) h = l.lastIndex, l === ze ? c[1] === "!--" ? l = Si : c[1] !== void 0 ? l = Ai : c[2] !== void 0 ? (Rl.test(c[2]) && (i = RegExp("</" + c[2], "g")), l = fe) : c[3] !== void 0 && (l = fe) : l === fe ? c[0] === ">" ? (l = i ?? ze, f = -1) : c[1] === void 0 ? f = -2 : (f = l.lastIndex - c[2].length, d = c[1], l = c[3] === void 0 ? fe : c[3] === '"' ? Di : wi) : l === Di || l === wi ? l = fe : l === Si || l === Ai ? l = ze : (l = fe, i = void 0);
+    const u = l === fe && t[o + 1].startsWith("/>") ? " " : "";
+    s += l === ze ? a + wh : f >= 0 ? (r.push(d), a.slice(0, f) + Cl + a.slice(f) + ie + u) : a + ie + (f === -2 ? o : u);
   }
   return [Tl(t, s + (t[n] || "<?>") + (e === 2 ? "</svg>" : e === 3 ? "</math>" : "")), r];
 };
@@ -9311,11 +9311,11 @@ class Ke {
     for (; (i = me.nextNode()) !== null && a.length < o; ) {
       if (i.nodeType === 1) {
         if (i.hasAttributes()) for (const f of i.getAttributeNames()) if (f.endsWith(Cl)) {
-          const h = c[l++], u = i.getAttribute(f).split(re), p = /([.?@])?(.*)/.exec(h);
+          const h = c[l++], u = i.getAttribute(f).split(ie), p = /([.?@])?(.*)/.exec(h);
           a.push({ type: 1, index: s, name: p[2], strings: u, ctor: p[1] === "." ? Th : p[1] === "?" ? xh : p[1] === "@" ? Mh : Wt }), i.removeAttribute(f);
-        } else f.startsWith(re) && (a.push({ type: 6, index: s }), i.removeAttribute(f));
+        } else f.startsWith(ie) && (a.push({ type: 6, index: s }), i.removeAttribute(f));
         if (Rl.test(i.tagName)) {
-          const f = i.textContent.split(re), h = f.length - 1;
+          const f = i.textContent.split(ie), h = f.length - 1;
           if (h > 0) {
             i.textContent = Ot ? Ot.emptyScript : "";
             for (let u = 0; u < h; u++) i.append(f[u], Ze()), me.nextNode(), a.push({ type: 2, index: ++s });
@@ -9325,7 +9325,7 @@ class Ke {
       } else if (i.nodeType === 8) if (i.data === _l) a.push({ type: 2, index: s });
       else {
         let f = -1;
-        for (; (f = i.data.indexOf(re, f + 1)) !== -1; ) a.push({ type: 7, index: s }), f += re.length - 1;
+        for (; (f = i.data.indexOf(ie, f + 1)) !== -1; ) a.push({ type: 7, index: s }), f += ie.length - 1;
       }
       s++;
     }
@@ -9567,7 +9567,7 @@ function V(t) {
   return fr({ ...t, state: !0, attribute: !1 });
 }
 const Lh = (t, e, n) => (n.configurable = !0, n.enumerable = !0, Reflect.decorate && typeof e != "object" && Object.defineProperty(t, e, n), n);
-function Uh(t, e) {
+function $h(t, e) {
   return (n, r, i) => {
     const s = (l) => l.renderRoot?.querySelector(t) ?? null;
     return Lh(n, r, { get() {
@@ -9575,7 +9575,7 @@ function Uh(t, e) {
     } });
   };
 }
-const $h = Dl`
+const Uh = Dl`
   :host {
     display: block;
     width: 100%;
@@ -9940,10 +9940,11 @@ let P = class extends Ge {
   }
   // ---------------------------------------------------------------- Rendering
   render() {
-    return fe`
+    return re`
       <ha-card>
         <div class="header">
           <div class="filters">
+            ${this.config?.links?.map((t) => this.renderLink(t))}
             ${this.config?.entities?.map((t) => this.renderFilterChip(t))}
             <div style="flex: 1"></div>
             <button
@@ -9961,9 +9962,28 @@ let P = class extends Ge {
       </ha-card>
     `;
   }
+  /** Kleine Symbolschaltflaeche, etwa zu einer anderen Ansicht. */
+  renderLink(t) {
+    return re`
+      <button
+        class="link-button"
+        title=${t.name ?? t.path}
+        aria-label=${t.name ?? t.path}
+        @click=${() => this.navigate(t.path)}
+      >
+        <ha-icon .icon=${t.icon}></ha-icon>
+      </button>
+    `;
+  }
+  /** Wechselt die Ansicht, ohne die Seite neu zu laden. */
+  navigate(t) {
+    history.pushState(null, "", t), window.dispatchEvent(
+      new CustomEvent("location-changed", { bubbles: !0, composed: !0 })
+    );
+  }
   renderFilterChip(t) {
     const e = this.config.colors?.[t] ?? _i, n = this.activeCalendars.includes(t);
-    return fe`
+    return re`
       <button
         class="filter-chip ${n ? "active" : ""}"
         style="--chip-color: ${e}"
@@ -9975,9 +9995,9 @@ let P = class extends Ge {
     `;
   }
   renderModal() {
-    if (!this.showModal) return fe``;
+    if (!this.showModal) return re``;
     const t = this.isAllDay ? "date" : "datetime-local";
-    return fe`
+    return re`
       <div class="modal-overlay" @click=${() => this.closeModal()}>
         <div class="modal-content" @click=${(e) => e.stopPropagation()}>
           <h3>${this.editMode ? "Termin bearbeiten" : "Neuer Termin"}</h3>
@@ -10001,7 +10021,7 @@ let P = class extends Ge {
               ?disabled=${this.editMode}
             >
               ${this.config.entities.map(
-      (e) => fe`<option value=${e}>${this.friendlyName(e)}</option>`
+      (e) => re`<option value=${e}>${this.friendlyName(e)}</option>`
     )}
             </select>
           </div>
@@ -10064,13 +10084,13 @@ let P = class extends Ge {
   }
   /** Zweistufiges Loeschen statt confirm(): erst Klick, dann Bestaetigung. */
   renderDeleteButton() {
-    return this.confirmDelete ? fe`
+    return this.confirmDelete ? re`
       <button class="btn-delete btn-delete--confirm" @click=${() => {
       this.deleteEvent();
     }}>
         Wirklich löschen?
       </button>
-    ` : fe`
+    ` : re`
         <button class="btn-delete" @click=${() => this.confirmDelete = !0}>Löschen</button>
       `;
   }
@@ -10083,6 +10103,14 @@ let P = class extends Ge {
         locale: Iu,
         selectable: !0,
         selectMirror: !0,
+        editable: !0,
+        eventDurationEditable: !0,
+        eventDrop: (t) => {
+          this.handleEventMoved(t);
+        },
+        eventResize: (t) => {
+          this.handleEventMoved(t);
+        },
         select: (t) => this.handleDateSelect(t),
         eventClick: (t) => this.handleEventClick(t),
         headerToolbar: {
@@ -10194,6 +10222,40 @@ let P = class extends Ge {
     const e = t.event, n = e.extendedProps;
     this.editMode = !0, this.confirmDelete = !1, this.isAllDay = e.allDay, this.currentEventId = n.uid || (e.id ?? ""), this.currentRecurrenceId = n.recurrenceId, this.newEventTitle = e.title, this.newEventCalendar = n.entityId, this.newEventStart = this.formatForInput(e.start, e.allDay), this.newEventEnd = this.formatForInput(e.end ?? e.start, e.allDay), this.newEventRecurrence = "", this.showModal = !0;
   }
+  /** Termin wurde gezogen oder in der Dauer geaendert. */
+  async handleEventMoved(t) {
+    const e = t.event, n = e.extendedProps;
+    if (!n.uid) {
+      t.revert(), this.notify("Dieser Termin hat keine Kennung und lässt sich nicht verschieben.");
+      return;
+    }
+    const r = {
+      summary: e.title,
+      dtstart: this.formatForApi(e.start, e.allDay),
+      dtend: this.formatForApi(e.end ?? e.start, e.allDay)
+    };
+    try {
+      await this.hass.callWS({
+        type: "calendar/event/update",
+        entity_id: n.entityId,
+        uid: n.uid,
+        // Beim Ziehen wird genau diese Instanz verschoben, nicht die ganze
+        // Serie - deshalb ohne recurrence_range.
+        ...n.recurrenceId ? { recurrence_id: n.recurrenceId } : {},
+        event: r
+      }), this.scheduleFetch();
+    } catch (i) {
+      t.revert(), console.error("Family Calendar: Verschieben fehlgeschlagen", i), this.notify(`Termin konnte nicht verschoben werden: ${this.errorText(i)}`);
+    }
+  }
+  /** Zeitangabe fuer die Kalender-Schnittstelle: lokal, ohne Zeitzone. */
+  formatForApi(t, e) {
+    if (!t) return "";
+    const n = new Date(t);
+    n.setMinutes(n.getMinutes() - n.getTimezoneOffset());
+    const r = n.toISOString();
+    return e ? r.slice(0, 10) : r.slice(0, 19);
+  }
   closeModal() {
     this.showModal = !1, this.editMode = !1, this.confirmDelete = !1, this.isAllDay = !1, this.currentEventId = "", this.currentRecurrenceId = "", this.newEventTitle = "", this.newEventCalendar = "", this.newEventStart = "", this.newEventEnd = "", this.newEventRecurrence = "";
   }
@@ -10295,8 +10357,29 @@ let P = class extends Ge {
   }
 };
 P.styles = [
-  $h,
+  Uh,
   Dl`
+      .link-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.55);
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s;
+      }
+      .link-button:hover {
+        background: rgba(255, 255, 255, 0.9);
+        color: var(--text-primary);
+      }
+      .link-button ha-icon {
+        --mdc-icon-size: 20px;
+      }
       .form-group--inline label {
         display: flex;
         align-items: center;
@@ -10363,7 +10446,7 @@ L([
   V()
 ], P.prototype, "newEventRecurrence", 2);
 L([
-  Uh("#calendar")
+  $h("#calendar")
 ], P.prototype, "calendarEl", 2);
 P = L([
   Ph("family-calendar")

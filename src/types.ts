@@ -7,6 +7,18 @@ export interface CalendarConfig {
   colors?: Record<string, string>;
   /** Wiederholungen pro Sekunde, mit denen auf hass-Updates reagiert wird. */
   refreshDebounceMs?: number;
+  /** Kleine Symbolschaltflaechen links in der Kopfzeile. */
+  links?: CardLink[];
+}
+
+/** Ein Sprungziel in der Kopfzeile, etwa eine andere Dashboard-Ansicht. */
+export interface CardLink {
+  /** Material-Design-Symbol, z. B. "mdi:cog". */
+  icon: string;
+  /** Pfad innerhalb von Home Assistant, z. B. "/dashboard-wand/planer". */
+  path: string;
+  /** Beschriftung fuer Sprachausgabe und Kurzhinweis. */
+  name?: string;
 }
 
 /** Ein Event, wie es die REST-API /api/calendars/<entity_id> liefert. */
