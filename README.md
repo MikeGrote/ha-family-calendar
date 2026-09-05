@@ -26,19 +26,23 @@ A modern, powerful calendar card for Home Assistant, inspired by modern calendar
 #### Via HACS (Recommended)
 
 1.  Add this repository as a **Custom Repository** in HACS:
-    *   HACS > Frontend > 3 dots (top right) > Custom Repositories
+    *   HACS > 3 dots (top right) > Custom Repositories
     *   URL: `https://github.com/MikeGrote/ha-family-calendar`
-    *   Category: **Dashboard**
-2.  Click "Install".
-3.  Reload your dashboard.
+    *   Category: **Integration**
+2.  Click "Install", then restart Home Assistant.
+3.  Go to Settings > Devices & Services > Add Integration and add
+    **Family Calendar**.
+
+The integration serves the card and registers it as a Lovelace resource
+automatically - no manual resource entry needed.
 
 #### Manual
 
-1.  Download the `family-calendar.js` file.
-2.  Copy it to your `config/www/` folder.
-3.  Add it under Settings > Dashboards > Resources:
-    *   URL: `/local/family-calendar.js`
-    *   Type: JavaScript Module
+1.  Copy the `custom_components/calendar_service_ext/` folder into your
+    `config/custom_components/` directory.
+2.  Restart Home Assistant.
+3.  Add the **Family Calendar** integration under
+    Settings > Devices & Services.
 
 ### Configuration
 
@@ -54,15 +58,20 @@ colors:
   calendar.privat: "#0078d4"
   calendar.arbeit: "#d93025"
   calendar.familie: "#107c10"
+# Optional: Entprellung der Aktualisierung in Millisekunden (Standard 500)
+refreshDebounceMs: 500
 ```
 
 ### Development
 
 ```bash
 npm install
-npm run dev   # Starts local test server
-npm run build # Builds family-calendar.js
+npm run check  # Typecheck + ESLint + Ruff
+npm run dev    # Starts local test server
+npm run build  # Builds family-calendar.js
 ```
+
+All checks must pass before the card is deployed.
 
 ### License
 
@@ -104,19 +113,23 @@ Eine moderne, leistungsstarke Kalender-Karte für Home Assistant, inspiriert von
 #### Über HACS (Empfohlen)
 
 1.  Füge dieses Repository als **Benutzerdefiniertes Repository** in HACS hinzu:
-    *   HACS > Frontend > 3 Punkte (oben rechts) > Benutzerdefinierte Repositories
+    *   HACS > 3 Punkte (oben rechts) > Benutzerdefinierte Repositories
     *   URL: `https://github.com/MikeGrote/ha-family-calendar`
-    *   Kategorie: **Dashboard**
-2.  Klicke auf "Installieren".
-3.  Lade dein Dashboard neu.
+    *   Kategorie: **Integration**
+2.  Klicke auf "Installieren" und starte Home Assistant neu.
+3.  Füge unter Einstellungen > Geräte & Dienste > Integration hinzufügen
+    die Integration **Family Calendar** hinzu.
+
+Die Integration liefert die Karte aus und registriert sie automatisch als
+Lovelace-Ressource - ein manueller Ressourcen-Eintrag ist nicht nötig.
 
 #### Manuell
 
-1.  Lade die Datei `family-calendar.js` herunter.
-2.  Kopiere sie in deinen `config/www/` Ordner.
-3.  Füge sie unter Einstellungen > Dashboards > Ressourcen hinzu:
-    *   URL: `/local/family-calendar.js`
-    *   Typ: JavaScript Modul
+1.  Kopiere den Ordner `custom_components/calendar_service_ext/` in dein
+    Verzeichnis `config/custom_components/`.
+2.  Starte Home Assistant neu.
+3.  Füge die Integration **Family Calendar** unter
+    Einstellungen > Geräte & Dienste hinzu.
 
 ### Konfiguration
 
@@ -132,15 +145,20 @@ colors:
   calendar.privat: "#0078d4"
   calendar.arbeit: "#d93025"
   calendar.familie: "#107c10"
+# Optional: Entprellung der Aktualisierung in Millisekunden (Standard 500)
+refreshDebounceMs: 500
 ```
 
 ### Entwicklung
 
 ```bash
 npm install
-npm run dev   # Startet lokalen Test-Server
-npm run build # Erstellt die family-calendar.js
+npm run check  # Typecheck + ESLint + Ruff
+npm run dev    # Startet lokalen Test-Server
+npm run build  # Erstellt die family-calendar.js
 ```
+
+Alle Checks müssen grün sein, bevor die Karte deployt wird.
 
 ### Lizenz
 
