@@ -3,11 +3,41 @@
     "step": {
       "user": {
         "title": "Family Calendar",
-        "description": "Registers the Family Calendar card in the frontend. There is nothing to configure - just confirm."
+        "description": "Registers the Family Calendar card in the frontend. Invitation sync can be set up afterwards under Configure."
       }
     },
     "abort": {
       "single_instance_allowed": "Family Calendar is already set up."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Import invitations from a mailbox",
+        "description": "Invite an address of this mailbox as an attendee and the event appears in the mapped calendar. Routing uses plus addressing: an invitation to mailbox+mike@… lands in the calendar mapped to the tag mike.",
+        "data": {
+          "invite_enabled": "Invitation sync enabled",
+          "imap_server": "IMAP server",
+          "imap_port": "Port",
+          "imap_username": "Username",
+          "imap_password": "Password or app password",
+          "imap_folder": "Folder",
+          "poll_interval": "Check every … minutes",
+          "calendar_mapping": "Mapping",
+          "fallback_calendar": "Fallback calendar",
+          "allowed_senders": "Allowed senders"
+        },
+        "data_description": {
+          "imap_password": "Gmail requires an app password; the regular account password will not work.",
+          "calendar_mapping": "One line per calendar, in the form: mike = calendar.mike",
+          "fallback_calendar": "Where invitations go whose plus tag is not in the mapping. Leave empty to discard them.",
+          "allowed_senders": "Comma-separated addresses. Leaving this empty means anyone who knows the mailbox address can add events."
+        }
+      }
+    },
+    "error": {
+      "invalid_mapping": "Each line must read tag = calendar.entity.",
+      "credentials_required": "Username and password are required for the sync."
     }
   }
 }

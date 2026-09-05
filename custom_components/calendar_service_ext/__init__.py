@@ -1,9 +1,12 @@
-"""Family Calendar - Lovelace-Karte plus Erweiterungspunkt fuer eigene Logik.
+"""Family Calendar - Lovelace-Karte plus Einladungs-Abgleich.
 
 Die Integration liefert das Frontend-Bundle aus und registriert es automatisch
-als Lovelace-Resource. Ein eigener Loeschservice wird bewusst nicht mehr
-angeboten: Home Assistant Core bringt dafuer den WebSocket-Befehl
-``calendar/event/delete`` mit, den die Karte direkt aufruft.
+als Lovelace-Resource. Optional traegt sie Besprechungsanfragen, die an ein
+ueberwachtes Postfach gehen, in die passenden Kalender ein.
+
+Einen eigenen Loeschservice gibt es bewusst nicht: Home Assistant Core bringt
+dafuer den WebSocket-Befehl ``calendar/event/delete`` mit, den die Karte
+direkt aufruft.
 """
 
 from __future__ import annotations
@@ -16,7 +19,8 @@ from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 
-from .const import DOMAIN, FRONTEND_SCRIPT, URL_BASE
+from .const import CONF_ENABLED, DOMAIN, FRONTEND_SCRIPT, URL_BASE
+from .invite_sync import InviteSync
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -28,16 +32,25 @@ _FRONTEND_REGISTERED = f"{DOMAIN}_frontend_registered"
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Richte die Integration aus einem Config Entry ein."""
     await _async_register_frontend(hass)
+
+    if entry.options.get(CONF_ENABLED):
+        sync = InviteSync(hass, entry)
+        await sync.async_start()
+        hass.data.setdefault(DOMAIN, {})[entry.entry_id] = sync
+
     entry.async_on_unload(entry.add_update_listener(_async_update_listener))
     return True
 
 
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:  # noqa: ARG001
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Entlade den Config Entry.
 
     Static Path und JS-URL bleiben bestehen: Home Assistant kann beides zur
     Laufzeit nicht zurueckziehen. Ein Neustart raeumt sie ab.
     """
+    sync: InviteSync | None = hass.data.get(DOMAIN, {}).pop(entry.entry_id, None)
+    if sync is not None:
+        sync.async_stop()
     return True
 
 

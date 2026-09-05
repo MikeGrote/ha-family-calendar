@@ -7,17 +7,39 @@
 <a name="english"></a>
 ## English
 
-> ⚠️ **Note:** This is a very early **Alpha version**. It may contain bugs and is subject to change. Use at your own risk.
+> ⚠️ **Note:** This is an early **Alpha version**. It may contain bugs and is
+> subject to change. Use at your own risk.
 
-A modern, powerful calendar card for Home Assistant, inspired by modern calendar apps.
+A calendar card for Home Assistant, plus an optional bridge that turns meeting
+invitations into calendar entries.
 
-### Features ✨
+### Features
 
-*   **Real Week View:** Timetable grid instead of a simple list.
-*   **Modern Glass Design:** Modern UI with blur effects and smooth animations.
-*   **Compact Mode:** Switchable to a space-saving list view ("Agenda").
-*   **Live Data:** Uses the WebSocket API for instant updates.
-*   **Filters:** Calendars can be toggled individually.
+**Calendar card**
+
+*   **Real week view** — a timetable grid rather than a list, with a month view
+    alongside it.
+*   **Create, edit and delete** events straight from the card, including all-day
+    events and simple recurrence.
+*   **Per-calendar colours and filters** — toggle each calendar on and off.
+*   **Compact mode** — a space-saving block view.
+*   **Adaptive time axis** — the visible hours follow the events of the week.
+
+**Invitation sync** (optional)
+
+*   Invite an address of a watched mailbox to a meeting and the event appears in
+    the matching Home Assistant calendar.
+*   **Plus addressing decides the target:** an invitation sent to
+    `mailbox+mike@example.com` lands in the calendar mapped to the tag `mike`.
+*   Cancellations remove the event again; rescheduled meetings replace it.
+*   Works with any IMAP mailbox — no calendar API, no admin consent, and only
+    what you deliberately invite ever reaches the screen.
+
+### Requirements
+
+*   Home Assistant 2025.7 or newer.
+*   For invitation sync: an IMAP mailbox reachable from Home Assistant. Gmail
+    requires an app password with two-step verification enabled.
 
 ### Installation
 
@@ -32,7 +54,7 @@ A modern, powerful calendar card for Home Assistant, inspired by modern calendar
     **Family Calendar**.
 
 The integration serves the card and registers it as a Lovelace resource
-automatically - no manual resource entry needed.
+automatically — no manual resource entry needed.
 
 #### Manual
 
@@ -44,7 +66,7 @@ automatically - no manual resource entry needed.
 
 ### Configuration
 
-Add a card to your dashboard:
+#### The card
 
 ```yaml
 type: custom:family-calendar
@@ -56,20 +78,46 @@ colors:
   calendar.privat: "#0078d4"
   calendar.arbeit: "#d93025"
   calendar.familie: "#107c10"
-# Optional: Entprellung der Aktualisierung in Millisekunden (Standard 500)
+# Optional: refresh debounce in milliseconds (default 500)
 refreshDebounceMs: 500
 ```
+
+#### Invitation sync
+
+Open **Settings > Devices & Services > Family Calendar > Configure**. Enable the
+sync and enter the mailbox details, then map plus tags to calendars — one per
+line:
+
+```
+mike = calendar.mike
+anja = calendar.anja
+family = calendar.family
+```
+
+Invitations whose tag is missing go to the fallback calendar, or are discarded
+if none is set.
+
+> ⚠️ **Restrict the senders.** Anyone who knows the mailbox address can put
+> events on your screen. Fill in **Allowed senders** unless the mailbox is
+> private.
 
 ### Development
 
 ```bash
 npm install
-npm run check  # Typecheck + ESLint + Ruff
-npm run dev    # Starts local test server
-npm run build  # Builds family-calendar.js
+npm run check   # Typecheck + ESLint + Ruff
+npm run dev     # Local test server
+npm run build   # Builds family-calendar.js
 ```
 
-All checks must pass before the card is deployed.
+Python tests for the invitation parser and routing:
+
+```bash
+pip install -r tests/python/requirements.txt
+pytest tests/python
+```
+
+All checks must pass before the card is deployed; CI runs them on every push.
 
 ### License
 
@@ -90,19 +138,48 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ---
 
 <a name="deutsch"></a>
+---
+
+<a name="deutsch"></a>
 ## Deutsch
 
-> ⚠️ **Hinweis:** Dies ist eine sehr frühe **Alpha-Version**. Sie kann Fehler enthalten und sich jederzeit ändern. Die Nutzung erfolgt auf eigene Gefahr.
+> ⚠️ **Hinweis:** Dies ist eine frühe **Alpha-Version**. Sie kann Fehler
+> enthalten und sich jederzeit ändern. Die Nutzung erfolgt auf eigene Gefahr.
 
-Eine moderne, leistungsstarke Kalender-Karte für Home Assistant, inspiriert von modernen Kalender-Apps.
+Eine Kalenderkarte für Home Assistant, dazu eine optionale Brücke, die
+Besprechungsanfragen in Kalendereinträge verwandelt.
 
-### Features ✨
+### Funktionen
 
-*   **Echte Wochenansicht:** Stundenplan-Raster statt einfacher Liste.
-*   **Modernes Glass Design:** Modernes UI mit Blur-Effekten und sanften Animationen.
-*   **Kompakt-Modus:** Umschaltbar auf eine platzsparende Listenansicht ("Agenda").
-*   **Live-Daten:** Nutzt die WebSocket-API für sofortige Updates.
-*   **Filter:** Kalender einzeln ein-/ausblendbar.
+**Kalenderkarte**
+
+*   **Echte Wochenansicht** — ein Stundenraster statt einer Liste, daneben eine
+    Monatsansicht.
+*   **Anlegen, Bearbeiten und Löschen** direkt in der Karte, auch ganztägige
+    Termine und einfache Wiederholungen.
+*   **Farben und Filter je Kalender** — jeder Kalender einzeln ein- und
+    ausblendbar.
+*   **Kompaktmodus** — platzsparende Blockansicht.
+*   **Mitwachsende Zeitachse** — der sichtbare Bereich richtet sich nach den
+    Terminen der Woche.
+
+**Einladungs-Abgleich** (optional)
+
+*   Lade eine Adresse eines überwachten Postfachs zu einem Termin ein, und er
+    erscheint im passenden Home-Assistant-Kalender.
+*   **Die Plus-Adresse bestimmt das Ziel:** eine Einladung an
+    `postfach+mike@example.com` landet im Kalender, der dem Kennwort `mike`
+    zugeordnet ist.
+*   Absagen entfernen den Termin wieder, Verschiebungen ersetzen ihn.
+*   Funktioniert mit jedem IMAP-Postfach — ohne Kalender-Schnittstelle, ohne
+    Administratorfreigabe, und es landet nur, was du bewusst einlädst.
+
+### Voraussetzungen
+
+*   Home Assistant 2025.7 oder neuer.
+*   Für den Einladungs-Abgleich: ein IMAP-Postfach, das Home Assistant
+    erreichen kann. Bei Gmail wird ein App-Passwort benötigt, dafür muss die
+    Zwei-Faktor-Authentifizierung aktiv sein.
 
 ### Installation
 
@@ -117,7 +194,7 @@ Eine moderne, leistungsstarke Kalender-Karte für Home Assistant, inspiriert von
     die Integration **Family Calendar** hinzu.
 
 Die Integration liefert die Karte aus und registriert sie automatisch als
-Lovelace-Ressource - ein manueller Ressourcen-Eintrag ist nicht nötig.
+Lovelace-Ressource — ein manueller Ressourcen-Eintrag ist nicht nötig.
 
 #### Manuell
 
@@ -129,7 +206,7 @@ Lovelace-Ressource - ein manueller Ressourcen-Eintrag ist nicht nötig.
 
 ### Konfiguration
 
-Füge eine Karte zu deinem Dashboard hinzu:
+#### Die Karte
 
 ```yaml
 type: custom:family-calendar
@@ -145,16 +222,43 @@ colors:
 refreshDebounceMs: 500
 ```
 
+#### Einladungs-Abgleich
+
+Unter **Einstellungen > Geräte & Dienste > Family Calendar > Konfigurieren**
+den Abgleich aktivieren, die Postfachdaten eintragen und die Kennworte den
+Kalendern zuordnen — eine Zeile je Kalender:
+
+```
+mike = calendar.mike
+anja = calendar.anja
+family = calendar.family
+```
+
+Einladungen mit unbekanntem Kennwort gehen in den Ausweichkalender, oder werden
+verworfen, wenn keiner gesetzt ist.
+
+> ⚠️ **Absender einschränken.** Wer die Postfachadresse kennt, kann Termine auf
+> euren Bildschirm bringen. Trage unter **Erlaubte Absender** ein, von wem
+> Einladungen angenommen werden, sofern das Postfach nicht privat ist.
+
 ### Entwicklung
 
 ```bash
 npm install
-npm run check  # Typecheck + ESLint + Ruff
-npm run dev    # Startet lokalen Test-Server
-npm run build  # Erstellt die family-calendar.js
+npm run check   # Typecheck + ESLint + Ruff
+npm run dev     # Startet lokalen Test-Server
+npm run build   # Erstellt die family-calendar.js
 ```
 
-Alle Checks müssen grün sein, bevor die Karte deployt wird.
+Python-Tests für Parser und Zuordnung des Einladungs-Abgleichs:
+
+```bash
+pip install -r tests/python/requirements.txt
+pytest tests/python
+```
+
+Alle Checks müssen grün sein, bevor die Karte deployt wird; die CI führt sie bei
+jedem Push aus.
 
 ### Lizenz
 

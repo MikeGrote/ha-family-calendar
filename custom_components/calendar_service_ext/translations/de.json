@@ -3,11 +3,41 @@
     "step": {
       "user": {
         "title": "Family Calendar",
-        "description": "Registriert die Family-Calendar-Karte im Frontend. Es gibt nichts zu konfigurieren - bestätige einfach."
+        "description": "Registriert die Family-Calendar-Karte im Frontend. Der Einladungs-Abgleich lässt sich danach unter Konfigurieren einrichten."
       }
     },
     "abort": {
       "single_instance_allowed": "Family Calendar ist bereits eingerichtet."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Einladungen aus einem Postfach übernehmen",
+        "description": "Lade eine Adresse dieses Postfachs als Teilnehmer zu einem Termin ein, dann erscheint er im zugeordneten Kalender. Die Zuordnung läuft über Plus-Adressen: eine Einladung an postfach+mike@… landet im Kalender, der dem Kennwort mike zugeordnet ist.",
+        "data": {
+          "invite_enabled": "Einladungs-Abgleich aktiv",
+          "imap_server": "IMAP-Server",
+          "imap_port": "Port",
+          "imap_username": "Benutzername",
+          "imap_password": "Passwort oder App-Passwort",
+          "imap_folder": "Ordner",
+          "poll_interval": "Abruf alle … Minuten",
+          "calendar_mapping": "Zuordnung",
+          "fallback_calendar": "Ausweichkalender",
+          "allowed_senders": "Erlaubte Absender"
+        },
+        "data_description": {
+          "imap_password": "Bei Gmail wird ein App-Passwort benötigt, das normale Kontopasswort funktioniert nicht.",
+          "calendar_mapping": "Eine Zeile je Kalender, im Format: mike = calendar.mike",
+          "fallback_calendar": "Hierhin gehen Einladungen, deren Plus-Kennwort in der Zuordnung fehlt. Leer lassen, um sie zu verwerfen.",
+          "allowed_senders": "Kommagetrennte Adressen. Leer lassen heißt: jeder, der die Postfachadresse kennt, kann Termine eintragen."
+        }
+      }
+    },
+    "error": {
+      "invalid_mapping": "Jede Zeile muss die Form kennwort = calendar.entity haben.",
+      "credentials_required": "Für den Abgleich werden Benutzername und Passwort benötigt."
     }
   }
 }

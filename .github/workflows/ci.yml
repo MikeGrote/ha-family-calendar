@@ -58,6 +58,23 @@ jobs:
           version: 0.15.15
           args: check custom_components/
 
+  pytest:
+    name: Python-Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: tests/python/requirements.txt
+
+      - run: pip install -r tests/python/requirements.txt
+
+      - name: Parser, Routing und Absenderfilter
+        run: pytest tests/python -q
+
   hassfest:
     name: Home Assistant hassfest
     runs-on: ubuntu-latest
