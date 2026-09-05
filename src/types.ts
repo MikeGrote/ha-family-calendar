@@ -79,6 +79,16 @@ export interface ShellArea extends NavItem {
   path?: string;
 }
 
+/** Umschalten nach einer Zeit ohne Beruehrung. */
+export interface ShellIdle {
+  /** Sekunden ohne Bedienung, bis umgeschaltet wird. */
+  after: number;
+  /** Bereich, in den dann gewechselt wird - etwa der Bilderrahmen. */
+  area: string;
+  /** Bereich, zu dem eine Beruehrung zurueckfuehrt. Standard: der vorherige. */
+  returnTo?: string;
+}
+
 /** Konfiguration der Huellkarte. */
 export interface ShellConfig {
   type?: string;
@@ -87,6 +97,11 @@ export interface ShellConfig {
   initial?: string;
   /** Nur Symbole ohne Beschriftung. Standard: mit Beschriftung. */
   compact?: boolean;
+  /** Ruhezustand: nach einer Weile ohne Beruehrung umschalten. */
+  idle?: ShellIdle;
+  /** Auswahlhelfer, der den aktiven Bereich spiegelt. Erlaubt Automationen,
+   *  das Panel umzuschalten. */
+  syncEntity?: string;
 }
 
 /** Konfiguration der Uebersichtskarte. */
@@ -140,4 +155,17 @@ export interface TasksConfig {
   showDue?: boolean;
   /** Ueberschrift ueber allen Spalten. */
   title?: string;
+}
+
+/** Konfiguration des Bilderrahmens. */
+export interface PhotosConfig {
+  type?: string;
+  /** Ordner in der Medienablage. Standard: media-source://media_source/local/fotos */
+  folder?: string;
+  /** Sekunden je Bild. Standard: 30. */
+  interval?: number;
+  /** Uhrzeit und Datum einblenden. Standard: true. */
+  showClock?: boolean;
+  /** Minuten, bis der Ordner erneut gelesen wird. Standard: 60. */
+  rescanMinutes?: number;
 }

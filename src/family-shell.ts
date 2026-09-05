@@ -1,3 +1,4 @@
+import type { HomeAssistant } from 'custom-card-helpers';
 import { LitElement, html, type PropertyValues, type TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
@@ -35,7 +36,7 @@ declare global {
 
 @customElement('family-shell')
 export class FamilyShell extends LitElement {
-  @property({ attribute: false }) hass!: unknown;
+  @property({ attribute: false }) hass!: HomeAssistant;
   @property({ attribute: false }) config!: ShellConfig;
   @property({ type: Boolean, reflect: true }) compact = false;
 
@@ -43,6 +44,9 @@ export class FamilyShell extends LitElement {
   @state() private ready = false;
 
   private readonly cards = new Map<string, LovelaceCardElement>();
+  private idleTimer?: number;
+  private previousId = '';
+  private readonly onActivity = (): void => this.noteActivity();
 
   setConfig(config: ShellConfig): void {
     if (!config.areas?.length) {
@@ -55,6 +59,24 @@ export class FamilyShell extends LitElement {
 
   getCardSize(): number {
     return 12;
+  }
+
+  connectedCallback(): void {
+    super.connectedCallback();
+    // Beobachtet wird auf dem Fenster, nicht auf der Karte: Ein Tipp irgendwo
+    // im Panel gilt als Bedienung, nicht nur einer in der Seitenleiste.
+    for (const typ of ['pointerdown', 'keydown', 'wheel']) {
+      window.addEventListener(typ, this.onActivity, { passive: true });
+    }
+    this.restartIdleTimer();
+  }
+
+  disconnectedCallback(): void {
+    super.disconnectedCallback();
+    for (const typ of ['pointerdown', 'keydown', 'wheel']) {
+      window.removeEventListener(typ, this.onActivity);
+    }
+    if (this.idleTimer !== undefined) clearTimeout(this.idleTimer);
   }
 
   firstUpdated(): void {
@@ -80,11 +102,26 @@ export class FamilyShell extends LitElement {
 
   updated(changed: PropertyValues): void {
     if (!changed.has('hass')) return;
+
     // Auch die verborgenen Bereiche bleiben auf Stand - sonst waeren sie
     // beim Einblenden veraltet und muessten doch nachladen.
     for (const element of this.cards.values()) {
       element.hass = this.hass;
     }
+
+    this.followSyncEntity();
+  }
+
+  /** Folgt dem Auswahlhelfer, damit Automationen umschalten koennen. */
+  private followSyncEntity(): void {
+    const entityId = this.config.syncEntity;
+    if (!entityId) return;
+
+    const gewuenscht = this.hass?.states[entityId]?.state;
+    if (!gewuenscht || gewuenscht === this.activeId) return;
+    if (!this.config.areas.some((area) => area.id === gewuenscht && !area.path)) return;
+
+    this.switchTo(gewuenscht);
   }
 
   render(): TemplateResult {
@@ -134,12 +171,56 @@ export class FamilyShell extends LitElement {
     }
 
     if (id === this.activeId) return;
+    this.switchTo(id);
+    this.reportToSyncEntity(id);
+  }
+
+  private switchTo(id: string): void {
+    if (id === this.activeId) return;
+    this.previousId = this.activeId;
     this.activeId = id;
 
     // Ein verborgener Bereich hat keine Breite. Karten, die ihr Layout
     // selbst berechnen - etwa das Wochenraster - brauchen nach dem
     // Einblenden einen Anstoss.
     window.setTimeout(() => window.dispatchEvent(new Event('resize')), 50);
+  }
+
+  /** Schreibt den Bereich in den Auswahlhelfer zurueck. */
+  private reportToSyncEntity(id: string): void {
+    const entityId = this.config.syncEntity;
+    if (!entityId || this.hass?.states[entityId]?.state === id) return;
+
+    void this.hass?.callService('input_select', 'select_option', {
+      entity_id: entityId,
+      option: id,
+    });
+  }
+
+  /** Eine Bedienung holt aus dem Ruhezustand zurueck. */
+  private noteActivity(): void {
+    const idle = this.config.idle;
+    if (idle && this.activeId === idle.area) {
+      const ziel = idle.returnTo ?? this.previousId;
+      if (ziel && ziel !== idle.area) {
+        this.switchTo(ziel);
+        this.reportToSyncEntity(ziel);
+      }
+    }
+    this.restartIdleTimer();
+  }
+
+  private restartIdleTimer(): void {
+    if (this.idleTimer !== undefined) clearTimeout(this.idleTimer);
+
+    const idle = this.config?.idle;
+    if (!idle?.after || !idle.area) return;
+
+    this.idleTimer = window.setTimeout(() => {
+      if (this.activeId === idle.area) return;
+      this.switchTo(idle.area);
+      this.reportToSyncEntity(idle.area);
+    }, idle.after * 1000);
   }
 
   static styles = [shellStyles, navStyles];

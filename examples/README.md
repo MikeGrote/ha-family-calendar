@@ -50,3 +50,18 @@ data:
 
 Die enthaltene Beispiel-Automation ist bewusst ausgeschaltet. Zum Verwenden
 kopieren, Zeitpunkt und Text anpassen, dann in den Einstellungen einschalten.
+
+## `panel_package.yaml`
+
+Bereichswahl fürs Wandpanel. Der Auswahlhelfer `input_select.panel_bereich`
+spiegelt den Bereich, der gerade sichtbar ist: Die Hüllkarte schreibt ihn beim
+Umschalten, und Automationen können darüber umschalten — etwa abends in den
+Bilderrahmen.
+
+Das Umschalten selbst läuft in der Karte und ohne Serverbeteiligung. Der
+Helfer ist nur die Brücke nach außen; ohne ihn funktioniert die Karte
+genauso, nur eben ohne Automationen.
+
+Die enthaltenen Automationen schalten um 21:30 auf den Bilderrahmen und um
+06:00 zurück auf den Kalender. Eine Berührung holt das Panel jederzeit
+zurück — das entscheidet die Karte selbst, dafür braucht es keine Automation.

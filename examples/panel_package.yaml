@@ -1,0 +1,53 @@
+# ==============================================================================
+#  WANDPANEL - Bereichswahl
+# ==============================================================================
+#  Der Auswahlhelfer spiegelt den Bereich, der auf dem Panel gerade sichtbar
+#  ist. Die Karte schreibt ihn beim Umschalten, und Automationen koennen
+#  darueber umschalten - etwa in den Bilderrahmen zur Nachtzeit.
+#
+#  Das Umschalten selbst laeuft in der Karte und ohne Serverbeteiligung; der
+#  Helfer ist nur die Bruecke nach aussen.
+# ==============================================================================
+
+input_select:
+  panel_bereich:
+    name: Panel-Bereich
+    icon: mdi:monitor-dashboard
+    options:
+      - kalender
+      - uebersicht
+      - aufgaben
+      - listen
+      - fotos
+    initial: kalender
+
+automation:
+  - id: panel_nachtruhe
+    alias: "Panel: nachts Bilderrahmen"
+    description: >-
+      Schaltet das Panel abends auf den Bilderrahmen. Eine Berührung holt es
+      jederzeit zurück - das entscheidet die Karte selbst.
+    mode: single
+    triggers:
+      - trigger: time
+        at: "21:30:00"
+    actions:
+      - action: input_select.select_option
+        target:
+          entity_id: input_select.panel_bereich
+        data:
+          option: fotos
+
+  - id: panel_morgens_kalender
+    alias: "Panel: morgens Kalender"
+    description: Holt das Panel früh zurück auf den Kalender.
+    mode: single
+    triggers:
+      - trigger: time
+        at: "06:00:00"
+    actions:
+      - action: input_select.select_option
+        target:
+          entity_id: input_select.panel_bereich
+        data:
+          option: kalender
