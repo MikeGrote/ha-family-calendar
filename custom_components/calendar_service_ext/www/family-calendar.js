@@ -65,7 +65,7 @@ function mr(t) {
     Ie = !1;
   }
 }
-function F(t, e) {
+function j(t, e) {
   this.props = t, this.context = e;
 }
 function qe(t, e) {
@@ -147,11 +147,11 @@ function _n(t, e, n, r, i, s, l, o, a) {
   n.__h != null && (a = n.__h, o = e.__e = n.__e, e.__h = null, s = [o]), (d = S.__b) && d(e);
   try {
     e: if (typeof _ == "function") {
-      if (b = e.props, y = (d = _.contextType) && r[d.__c], E = d ? y ? y.props.value : d.__ : r, n.__c ? v = (c = e.__c = n.__c).__ = c.__E : ("prototype" in _ && _.prototype.render ? e.__c = c = new _(b, E) : (e.__c = c = new F(b, E), c.constructor = _, c.render = Pl), y && y.sub(c), c.props = b, c.state || (c.state = {}), c.context = E, c.__n = r, f = c.__d = !0, c.__h = [], c._sb = []), c.__s == null && (c.__s = c.state), _.getDerivedStateFromProps != null && (c.__s == c.state && (c.__s = se({}, c.__s)), se(c.__s, _.getDerivedStateFromProps(b, c.__s))), h = c.props, u = c.state, c.__v = e, f) _.getDerivedStateFromProps == null && c.componentWillMount != null && c.componentWillMount(), c.componentDidMount != null && c.__h.push(c.componentDidMount);
+      if (b = e.props, y = (d = _.contextType) && r[d.__c], E = d ? y ? y.props.value : d.__ : r, n.__c ? v = (c = e.__c = n.__c).__ = c.__E : ("prototype" in _ && _.prototype.render ? e.__c = c = new _(b, E) : (e.__c = c = new j(b, E), c.constructor = _, c.render = Pl), y && y.sub(c), c.props = b, c.state || (c.state = {}), c.context = E, c.__n = r, f = c.__d = !0, c.__h = [], c._sb = []), c.__s == null && (c.__s = c.state), _.getDerivedStateFromProps != null && (c.__s == c.state && (c.__s = se({}, c.__s)), se(c.__s, _.getDerivedStateFromProps(b, c.__s))), h = c.props, u = c.state, c.__v = e, f) _.getDerivedStateFromProps == null && c.componentWillMount != null && c.componentWillMount(), c.componentDidMount != null && c.__h.push(c.componentDidMount);
       else {
         if (_.getDerivedStateFromProps == null && b !== h && c.componentWillReceiveProps != null && c.componentWillReceiveProps(b, E), !c.__e && c.shouldComponentUpdate != null && c.shouldComponentUpdate(b, c.__s, E) === !1 || e.__v === n.__v) {
-          for (e.__v !== n.__v && (c.props = b, c.state = c.__s, c.__d = !1), e.__e = n.__e, e.__k = n.__k, e.__k.forEach(function(ne) {
-            ne && (ne.__ = e);
+          for (e.__v !== n.__v && (c.props = b, c.state = c.__s, c.__d = !1), e.__e = n.__e, e.__k = n.__k, e.__k.forEach(function(re) {
+            re && (re.__ = e);
           }), w = 0; w < c._sb.length; w++) c.__h.push(c._sb[w]);
           c._sb = [], c.__h.length && l.push(c);
           break e;
@@ -169,8 +169,8 @@ function _n(t, e, n, r, i, s, l, o, a) {
       c.state = c.__s, c.getChildContext != null && (r = se(se({}, r), c.getChildContext())), f || c.getSnapshotBeforeUpdate == null || (p = c.getSnapshotBeforeUpdate(h, u)), k = d != null && d.type === x && d.key == null ? d.props.children : d, Bi(t, Array.isArray(k) ? k : [k], e, n, r, i, s, l, o, a), c.base = e.__e, e.__h = null, c.__h.length && l.push(c), v && (c.__E = c.__ = null), c.__e = !1;
     } else s == null && e.__v === n.__v ? (e.__k = n.__k, e.__e = n.__e) : e.__e = Ol(n.__e, e, n, r, i, s, l, a);
     (d = S.diffed) && d(e);
-  } catch (ne) {
-    e.__v = null, (a || s != null) && (e.__e = o, e.__h = !!a, s[s.indexOf(o)] = null), S.__e(ne, e, n);
+  } catch (re) {
+    e.__v = null, (a || s != null) && (e.__e = o, e.__h = !!a, s[s.indexOf(o)] = null), S.__e(re, e, n);
   }
 }
 function zi(t, e) {
@@ -265,13 +265,13 @@ Pt = Oi.slice, S = { __e: function(t, e, n, r) {
   throw t;
 } }, Mi = 0, ki = function(t) {
   return t != null && t.constructor === void 0;
-}, Ie = !1, F.prototype.setState = function(t, e) {
+}, Ie = !1, j.prototype.setState = function(t, e) {
   var n;
   n = this.__s != null && this.__s !== this.state ? this.__s : this.__s = se({}, this.state), typeof t == "function" && (t = t(se({}, n), this.props)), t && se(n, t), t != null && this.__v && (e && this._sb.push(e), un(this));
-}, F.prototype.forceUpdate = function(t) {
+}, j.prototype.forceUpdate = function(t) {
   this.__v && (this.__e = !0, t && this.__h.push(t), un(this));
-}, F.prototype.render = x, pe = [], Ii = typeof Promise == "function" ? Promise.prototype.then.bind(Promise.resolve()) : setTimeout, yt.__r = 0, Ni = 0;
-var Y, Vt, vr, Wi = [], Gt = [], br = S.__b, yr = S.__r, Er = S.diffed, Sr = S.__c, Ar = S.unmount;
+}, j.prototype.render = x, pe = [], Ii = typeof Promise == "function" ? Promise.prototype.then.bind(Promise.resolve()) : setTimeout, yt.__r = 0, Ni = 0;
+var Q, Vt, vr, Wi = [], Gt = [], br = S.__b, yr = S.__r, Er = S.diffed, Sr = S.__c, Ar = S.unmount;
 function Bl() {
   for (var t; t = Wi.shift(); ) if (t.__P && t.__H) try {
     t.__H.__h.forEach(ut), t.__H.__h.forEach(fn), t.__H.__h = [];
@@ -280,19 +280,19 @@ function Bl() {
   }
 }
 S.__b = function(t) {
-  Y = null, br && br(t);
+  Q = null, br && br(t);
 }, S.__r = function(t) {
   yr && yr(t);
-  var e = (Y = t.__c).__H;
-  e && (Vt === Y ? (e.__h = [], Y.__h = [], e.__.forEach(function(n) {
+  var e = (Q = t.__c).__H;
+  e && (Vt === Q ? (e.__h = [], Q.__h = [], e.__.forEach(function(n) {
     n.__N && (n.__ = n.__N), n.__V = Gt, n.__N = n.i = void 0;
-  })) : (e.__h.forEach(ut), e.__h.forEach(fn), e.__h = [])), Vt = Y;
+  })) : (e.__h.forEach(ut), e.__h.forEach(fn), e.__h = [])), Vt = Q;
 }, S.diffed = function(t) {
   Er && Er(t);
   var e = t.__c;
   e && e.__H && (e.__H.__h.length && (Wi.push(e) !== 1 && vr === S.requestAnimationFrame || ((vr = S.requestAnimationFrame) || Ll)(Bl)), e.__H.__.forEach(function(n) {
     n.i && (n.__H = n.i), n.__V !== Gt && (n.__ = n.__V), n.i = void 0, n.__V = Gt;
-  })), Vt = Y = null;
+  })), Vt = Q = null;
 }, S.__c = function(t, e) {
   e.some(function(n) {
     try {
@@ -324,12 +324,12 @@ function Ll(t) {
   wr && (e = requestAnimationFrame(n));
 }
 function ut(t) {
-  var e = Y, n = t.__c;
-  typeof n == "function" && (t.__c = void 0, n()), Y = e;
+  var e = Q, n = t.__c;
+  typeof n == "function" && (t.__c = void 0, n()), Q = e;
 }
 function fn(t) {
-  var e = Y;
-  t.__c = t.__(), Y = e;
+  var e = Q;
+  t.__c = t.__(), Q = e;
 }
 function $l(t, e) {
   for (var n in e) t[n] = e[n];
@@ -343,7 +343,7 @@ function Dr(t, e) {
 function Cr(t) {
   this.props = t;
 }
-(Cr.prototype = new F()).isPureReactComponent = !0, Cr.prototype.shouldComponentUpdate = function(t, e) {
+(Cr.prototype = new j()).isPureReactComponent = !0, Cr.prototype.shouldComponentUpdate = function(t, e) {
   return Dr(this.props, t) || Dr(this.state, e);
 };
 var _r = S.__b;
@@ -383,7 +383,7 @@ function rt() {
 S.unmount = function(t) {
   var e = t.__c;
   e && e.__R && e.__R(), e && t.__h === !0 && (t.type = null), Rr && Rr(t);
-}, (qt.prototype = new F()).__c = function(t, e) {
+}, (qt.prototype = new j()).__c = function(t, e) {
   var n = e.__c, r = this;
   r.t == null && (r.t = []), r.t.push(n);
   var i = qi(r.__v), s = !1, l = function() {
@@ -442,7 +442,7 @@ function jl(t, e) {
   var n = g(Fl, { __v: t, i: e });
   return n.containerInfo = e, n;
 }
-(rt.prototype = new F()).__a = function(t) {
+(rt.prototype = new j()).__a = function(t) {
   var e = this, n = qi(e.__v), r = e.o.get(t);
   return r[0]++, function(i) {
     var s = function() {
@@ -465,8 +465,8 @@ function jl(t, e) {
 var Wl = typeof Symbol < "u" && Symbol.for && /* @__PURE__ */ Symbol.for("react.element") || 60103, Vl = /^(?:accent|alignment|arabic|baseline|cap|clip(?!PathU)|color|dominant|fill|flood|font|glyph(?!R)|horiz|image|letter|lighting|marker(?!H|W|U)|overline|paint|pointer|shape|stop|strikethrough|stroke|text(?!L)|transform|underline|unicode|units|v|vector|vert|word|writing|x(?!C))[A-Z]/, Gl = typeof document < "u", ql = function(t) {
   return (typeof Symbol < "u" && typeof /* @__PURE__ */ Symbol() == "symbol" ? /fil|che|rad/i : /fil|che|ra/i).test(t);
 };
-F.prototype.isReactComponent = {}, ["componentWillMount", "componentWillReceiveProps", "componentWillUpdate"].forEach(function(t) {
-  Object.defineProperty(F.prototype, t, { configurable: !0, get: function() {
+j.prototype.isReactComponent = {}, ["componentWillMount", "componentWillReceiveProps", "componentWillUpdate"].forEach(function(t) {
+  Object.defineProperty(j.prototype, t, { configurable: !0, get: function() {
     return this["UNSAFE_" + t];
   }, set: function(e) {
     Object.defineProperty(this, t, { configurable: !0, writable: !0, value: e });
@@ -821,9 +821,9 @@ function Co(t) {
   return Me(t) / 30;
 }
 function Me(t) {
-  return G(t) / 864e5;
+  return q(t) / 864e5;
 }
-function G(t) {
+function q(t) {
   return t.years * (365 * 864e5) + t.months * (30 * 864e5) + t.days * 864e5 + t.milliseconds;
 }
 function In(t, e) {
@@ -1031,7 +1031,7 @@ function A(t, e, n) {
 }
 function ht(t, e, n) {
   let r, i;
-  return (s) => (r ? q(r, s) || (i = t.call(this, s)) : i = t.call(this, s), r = s, i);
+  return (s) => (r ? Y(r, s) || (i = t.call(this, s)) : i = t.call(this, s), r = s, i);
 }
 const Zt = {
   week: 3,
@@ -1480,7 +1480,7 @@ const jr = {
   resources: st
 };
 function ge(t, e) {
-  return typeof t == "object" && typeof e == "object" && t && e ? q(t, e) : t === e;
+  return typeof t == "object" && typeof e == "object" && t && e ? Y(t, e) : t === e;
 }
 function st(t, e) {
   return Array.isArray(t) && Array.isArray(e) ? ce(t, e) : t === e;
@@ -1543,7 +1543,7 @@ function ye(t, e) {
     e(t[r], r) && (n[r] = t[r]);
   return n;
 }
-function J(t, e) {
+function ee(t, e) {
   let n = {};
   for (let r in t)
     n[r] = e(t[r], r);
@@ -1561,7 +1561,7 @@ function Bn(t) {
     e.push(t[n]);
   return e;
 }
-function q(t, e) {
+function Y(t, e) {
   if (t === e)
     return !0;
   for (let n in t)
@@ -1720,7 +1720,7 @@ class fa {
   }
   countDurationsBetween(e, n, r) {
     let i;
-    return r.years && (i = this.diffWholeYears(e, n), i !== null) ? i / Do(r) : r.months && (i = this.diffWholeMonths(e, n), i !== null) ? i / Co(r) : r.days && (i = St(e, n), i !== null) ? i / Me(r) : (n.valueOf() - e.valueOf()) / G(r);
+    return r.years && (i = this.diffWholeYears(e, n), i !== null) ? i / Do(r) : r.months && (i = this.diffWholeMonths(e, n), i !== null) ? i / Co(r) : r.days && (i = St(e, n), i !== null) ? i / Me(r) : (n.valueOf() - e.valueOf()) / q(r);
   }
   // Start-Of
   // these DON'T return zoned-dates. only UTC start-of dates
@@ -1828,7 +1828,7 @@ function Ct(t) {
     n.shift()();
   S.debounceRendering = e;
 }
-class ha extends F {
+class ha extends j {
   render() {
     return g("div", {});
   }
@@ -1878,7 +1878,7 @@ class ga {
     this.queuedRequest && this.execFunc(this.queuedRequest) && (this.queuedRequest = null);
   }
 }
-const ee = ls({});
+const te = ls({});
 function pa(t, e, n, r, i, s, l, o, a, d, c, f, h, u) {
   return {
     dateEnv: i,
@@ -1907,7 +1907,7 @@ function pa(t, e, n, r, i, s, l, o, a, d, c, f, h, u) {
     unregisterInteractiveComponent: u
   };
 }
-class Ce extends F {
+class Ce extends j {
   // debug: boolean
   shouldComponentUpdate(e, n) {
     return !Kt(
@@ -1929,12 +1929,12 @@ class Ce extends F {
 }
 Ce.addPropsEquality = ma;
 Ce.addStateEquality = va;
-Ce.contextType = ee;
+Ce.contextType = te;
 Ce.prototype.propEquality = {};
 Ce.prototype.stateEquality = {};
 class R extends Ce {
 }
-R.contextType = ee;
+R.contextType = te;
 function ma(t) {
   let e = Object.create(this.prototype.propEquality);
   Object.assign(e, t), this.prototype.propEquality = e;
@@ -1943,7 +1943,7 @@ function va(t) {
   let e = Object.create(this.prototype.stateEquality);
   Object.assign(e, t), this.prototype.stateEquality = e;
 }
-function Q(t, e) {
+function Z(t, e) {
   typeof t == "function" ? t(e) : t && (t.current = e);
 }
 class Ln extends R {
@@ -1952,7 +1952,7 @@ class Ln extends R {
       const { options: n } = this.context, { generatorName: r } = this.props;
       (!n.customRenderingReplaces || !mn(r, n)) && this.updateElRef(e);
     }, this.updateElRef = (e) => {
-      this.props.elRef && Q(this.props.elRef, e);
+      this.props.elRef && Z(this.props.elRef, e);
     };
   }
   render() {
@@ -2006,9 +2006,9 @@ class Ln extends R {
 }
 Ln.addPropsEquality({
   elClasses: ce,
-  elStyle: q,
+  elStyle: Y,
   elAttrs: ra,
-  renderProps: q
+  renderProps: Y
 });
 function mn(t, e) {
   var n;
@@ -2022,10 +2022,10 @@ function ba(t) {
   return !!t;
 }
 const as = ls(0);
-class W extends F {
+class V extends j {
   constructor() {
     super(...arguments), this.InnerContent = ya.bind(void 0, this), this.handleEl = (e) => {
-      this.el = e, this.props.elRef && (Q(this.props.elRef, e), e && this.didMountMisfire && this.componentDidMount());
+      this.el = e, this.props.elRef && (Z(this.props.elRef, e), e && this.didMountMisfire && this.componentDidMount());
     };
   }
   render() {
@@ -2045,7 +2045,7 @@ class W extends F {
     (n = (e = this.props).willUnmount) === null || n === void 0 || n.call(e, Object.assign(Object.assign({}, this.props.renderProps), { el: this.el }));
   }
 }
-W.contextType = as;
+V.contextType = as;
 function ya(t, e) {
   const n = t.props;
   return g(Ln, Object.assign({ renderProps: n.renderProps, generatorName: n.generatorName, customGenerator: n.customGenerator, defaultGenerator: n.defaultGenerator, renderId: t.context }, e));
@@ -2057,7 +2057,7 @@ function Ea(t, e) {
 class _t extends R {
   render() {
     let { props: e, context: n } = this, { options: r } = n, i = { view: n.viewApi };
-    return g(W, { elRef: e.elRef, elTag: e.elTag || "div", elAttrs: e.elAttrs, elClasses: [
+    return g(V, { elRef: e.elRef, elTag: e.elTag || "div", elAttrs: e.elAttrs, elClasses: [
       ...cs(e.viewSpec),
       ...e.elClasses || []
     ], elStyle: e.elStyle, renderProps: i, classNameGenerator: r.viewClassNames, generatorName: void 0, didMount: r.viewDidMount, willUnmount: r.viewWillUnmount }, () => e.children);
@@ -2095,7 +2095,7 @@ function $n(t, e) {
 function Lt(t, e) {
   return (t.start === null || e.start !== null && e.start >= t.start) && (t.end === null || e.end !== null && e.end <= t.end);
 }
-function K(t, e) {
+function J(t, e) {
   return (t.start === null || e >= t.start) && (t.end === null || e < t.end);
 }
 function Da(t, e) {
@@ -2110,7 +2110,7 @@ function us(t, e = C(0)) {
   if (t.end) {
     r = M(t.end);
     let i = t.end.valueOf() - r.valueOf();
-    i && i >= G(e) && (r = B(r, 1));
+    i && i >= q(e) && (r = B(r, 1));
   }
   return t.start && (n = M(t.start), r && r <= n && (r = B(n, 1))), { start: n, end: r };
 }
@@ -2146,7 +2146,7 @@ class fs {
   // from its previous value. decremented = -1, incremented = 1 (default).
   build(e, n, r = !0) {
     let { props: i } = this, s, l, o, a, d, c;
-    return s = this.buildValidRange(), s = this.trimHiddenDays(s), r && (e = Da(e, s)), l = this.buildCurrentRangeInfo(e, n), o = /^(year|month|week|day)$/.test(l.unit), a = this.buildRenderRange(this.trimHiddenDays(l.range), l.unit, o), a = this.trimHiddenDays(a), d = a, i.showNonCurrentDates || (d = Ee(d, l.range)), d = this.adjustActiveRange(d), d = Ee(d, s), c = $n(l.range, s), K(a, e) || (e = a.start), {
+    return s = this.buildValidRange(), s = this.trimHiddenDays(s), r && (e = Da(e, s)), l = this.buildCurrentRangeInfo(e, n), o = /^(year|month|week|day)$/.test(l.unit), a = this.buildRenderRange(this.trimHiddenDays(l.range), l.unit, o), a = this.trimHiddenDays(a), d = a, i.showNonCurrentDates || (d = Ee(d, l.range)), d = this.adjustActiveRange(d), d = Ee(d, s), c = $n(l.range, s), J(a, e) || (e = a.start), {
       currentDate: e,
       // constraint for where prev/next operations can go and where events can be dragged/resized to.
       // an object with optional start and end properties.
@@ -2203,7 +2203,7 @@ class fs {
     let { dateEnv: s, dateAlignment: l } = this.props, o, a, d;
     if (!l) {
       let { dateIncrement: f } = this.props;
-      f && G(f) < G(r) ? l = pn(f).unit : l = i;
+      f && q(f) < q(r) ? l = pn(f).unit : l = i;
     }
     Me(r) <= 1 && this.isHiddenDay(o) && (o = this.skipHiddenDays(o, n), o = M(o));
     function c() {
@@ -2402,14 +2402,14 @@ function xa(t, e) {
   return t && (n = t.defaultAllDay), n == null && (n = e.options.defaultAllDay), n;
 }
 function Qe(t, e, n, r, i, s) {
-  let l = j(), o = zn(n);
+  let l = W(), o = zn(n);
   for (let a of t) {
     let d = gs(a, e, n, r, o, i, s);
     d && bn(d, l);
   }
   return l;
 }
-function bn(t, e = j()) {
+function bn(t, e = W()) {
   return e.defs[t.def.defId] = t.def, t.instance && (e.instances[t.instance.instanceId] = t.instance), e;
 }
 function Fn(t, e) {
@@ -2418,12 +2418,12 @@ function Fn(t, e) {
     let r = t.defs[n.defId], i = $t(t, (s) => Ma(r, s));
     return i.defs[r.defId] = r, i.instances[n.instanceId] = n, i;
   }
-  return j();
+  return W();
 }
 function Ma(t, e) {
   return !!(t.groupId && t.groupId === e.groupId);
 }
-function j() {
+function W() {
   return { defs: {}, instances: {} };
 }
 function jn(t, e) {
@@ -2591,7 +2591,7 @@ function Ba(t, e, n, r, i) {
     case "REMOVE_ALL_EVENT_SOURCES":
       return $t(t, (s) => !s.sourceId);
     case "REMOVE_ALL_EVENTS":
-      return j();
+      return W();
     default:
       return t;
   }
@@ -2630,7 +2630,7 @@ function Ua(t, e, n, r) {
   return n && (e = Se(e, n, r)), jn(t, e);
 }
 function Qr(t, e, n) {
-  let { defs: r } = t, i = J(t.instances, (s) => r[s.defId].allDay ? s : Object.assign(Object.assign({}, s), { range: {
+  let { defs: r } = t, i = ee(t.instances, (s) => r[s.defId].allDay ? s : Object.assign(Object.assign({}, s), { range: {
     start: n.createMarker(e.toDate(s.range.start, s.forcedStartTzo)),
     end: n.createMarker(e.toDate(s.range.end, s.forcedEndTzo))
   }, forcedStartTzo: n.canComputeOffset ? null : s.forcedStartTzo, forcedEndTzo: n.canComputeOffset ? null : s.forcedEndTzo }));
@@ -2724,7 +2724,7 @@ function Zr(t, e, n) {
   return t ? (s = M(s), s = r.add(s, i.defaultAllDayEventDuration)) : s = r.add(s, i.defaultTimedEventDuration), s;
 }
 function Vn(t, e, n, r) {
-  let i = xt(t.defs, e), s = j();
+  let i = xt(t.defs, e), s = W();
   for (let l in t.defs) {
     let o = t.defs[l];
     s.defs[l] = Qa(o, i[l], n, r);
@@ -3087,7 +3087,7 @@ function Ne(t) {
   null;
 }
 function xt(t, e) {
-  return J(t, (n) => ws(n, e));
+  return ee(t, (n) => ws(n, e));
 }
 function ws(t, e) {
   let n = [];
@@ -3137,7 +3137,7 @@ function ae(t, e, n) {
   return {
     isPast: r.end <= (n || e.start),
     isFuture: r.start >= (n || e.end),
-    isToday: e && K(e, r.start)
+    isToday: e && J(e, r.start)
   };
 }
 function nc(t) {
@@ -3323,7 +3323,7 @@ function Gn(t) {
   };
 }
 const yn = {};
-class Le extends F {
+class Le extends j {
   constructor(e, n) {
     super(e, n), this.handleRefresh = () => {
       let r = this.computeTiming();
@@ -3368,7 +3368,7 @@ class Le extends F {
     this.timeoutId && clearTimeout(this.timeoutId);
   }
 }
-Le.contextType = ee;
+Le.contextType = te;
 function pc(t) {
   let e = M(t), n = B(e, 1);
   return { start: e, end: n };
@@ -3690,14 +3690,14 @@ function Ec(t, e) {
     top: t.top - e.top
   };
 }
-const en = j();
+const en = W();
 class Sc {
   constructor() {
     this.getKeysForEventDefs = A(this._getKeysForEventDefs), this.splitDateSelection = A(this._splitDateSpan), this.splitEventStore = A(this._splitEventStore), this.splitIndividualUi = A(this._splitIndividualUi), this.splitEventDrag = A(this._splitInteraction), this.splitEventResize = A(this._splitInteraction), this.eventUiBuilders = {};
   }
   splitProps(e) {
     let n = this.getKeyInfo(e), r = this.getKeysForEventDefs(e.eventStore), i = this.splitDateSelection(e.dateSelection), s = this.splitIndividualUi(e.eventUiBases, r), l = this.splitEventStore(e.eventStore, r), o = this.splitEventDrag(e.eventDrag), a = this.splitEventResize(e.eventResize), d = {};
-    this.eventUiBuilders = J(n, (c, f) => this.eventUiBuilders[f] || A(Ac));
+    this.eventUiBuilders = ee(n, (c, f) => this.eventUiBuilders[f] || A(Ac));
     for (let c in n) {
       let f = n[c], h = l[c] || en, u = this.eventUiBuilders[c];
       d[c] = {
@@ -3722,13 +3722,13 @@ class Sc {
     return n;
   }
   _getKeysForEventDefs(e) {
-    return J(e.defs, (n) => this.getKeysForEventDef(n));
+    return ee(e.defs, (n) => this.getKeysForEventDef(n));
   }
   _splitEventStore(e, n) {
     let { defs: r, instances: i } = e, s = {};
     for (let l in r)
       for (let o of n[l])
-        s[o] || (s[o] = j()), s[o].defs[l] = r[l];
+        s[o] || (s[o] = W()), s[o].defs[l] = r[l];
     for (let l in i) {
       let o = i[l];
       for (let a of n[o.defId])
@@ -3773,9 +3773,9 @@ function Ac(t, e, n) {
 function Is(t, e, n, r) {
   return {
     dow: t.getUTCDay(),
-    isDisabled: !!(r && (!r.activeRange || !K(r.activeRange, t))),
-    isOther: !!(r && !K(r.currentRange, t)),
-    isToday: !!(e && K(e, t)),
+    isDisabled: !!(r && (!r.activeRange || !J(r.activeRange, t))),
+    isOther: !!(r && !J(r.currentRange, t)),
+    isToday: !!(e && J(e, t)),
     isPast: !!(e && t < e.start),
     isFuture: !!(e && t >= e.end)
   };
@@ -4028,7 +4028,7 @@ class Nc extends Qn {
     return document.documentElement.clientWidth;
   }
 }
-class Z extends R {
+class X extends R {
   constructor() {
     super(...arguments), this.uid = we();
   }
@@ -4219,7 +4219,7 @@ class Lc extends R {
     let { dateEnv: e, options: n, theme: r, viewApi: i } = this.context, { props: s } = this, { date: l, dateProfile: o } = s, a = Is(l, s.todayRange, null, o), d = [Hs].concat(qn(a, r)), c = e.format(l, s.dayHeaderFormat), f = !a.isDisabled && s.colCnt > 1 ? Mt(this.context, l) : {}, h = e.toDate(l);
     e.namedTimeZoneImpl && (h = de(h, 36e5));
     let u = Object.assign(Object.assign(Object.assign({ date: h, view: i }, s.extraRenderProps), { text: c }), a);
-    return g(W, { elTag: "th", elClasses: d, elAttrs: Object.assign({ role: "columnheader", colSpan: s.colSpan, "data-date": a.isDisabled ? void 0 : Nn(l) }, s.extraDataAttrs), renderProps: u, generatorName: "dayHeaderContent", customGenerator: n.dayHeaderContent, defaultGenerator: Bs, classNameGenerator: n.dayHeaderClassNames, didMount: n.dayHeaderDidMount, willUnmount: n.dayHeaderWillUnmount }, (p) => g("div", { className: "fc-scrollgrid-sync-inner" }, !a.isDisabled && g(p, { elTag: "a", elAttrs: f, elClasses: [
+    return g(V, { elTag: "th", elClasses: d, elAttrs: Object.assign({ role: "columnheader", colSpan: s.colSpan, "data-date": a.isDisabled ? void 0 : Nn(l) }, s.extraDataAttrs), renderProps: u, generatorName: "dayHeaderContent", customGenerator: n.dayHeaderContent, defaultGenerator: Bs, classNameGenerator: n.dayHeaderClassNames, didMount: n.dayHeaderDidMount, willUnmount: n.dayHeaderWillUnmount }, (p) => g("div", { className: "fc-scrollgrid-sync-inner" }, !a.isDisabled && g(p, { elTag: "a", elAttrs: f, elClasses: [
       "fc-col-header-cell-cushion",
       s.isSticky && "fc-sticky"
     ] })));
@@ -4239,7 +4239,7 @@ class Uc extends R {
       // TODO: make this public?
       date: l
     }, o), { view: i }), e.extraRenderProps), { text: a });
-    return g(W, { elTag: "th", elClasses: [
+    return g(V, { elTag: "th", elClasses: [
       Hs,
       ...qn(o, r),
       ...e.extraClassNames || []
@@ -4464,7 +4464,7 @@ function jc(t, e, n = {}, r) {
 }
 function Wc(t, e, n, r) {
   let i = e.getCurrentData(), s = t.eventDrag, l = s.mutatedEvents, o = l.defs, a = l.instances, d = xt(o, s.isEvent ? t.eventUiBases : { "": i.selectionConfig });
-  r && (d = J(d, r));
+  r && (d = ee(d, r));
   let c = za(t.eventStore, s.affectedEvents.instances), f = c.defs, h = c.instances, u = xt(f, t.eventUiBases);
   for (let p in a) {
     let v = a[p], b = v.range, y = d[v.defId], E = o[v.defId];
@@ -4482,8 +4482,8 @@ function Wc(t, e, n, r) {
     }
     let O = i.eventStore;
     for (let T of y.allows) {
-      let k = Object.assign(Object.assign({}, n), { range: v.range, allDay: E.allDay }), _ = O.defs[E.defId], ne = O.instances[p], $e;
-      if (_ ? $e = new I(e, _, ne) : $e = new I(e, E), !T(Wn(k, e), $e))
+      let k = Object.assign(Object.assign({}, n), { range: v.range, allDay: E.allDay }), _ = O.defs[E.defId], re = O.instances[p], $e;
+      if (_ ? $e = new I(e, _, re) : $e = new I(e, E), !T(Wn(k, e), $e))
         return !1;
     }
   }
@@ -4531,7 +4531,7 @@ const at = /^(visible|hidden)$/;
 class Yc extends R {
   constructor() {
     super(...arguments), this.handleEl = (e) => {
-      this.el = e, Q(this.props.elRef, e);
+      this.el = e, Z(this.props.elRef, e);
     };
   }
   render() {
@@ -4573,7 +4573,7 @@ class Yc extends R {
     return at.test(this.props.overflowY) ? 0 : this.el.offsetWidth - this.el.clientWidth;
   }
 }
-class X {
+class K {
   constructor(e) {
     this.masterCallback = e, this.currentMap = {}, this.depths = {}, this.callbackMap = {}, this.handleValue = (n, r) => {
       let { depths: i, currentMap: s } = this, l = !1, o = !1;
@@ -4628,7 +4628,7 @@ function Xc(t, e, n, r) {
   }, typeof e.rowContent == "function" ? e.rowContent(n) : e.rowContent));
 }
 function Kc(t, e) {
-  return ce(t, e, q);
+  return ce(t, e, Y);
 }
 function Jc(t, e) {
   let n = [];
@@ -4683,7 +4683,7 @@ function Gs(t) {
 }
 class Kn extends R {
   constructor() {
-    super(...arguments), this.processCols = A((e) => e, Kc), this.renderMicroColGroup = A(Jc), this.scrollerRefs = new X(), this.scrollerElRefs = new X(this._handleScrollerEl.bind(this)), this.state = {
+    super(...arguments), this.processCols = A((e) => e, Kc), this.renderMicroColGroup = A(Jc), this.scrollerRefs = new K(), this.scrollerElRefs = new K(this._handleScrollerEl.bind(this)), this.state = {
       shrinkWidth: null,
       forceYScrollbars: !1,
       scrollerClientWidths: {},
@@ -4738,7 +4738,7 @@ class Kn extends R {
   }
   _handleScrollerEl(e, n) {
     let r = id(this.props.sections, n);
-    r && Q(r.chunk.scrollerElRef, e);
+    r && Z(r.chunk.scrollerElRef, e);
   }
   componentDidMount() {
     this.handleSizing(), this.context.addResizeHandler(this.handleSizing);
@@ -4772,8 +4772,8 @@ class Kn extends R {
   }
 }
 Kn.addStateEquality({
-  scrollerClientWidths: q,
-  scrollerClientHeights: q
+  scrollerClientWidths: Y,
+  scrollerClientHeights: Y
 });
 function id(t, e) {
   for (let n of t)
@@ -4784,7 +4784,7 @@ function id(t, e) {
 class Jn extends R {
   constructor() {
     super(...arguments), this.buildPublicEvent = A((e, n, r) => new I(e, n, r)), this.handleEl = (e) => {
-      this.el = e, Q(this.props.elRef, e), e && Kr(e, this.props.seg);
+      this.el = e, Z(this.props.elRef, e), e && Kr(e, this.props.seg);
     };
   }
   render() {
@@ -4808,7 +4808,7 @@ class Jn extends R {
       isDragging: !!e.isDragging,
       isResizing: !!e.isResizing
     };
-    return g(W, { elRef: this.handleEl, elTag: e.elTag, elAttrs: e.elAttrs, elClasses: [
+    return g(V, { elRef: this.handleEl, elTag: e.elTag, elAttrs: e.elAttrs, elClasses: [
       ...nc(o),
       ...i.eventRange.ui.classNames,
       ...e.elClasses || []
@@ -4834,7 +4834,7 @@ class er extends R {
   }
 }
 er.addPropsEquality({
-  seg: q
+  seg: Y
 });
 function sd(t) {
   return g(
@@ -4848,13 +4848,13 @@ function sd(t) {
     )
   );
 }
-const tr = (t) => g(ee.Consumer, null, (e) => {
+const tr = (t) => g(te.Consumer, null, (e) => {
   let { options: n } = e, r = {
     isAxis: t.isAxis,
     date: e.dateEnv.toDate(t.date),
     view: e.viewApi
   };
-  return g(W, { elRef: t.elRef, elTag: t.elTag || "div", elAttrs: t.elAttrs, elClasses: t.elClasses, elStyle: t.elStyle, renderProps: r, generatorName: "nowIndicatorContent", customGenerator: n.nowIndicatorContent, classNameGenerator: n.nowIndicatorClassNames, didMount: n.nowIndicatorDidMount, willUnmount: n.nowIndicatorWillUnmount }, t.children);
+  return g(V, { elRef: t.elRef, elTag: t.elTag || "div", elAttrs: t.elAttrs, elClasses: t.elClasses, elStyle: t.elStyle, renderProps: r, generatorName: "nowIndicatorContent", customGenerator: n.nowIndicatorContent, classNameGenerator: n.nowIndicatorClassNames, didMount: n.nowIndicatorDidMount, willUnmount: n.nowIndicatorWillUnmount }, t.children);
 }), ld = N({ day: "numeric" });
 class nr extends R {
   constructor() {
@@ -4872,7 +4872,7 @@ class nr extends R {
       dateEnv: n.dateEnv,
       monthStartFormat: r.monthStartFormat
     });
-    return g(W, { elRef: e.elRef, elTag: e.elTag, elAttrs: Object.assign(Object.assign({}, e.elAttrs), i.isDisabled ? {} : { "data-date": Nn(e.date) }), elClasses: [
+    return g(V, { elRef: e.elRef, elTag: e.elTag, elAttrs: Object.assign(Object.assign({}, e.elAttrs), i.isDisabled ? {} : { "data-date": Nn(e.date) }), elClasses: [
       ...qn(i, n.theme),
       ...e.elClasses || []
     ], elStyle: e.elStyle, renderProps: i, generatorName: "dayCellContent", customGenerator: r.dayCellContent, defaultGenerator: e.defaultGenerator, classNameGenerator: (
@@ -4904,10 +4904,10 @@ function ad(t) {
 function Ys(t) {
   return g("div", { className: `fc-${t}` });
 }
-const Qs = (t) => g(ee.Consumer, null, (e) => {
+const Qs = (t) => g(te.Consumer, null, (e) => {
   let { dateEnv: n, options: r } = e, { date: i } = t, s = r.weekNumberFormat || t.defaultFormat, l = n.computeWeekNumber(i), o = n.format(i, s), a = { num: l, text: o, date: i };
   return g(
-    W,
+    V,
     { elRef: t.elRef, elTag: t.elTag, elAttrs: t.elAttrs, elClasses: t.elClasses, elStyle: t.elStyle, renderProps: a, generatorName: "weekNumberContent", customGenerator: r.weekNumberContent, defaultGenerator: cd, classNameGenerator: r.weekNumberClassNames, didMount: r.weekNumberDidMount, willUnmount: r.weekNumberWillUnmount },
     t.children
   );
@@ -4921,7 +4921,7 @@ class dd extends R {
     super(...arguments), this.state = {
       titleId: Ht()
     }, this.handleRootEl = (e) => {
-      this.rootEl = e, this.props.elRef && Q(this.props.elRef, e);
+      this.rootEl = e, this.props.elRef && Z(this.props.elRef, e);
     }, this.handleDocumentMouseDown = (e) => {
       const n = Ki(e);
       this.rootEl.contains(n) || this.handleCloseClick();
@@ -4968,7 +4968,7 @@ class dd extends R {
     }
   }
 }
-class ud extends Z {
+class ud extends X {
   constructor() {
     super(...arguments), this.handleRootEl = (e) => {
       this.rootEl = e, e ? this.context.registerInteractiveComponent(this, {
@@ -5012,7 +5012,7 @@ class Zs extends R {
       isPopoverOpen: !1,
       popoverId: Ht()
     }, this.handleLinkEl = (e) => {
-      this.linkEl = e, this.props.elRef && Q(this.props.elRef, e);
+      this.linkEl = e, this.props.elRef && Z(this.props.elRef, e);
     }, this.handleClick = (e) => {
       let { props: n, context: r } = this, { moreLinkClick: i } = r.options, s = ei(n).start;
       function l(o) {
@@ -5039,7 +5039,7 @@ class Zs extends R {
   }
   render() {
     let { props: e, state: n } = this;
-    return g(ee.Consumer, null, (r) => {
+    return g(te.Consumer, null, (r) => {
       let { viewApi: i, options: s, calendarApi: l } = r, { moreLinkText: o } = s, { moreCnt: a } = e, d = ei(e), c = typeof o == "function" ? o.call(l, a) : `+${a} ${o}`, f = je(s.moreLinkHint, [a], c), h = {
         num: a,
         shortText: `+${a}`,
@@ -5049,7 +5049,7 @@ class Zs extends R {
       return g(
         x,
         null,
-        !!e.moreCnt && g(W, { elTag: e.elTag || "a", elRef: this.handleLinkEl, elClasses: [
+        !!e.moreCnt && g(V, { elTag: e.elTag || "a", elRef: this.handleLinkEl, elClasses: [
           ...e.elClasses || [],
           "fc-more-link"
         ], elStyle: e.elStyle, elAttrs: Object.assign(Object.assign(Object.assign({}, e.elAttrs), es(this.handleClick)), { title: f, "aria-expanded": n.isPopoverOpen, "aria-controls": n.isPopoverOpen ? n.popoverId : "" }), renderProps: h, generatorName: "moreLinkContent", customGenerator: s.moreLinkContent, defaultGenerator: e.defaultGenerator || fd, classNameGenerator: s.moreLinkClassNames, didMount: s.moreLinkDidMount, willUnmount: s.moreLinkWillUnmount }, e.children),
@@ -5179,7 +5179,7 @@ function tl(t, e, n) {
     options: r
   };
 }
-function te(t) {
+function ne(t) {
   return {
     id: we(),
     name: t.name,
@@ -5362,7 +5362,7 @@ function Cd(t, e, n, r) {
   } : null;
 }
 function ti(t) {
-  return J(t, _d);
+  return ee(t, _d);
 }
 function _d(t) {
   let e = typeof t == "function" ? { component: t } : t, { component: n } = e;
@@ -5374,11 +5374,11 @@ function _d(t) {
   };
 }
 function ni(t) {
-  return (e) => g(ee.Consumer, null, (n) => g(W, { elTag: "div", elClasses: cs(n.viewSpec), renderProps: Object.assign(Object.assign({}, e), { nextDayThreshold: n.options.nextDayThreshold }), generatorName: void 0, customGenerator: t.content, classNameGenerator: t.classNames, didMount: t.didMount, willUnmount: t.willUnmount }));
+  return (e) => g(te.Consumer, null, (n) => g(V, { elTag: "div", elClasses: cs(n.viewSpec), renderProps: Object.assign(Object.assign({}, e), { nextDayThreshold: n.options.nextDayThreshold }), generatorName: void 0, customGenerator: t.content, classNameGenerator: t.classNames, didMount: t.didMount, willUnmount: t.willUnmount }));
 }
 function Rd(t, e, n, r) {
   let i = ti(t), s = ti(e.views), l = Dd(i, s);
-  return J(l, (o) => Td(o, s, e, n, r));
+  return ee(l, (o) => Td(o, s, e, n, r));
 }
 function Td(t, e, n, r, i) {
   let s = t.overrides.duration || t.defaults.duration || r.duration || n.duration, l = null, o = "", a = "", d = {};
@@ -5695,7 +5695,7 @@ let Zd = {
     });
   }
 };
-const Xd = te({
+const Xd = ne({
   name: "array-event-source",
   eventSourceDefs: [Zd]
 });
@@ -5708,7 +5708,7 @@ let Kd = {
     dc(i.bind(null, Ts(t.range, r)), (s) => e({ rawEvents: s }), n);
   }
 };
-const Jd = te({
+const Jd = ne({
   name: "func-event-source",
   eventSourceDefs: [Kd]
 }), eu = {
@@ -5737,7 +5737,7 @@ let tu = {
     }, n);
   }
 };
-const nu = te({
+const nu = ne({
   name: "json-event-source",
   eventSourceRefiners: eu,
   eventSourceDefs: [tu]
@@ -5779,7 +5779,7 @@ let su = {
     return r ? ou(t.daysOfWeek, t.startTime, t.dateEnv, n, r) : [];
   }
 };
-const lu = te({
+const lu = ne({
   name: "simple-recurring-event",
   recurringTypes: [su],
   eventRefiners: iu
@@ -5792,7 +5792,7 @@ function ou(t, e, n, r, i) {
   }
   return a;
 }
-const au = te({
+const au = ne({
   name: "change-handler",
   optionChangeHandlers: {
     events(t, e) {
@@ -5842,7 +5842,7 @@ const uu = [
   nu,
   lu,
   au,
-  te({
+  ne({
     name: "misc",
     isLoadingFuncs: [
       (t) => nl(t.eventSources)
@@ -5920,7 +5920,7 @@ class li {
 }
 class pu {
   constructor(e) {
-    this.computeCurrentViewData = A(this._computeCurrentViewData), this.organizeRawLocales = A(vd), this.buildLocale = A(el), this.buildPluginHooks = Sd(), this.buildDateEnv = A(mu), this.buildTheme = A(vu), this.parseToolbars = A(qd), this.buildViewSpecs = A(Rd), this.buildDateProfileGenerator = ht(bu), this.buildViewApi = A(yu), this.buildViewUiProps = ht(Au), this.buildEventUiBySource = A(Eu, q), this.buildEventUiBases = A(Su), this.parseContextBusinessHours = ht(wu), this.buildTitle = A(hu), this.nowManager = new li(), this.emitter = new Ut(), this.actionRunner = new fu(this._handleAction.bind(this), this.updateData.bind(this)), this.currentCalendarOptionsInput = {}, this.currentCalendarOptionsRefined = {}, this.currentViewOptionsInput = {}, this.currentViewOptionsRefined = {}, this.currentCalendarOptionsRefiners = {}, this.optionsForRefining = [], this.optionsForHandling = [], this.getCurrentData = () => this.data, this.dispatch = (h) => {
+    this.computeCurrentViewData = A(this._computeCurrentViewData), this.organizeRawLocales = A(vd), this.buildLocale = A(el), this.buildPluginHooks = Sd(), this.buildDateEnv = A(mu), this.buildTheme = A(vu), this.parseToolbars = A(qd), this.buildViewSpecs = A(Rd), this.buildDateProfileGenerator = ht(bu), this.buildViewApi = A(yu), this.buildViewUiProps = ht(Au), this.buildEventUiBySource = A(Eu, Y), this.buildEventUiBases = A(Su), this.parseContextBusinessHours = ht(wu), this.buildTitle = A(hu), this.nowManager = new li(), this.emitter = new Ut(), this.actionRunner = new fu(this._handleAction.bind(this), this.updateData.bind(this)), this.currentCalendarOptionsInput = {}, this.currentCalendarOptionsRefined = {}, this.currentViewOptionsInput = {}, this.currentViewOptionsRefined = {}, this.currentCalendarOptionsRefiners = {}, this.optionsForRefining = [], this.optionsForHandling = [], this.getCurrentData = () => this.data, this.dispatch = (h) => {
       this.actionRunner.request(h);
     }, this.props = e, this.actionRunner.pause(), this.nowManager = new li();
     let n = {}, r = this.computeOptionsData(e.optionOverrides, n, e.calendarApi), i = r.calendarOptions.initialView || r.pluginHooks.initialView, s = this.computeCurrentViewData(i, r, e.optionOverrides, n);
@@ -5935,7 +5935,7 @@ class pu {
       emitter: this.emitter,
       getCurrentData: this.getCurrentData
     }, o = Id(r.calendarOptions, r.dateEnv, this.nowManager), a = s.dateProfileGenerator.build(o);
-    K(a.activeRange, o) || (o = a.currentRange.start);
+    J(a.activeRange, o) || (o = a.currentRange.start);
     for (let h of r.pluginHooks.contextInit)
       h(l);
     let d = Pd(r.calendarOptions, a, l), c = {
@@ -5946,8 +5946,8 @@ class pu {
       businessHours: this.parseContextBusinessHours(l),
       eventSources: d,
       eventUiBases: {},
-      eventStore: j(),
-      renderableEventStore: j(),
+      eventStore: W(),
+      renderableEventStore: W(),
       dateSelection: null,
       eventSelection: "",
       eventDrag: null,
@@ -5979,7 +5979,7 @@ class pu {
     }, { currentDate: c, dateProfile: f } = r;
     this.data && this.data.dateProfileGenerator !== a.dateProfileGenerator && (f = a.dateProfileGenerator.build(c)), c = kd(c, e), f = Od(f, e, c, a.dateProfileGenerator), (e.type === "PREV" || // TODO: move this logic into DateProfileGenerator
     e.type === "NEXT" || // "
-    !K(f.currentRange, c)) && (c = f.currentRange.start);
+    !J(f.currentRange, c)) && (c = f.currentRange.start);
     let h = Hd(r.eventSources, e, f, d), u = Ba(r.eventStore, e, h, f, d), v = nl(h) && !a.options.progressiveEventRendering && r.renderableEventStore || u, { eventUiSingleBase: b, selectionConfig: y } = this.buildViewUiProps(d), E = this.buildEventUiBySource(h), w = this.buildEventUiBases(v.defs, b, E), D = {
       dynamicOptionOverrides: s,
       currentViewType: o,
@@ -6122,7 +6122,7 @@ function yu(t, e, n) {
   return new Qd(t, e, n);
 }
 function Eu(t) {
-  return J(t, (e) => e.ui);
+  return ee(t, (e) => e.ui);
 }
 function Su(t, e, n) {
   let r = { "": e };
@@ -6217,7 +6217,7 @@ class Cu extends R {
     super(...arguments), this.state = {
       availableWidth: null
     }, this.handleEl = (e) => {
-      this.el = e, Q(this.props.elRef, e), this.updateAvailableWidth();
+      this.el = e, Z(this.props.elRef, e), this.updateAvailableWidth();
     }, this.handleResize = () => {
       this.updateAvailableWidth();
     };
@@ -6326,7 +6326,7 @@ class Tu extends Ce {
     e.isHeightAuto || e.forPrint ? s = "" : r.height != null ? i = !0 : r.contentHeight != null ? s = r.contentHeight : l = Math.max(r.aspectRatio, 0.5);
     let o = this.buildViewContext(e.viewSpec, e.viewApi, e.options, e.dateProfileGenerator, e.dateEnv, e.nowManager, e.theme, e.pluginHooks, e.dispatch, e.getCurrentData, e.emitter, e.calendarApi, this.registerInteractiveComponent, this.unregisterInteractiveComponent), a = n.header && n.header.hasTitle ? this.state.viewLabelId : void 0;
     return g(
-      ee.Provider,
+      te.Provider,
       { value: o },
       g(Le, { unit: "day" }, (d) => {
         let c = this.buildToolbarProps(e.viewSpec, e.dateProfile, e.dateProfileGenerator, e.currentDate, d, e.viewTitle);
@@ -6392,7 +6392,7 @@ function xu(t, e, n, r, i, s) {
     title: s,
     activeButton: t.type,
     navUnit: t.singleUnit,
-    isTodayEnabled: l.isValid && !K(e.currentRange, i),
+    isTodayEnabled: l.isValid && !J(e.currentRange, i),
     isPrevEnabled: o.isValid,
     isNextEnabled: a.isValid
   };
@@ -6516,7 +6516,7 @@ var Iu = {
   timeHint: "Uhrzeit",
   eventHint: "Ereignis"
 };
-class Nu extends Z {
+class Nu extends X {
   constructor() {
     super(...arguments), this.headerElRef = U();
   }
@@ -6669,12 +6669,12 @@ function Hu(t) {
   return { allSegs: e, invisibleSegs: n };
 }
 const Bu = N({ week: "narrow" });
-class Lu extends Z {
+class Lu extends X {
   constructor() {
     super(...arguments), this.rootElRef = U(), this.state = {
       dayNumberId: Ht()
     }, this.handleRootEl = (e) => {
-      Q(this.rootElRef, e), Q(this.props.elRef, e);
+      Z(this.rootElRef, e), Z(this.props.elRef, e);
     };
   }
   render() {
@@ -6874,9 +6874,9 @@ class Wu extends Ps {
     super.handleInvalidInsertion(e, n, r);
   }
 }
-class hl extends Z {
+class hl extends X {
   constructor() {
-    super(...arguments), this.cellElRefs = new X(), this.frameElRefs = new X(), this.fgElRefs = new X(), this.segHarnessRefs = new X(), this.rootElRef = U(), this.state = {
+    super(...arguments), this.cellElRefs = new K(), this.frameElRefs = new K(), this.fgElRefs = new K(), this.segHarnessRefs = new K(), this.rootElRef = U(), this.state = {
       framePositions: null,
       maxContentHeight: null,
       segHeights: {}
@@ -6921,7 +6921,7 @@ class hl extends Z {
   }
   componentDidUpdate(e, n) {
     let r = this.props;
-    this.updateSizing(!q(e, r));
+    this.updateSizing(!Y(e, r));
   }
   componentWillUnmount() {
     this.context.removeResizeHandler(this.handleResize);
@@ -7016,7 +7016,7 @@ class hl extends Z {
   }
 }
 hl.addStateEquality({
-  segHeights: q
+  segHeights: Y
 });
 function Vu(t, e) {
   if (!t.length)
@@ -7037,9 +7037,9 @@ function Gu(t) {
       e[r.seg.eventRange.instance.instanceId] = r.absoluteTop;
   return e;
 }
-class qu extends Z {
+class qu extends X {
   constructor() {
-    super(...arguments), this.splitBusinessHourSegs = A(pt), this.splitBgEventSegs = A(Yu), this.splitFgEventSegs = A(pt), this.splitDateSelectionSegs = A(pt), this.splitEventDrag = A(ci), this.splitEventResize = A(ci), this.rowRefs = new X();
+    super(...arguments), this.splitBusinessHourSegs = A(pt), this.splitBgEventSegs = A(Yu), this.splitFgEventSegs = A(pt), this.splitDateSelectionSegs = A(pt), this.splitEventDrag = A(ci), this.splitEventResize = A(ci), this.rowRefs = new K();
   }
   render() {
     let { props: e, context: n } = this, r = e.cells.length, i = this.splitBusinessHourSegs(e.businessHourSegs, r), s = this.splitBgEventSegs(e.bgEventSegs, r), l = this.splitFgEventSegs(e.fgEventSegs, r), o = this.splitDateSelectionSegs(e.dateSelectionSegs, r), a = this.splitEventDrag(e.eventDrag, r), d = this.splitEventResize(e.eventResize, r), c = r >= 7 && e.clientWidth ? e.clientWidth / n.options.aspectRatio / 6 : null;
@@ -7136,7 +7136,7 @@ function Yu(t, e) {
 function Qu(t) {
   return t.eventRange.def.allDay;
 }
-class Zu extends Z {
+class Zu extends X {
   constructor() {
     super(...arguments), this.elRef = U(), this.needsScrollReset = !1;
   }
@@ -7205,7 +7205,7 @@ class Ku extends zs {
     return n.sliceRange(e);
   }
 }
-class gl extends Z {
+class gl extends X {
   constructor() {
     super(...arguments), this.slicer = new Ku(), this.tableRef = U();
   }
@@ -7252,7 +7252,7 @@ function nf(t) {
 }
 var rf = ':root{--fc-daygrid-event-dot-width:8px}.fc-daygrid-day-events:after,.fc-daygrid-day-events:before,.fc-daygrid-day-frame:after,.fc-daygrid-day-frame:before,.fc-daygrid-event-harness:after,.fc-daygrid-event-harness:before{clear:both;content:"";display:table}.fc .fc-daygrid-body{position:relative;z-index:1}.fc .fc-daygrid-day.fc-day-today{background-color:var(--fc-today-bg-color)}.fc .fc-daygrid-day-frame{min-height:100%;position:relative}.fc .fc-daygrid-day-top{display:flex;flex-direction:row-reverse}.fc .fc-day-other .fc-daygrid-day-top{opacity:.3}.fc .fc-daygrid-day-number{padding:4px;position:relative;z-index:4}.fc .fc-daygrid-month-start{font-size:1.1em;font-weight:700}.fc .fc-daygrid-day-events{margin-top:1px}.fc .fc-daygrid-body-balanced .fc-daygrid-day-events{left:0;position:absolute;right:0}.fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events{min-height:2em;position:relative}.fc .fc-daygrid-body-natural .fc-daygrid-day-events{margin-bottom:1em}.fc .fc-daygrid-event-harness{position:relative}.fc .fc-daygrid-event-harness-abs{left:0;position:absolute;right:0;top:0}.fc .fc-daygrid-bg-harness{bottom:0;position:absolute;top:0}.fc .fc-daygrid-day-bg .fc-non-business{z-index:1}.fc .fc-daygrid-day-bg .fc-bg-event{z-index:2}.fc .fc-daygrid-day-bg .fc-highlight{z-index:3}.fc .fc-daygrid-event{margin-top:1px;z-index:6}.fc .fc-daygrid-event.fc-event-mirror{z-index:7}.fc .fc-daygrid-day-bottom{font-size:.85em;margin:0 2px}.fc .fc-daygrid-day-bottom:after,.fc .fc-daygrid-day-bottom:before{clear:both;content:"";display:table}.fc .fc-daygrid-more-link{border-radius:3px;cursor:pointer;line-height:1;margin-top:1px;max-width:100%;overflow:hidden;padding:2px;position:relative;white-space:nowrap;z-index:4}.fc .fc-daygrid-more-link:hover{background-color:rgba(0,0,0,.1)}.fc .fc-daygrid-week-number{background-color:var(--fc-neutral-bg-color);color:var(--fc-neutral-text-color);min-width:1.5em;padding:2px;position:absolute;text-align:center;top:0;z-index:5}.fc .fc-more-popover .fc-popover-body{min-width:220px;padding:10px}.fc-direction-ltr .fc-daygrid-event.fc-event-start,.fc-direction-rtl .fc-daygrid-event.fc-event-end{margin-left:2px}.fc-direction-ltr .fc-daygrid-event.fc-event-end,.fc-direction-rtl .fc-daygrid-event.fc-event-start{margin-right:2px}.fc-direction-ltr .fc-daygrid-more-link{float:left}.fc-direction-ltr .fc-daygrid-week-number{border-radius:0 0 3px 0;left:0}.fc-direction-rtl .fc-daygrid-more-link{float:right}.fc-direction-rtl .fc-daygrid-week-number{border-radius:0 0 0 3px;right:0}.fc-liquid-hack .fc-daygrid-day-frame{position:static}.fc-daygrid-event{border-radius:3px;font-size:var(--fc-small-font-size);position:relative;white-space:nowrap}.fc-daygrid-block-event .fc-event-time{font-weight:700}.fc-daygrid-block-event .fc-event-time,.fc-daygrid-block-event .fc-event-title{padding:1px}.fc-daygrid-dot-event{align-items:center;display:flex;padding:2px 0}.fc-daygrid-dot-event .fc-event-title{flex-grow:1;flex-shrink:1;font-weight:700;min-width:0;overflow:hidden}.fc-daygrid-dot-event.fc-event-mirror,.fc-daygrid-dot-event:hover{background:rgba(0,0,0,.1)}.fc-daygrid-dot-event.fc-event-selected:before{bottom:-10px;top:-10px}.fc-daygrid-event-dot{border:calc(var(--fc-daygrid-event-dot-width)/2) solid var(--fc-event-border-color);border-radius:calc(var(--fc-daygrid-event-dot-width)/2);box-sizing:content-box;height:0;margin:0 4px;width:0}.fc-direction-ltr .fc-daygrid-event .fc-event-time{margin-right:3px}.fc-direction-rtl .fc-daygrid-event .fc-event-time{margin-left:3px}';
 Rn(rf);
-var sf = te({
+var sf = ne({
   name: "@fullcalendar/daygrid",
   initialView: "dayGridMonth",
   views: {
@@ -7721,7 +7721,7 @@ class zt {
     (n || !Ft(this.movingHit, r)) && (this.movingHit = r, this.emitter.trigger("hitupdate", r, !1, e));
   }
   prepareHits() {
-    this.offsetTrackers = J(this.droppableStore, (e) => (e.component.prepareHits(), new hf(e.el)));
+    this.offsetTrackers = ee(this.droppableStore, (e) => (e.component.prepareHits(), new hf(e.el)));
   }
   releaseHits() {
     let { offsetTrackers: e } = this;
@@ -7864,13 +7864,13 @@ class tt extends Be {
         return;
       let a = this.relevantEvents, d = this.hitDragging.initialHit, c = this.component.context, f = null, h = null, u = null, p = !1, v = {
         affectedEvents: a,
-        mutatedEvents: j(),
+        mutatedEvents: W(),
         isEvent: !0
       };
       if (l) {
         f = l.context;
         let b = f.options;
-        c === f || b.editable && b.droppable ? (h = Ef(d, l, this.eventRange.instance.range.start, f.getCurrentData().pluginHooks.eventDragMutationMassagers), h && (u = Vn(a, f.getCurrentData().eventUiBases, h, f), v.mutatedEvents = u, Fs(v, l.dateProfile, f) || (p = !0, h = null, u = null, v.mutatedEvents = j()))) : f = null;
+        c === f || b.editable && b.droppable ? (h = Ef(d, l, this.eventRange.instance.range.start, f.getCurrentData().pluginHooks.eventDragMutationMassagers), h && (u = Vn(a, f.getCurrentData().eventUiBases, h, f), v.mutatedEvents = u, Fs(v, l.dateProfile, f) || (p = !0, h = null, u = null, v.mutatedEvents = W()))) : f = null;
       }
       this.displayDrag(f, v), p ? Mn() : kn(), o || (c === f && // TODO: write test for this
       Ft(d, l) && (h = null), this.dragging.setMirrorNeedsRevert(!h), this.dragging.setMirrorIsVisible(!l || !this.subjectEl.getRootNode().querySelector(".fc-event-mirror")), this.receivingContext = f, this.validMutation = h, this.mutatedRelevantEvents = u);
@@ -7961,7 +7961,7 @@ class tt extends Be {
       type: "SET_EVENT_DRAG",
       state: {
         affectedEvents: n.affectedEvents,
-        mutatedEvents: j(),
+        mutatedEvents: W(),
         isEvent: !0
       }
     }) : i.dispatch({ type: "UNSET_EVENT_DRAG" })), e && e.dispatch({ type: "SET_EVENT_DRAG", state: n });
@@ -8010,7 +8010,7 @@ class Af extends Be {
     }, this.handleHitUpdate = (s, l, o) => {
       let { context: a } = this.component, d = this.relevantEvents, c = this.hitDragging.initialHit, f = this.eventRange.instance, h = null, u = null, p = !1, v = {
         affectedEvents: d,
-        mutatedEvents: j(),
+        mutatedEvents: W(),
         isEvent: !0
       };
       s && (s.componentId === c.componentId && this.isHitComboAllowed && !this.isHitComboAllowed(c, s) || (h = wf(c, s, o.subjectEl.classList.contains("fc-event-resizer-start"), f.range))), h && (u = Vn(d, a.getCurrentData().eventUiBases, h, a), v.mutatedEvents = u, Fs(v, s.dateProfile, a) || (p = !0, h = null, u = null, v.mutatedEvents = null)), u ? a.dispatch({
@@ -8110,7 +8110,7 @@ const Cf = {
   eventLeave: m
 };
 Xn.dataAttrPrefix = "";
-var Rf = te({
+var Rf = ne({
   name: "@fullcalendar/interaction",
   componentInteractions: [mf, vf, tt, Af],
   calendarInteractions: [Df],
@@ -8144,7 +8144,7 @@ function El(t) {
     "fc-timegrid-slot-label",
     t.isLabeled ? "fc-scrollgrid-shrink" : "fc-timegrid-slot-minor"
   ];
-  return g(ee.Consumer, null, (n) => {
+  return g(te.Consumer, null, (n) => {
     if (!t.isLabeled)
       return g("td", { className: e.join(" "), "data-time": t.isoTimeStr });
     let { dateEnv: r, options: i, viewApi: s } = n, l = (
@@ -8157,7 +8157,7 @@ function El(t) {
       view: s,
       text: r.format(t.date, l)
     };
-    return g(W, { elTag: "td", elClasses: e, elAttrs: {
+    return g(V, { elTag: "td", elClasses: e, elAttrs: {
       "data-time": t.isoTimeStr
     }, renderProps: o, generatorName: "slotLabelContent", customGenerator: i.slotLabelContent, defaultGenerator: Mf, classNameGenerator: i.slotLabelClassNames, didMount: i.slotLabelDidMount, willUnmount: i.slotLabelWillUnmount }, (a) => g(
       "div",
@@ -8182,7 +8182,7 @@ class kf extends R {
   }
 }
 const If = N({ week: "short" }), Nf = 5;
-class Of extends Z {
+class Of extends X {
   constructor() {
     super(...arguments), this.allDaySplitter = new Tf(), this.headerElRef = U(), this.rootElRef = U(), this.scrollerElRef = U(), this.state = {
       slatCoords: null
@@ -8220,7 +8220,7 @@ class Of extends Z {
       };
       return (
         // TODO: make reusable hook. used in list view too
-        g(W, { elTag: "td", elClasses: [
+        g(V, { elTag: "td", elClasses: [
           "fc-timegrid-axis",
           "fc-scrollgrid-shrink"
         ], elAttrs: {
@@ -8417,9 +8417,9 @@ class Hf {
   }
   safeComputeTop(e) {
     let { dateProfile: n } = this;
-    if (K(n.currentRange, e)) {
+    if (J(n.currentRange, e)) {
       let r = M(e), i = e.valueOf() - r.valueOf();
-      if (i >= G(n.slotMinTime) && i < G(n.slotMaxTime))
+      if (i >= q(n.slotMinTime) && i < q(n.slotMaxTime))
         return this.computeTimeTop(C(i));
     }
     return null;
@@ -8433,7 +8433,7 @@ class Hf {
   // This is a makeshify way to compute the time-top. Assumes all slatMetas dates are uniform.
   // Eventually allow computation with arbirary slat dates.
   computeTimeTop(e) {
-    let { positions: n, dateProfile: r } = this, i = n.els.length, s = (e.milliseconds - G(r.slotMinTime)) / G(this.slotDuration), l, o;
+    let { positions: n, dateProfile: r } = this, i = n.els.length, s = (e.milliseconds - q(r.slotMinTime)) / q(this.slotDuration), l, o;
     return s = Math.max(0, s), s = Math.min(i, s), l = Math.floor(s), l = Math.min(l, i - 1), o = s - l, n.tops[l] + n.getHeight(l) * o;
   }
 }
@@ -8450,7 +8450,7 @@ class Bf extends R {
         "tr",
         { key: s.key, ref: i.createRef(s.key) },
         e.axis && g(El, Object.assign({}, s)),
-        g(W, { elTag: "td", elClasses: [
+        g(V, { elTag: "td", elClasses: [
           "fc-timegrid-slot",
           "fc-timegrid-slot-lane",
           !s.isLabeled && "fc-timegrid-slot-minor"
@@ -8463,7 +8463,7 @@ class Bf extends R {
 }
 class Lf extends R {
   constructor() {
-    super(...arguments), this.rootElRef = U(), this.slatElRefs = new X();
+    super(...arguments), this.rootElRef = U(), this.slatElRefs = new K();
   }
   render() {
     let { props: e, context: n } = this;
@@ -8727,10 +8727,10 @@ class Xf extends R {
       null,
       this.renderHiddenGroups(w, e),
       E.map((D) => {
-        let { seg: O, rect: T } = D, k = O.eventRange.instance.instanceId, _ = b || !!(!n[k] && T), ne = cn(T && T.span), $e = !b && T ? this.computeSegHStyle(T) : { left: 0, right: 0 }, xl = !!T && T.stackForward > 0, Ml = !!T && T.span.end - T.span.start < a;
+        let { seg: O, rect: T } = D, k = O.eventRange.instance.instanceId, _ = b || !!(!n[k] && T), re = cn(T && T.span), $e = !b && T ? this.computeSegHStyle(T) : { left: 0, right: 0 }, xl = !!T && T.stackForward > 0, Ml = !!T && T.span.end - T.span.start < a;
         return g(
           "div",
-          { className: "fc-timegrid-event-harness" + (xl ? " fc-timegrid-event-harness-inset" : ""), key: l || k, style: Object.assign(Object.assign({ visibility: _ ? "" : "hidden" }, ne), $e) },
+          { className: "fc-timegrid-event-harness" + (xl ? " fc-timegrid-event-harness-inset" : ""), key: l || k, style: Object.assign(Object.assign({ visibility: _ ? "" : "hidden" }, re), $e) },
           g(Sl, Object.assign({ seg: O, isDragging: r, isResizing: i, isDateSelecting: s, isSelected: k === u, isShort: Ml }, ae(O, p, v)))
         );
       })
@@ -8800,7 +8800,7 @@ function Kf(t, e) {
 }
 class Jf extends R {
   constructor() {
-    super(...arguments), this.splitFgEventSegs = A(Ue), this.splitBgEventSegs = A(Ue), this.splitBusinessHourSegs = A(Ue), this.splitNowIndicatorSegs = A(Ue), this.splitDateSelectionSegs = A(Ue), this.splitEventDrag = A(ui), this.splitEventResize = A(ui), this.rootElRef = U(), this.cellElRefs = new X();
+    super(...arguments), this.splitFgEventSegs = A(Ue), this.splitBgEventSegs = A(Ue), this.splitBusinessHourSegs = A(Ue), this.splitNowIndicatorSegs = A(Ue), this.splitDateSelectionSegs = A(Ue), this.splitEventDrag = A(ui), this.splitEventResize = A(ui), this.rootElRef = U(), this.cellElRefs = new K();
   }
   render() {
     let { props: e, context: n } = this, r = n.options.nowIndicator && e.slatCoords && e.slatCoords.safeComputeTop(e.nowDate), i = e.cells.length, s = this.splitFgEventSegs(e.fgEventSegs, i), l = this.splitBgEventSegs(e.bgEventSegs, i), o = this.splitBusinessHourSegs(e.businessHourSegs, i), a = this.splitNowIndicatorSegs(e.nowIndicatorSegs, i), d = this.splitDateSelectionSegs(e.dateSelectionSegs, i), c = this.splitEventDrag(e.eventDrag, i), f = this.splitEventResize(e.eventResize, i);
@@ -8855,7 +8855,7 @@ class Jf extends R {
 function eh(t, e) {
   return e.map((n) => t[n.key]);
 }
-class th extends Z {
+class th extends X {
   constructor() {
     super(...arguments), this.processSlotOptions = A(nh), this.state = {
       slatCoords: null
@@ -8943,7 +8943,7 @@ class rh extends zs {
     return r;
   }
 }
-class ih extends Z {
+class ih extends X {
   constructor() {
     super(...arguments), this.buildDayRanges = A(sh), this.slicer = new rh(), this.timeColsRef = U();
   }
@@ -8970,7 +8970,7 @@ const gi = [
 ];
 function lh(t, e, n, r, i) {
   let s = /* @__PURE__ */ new Date(0), l = t, o = C(0), a = n || oh(r), d = [];
-  for (; G(l) < G(e); ) {
+  for (; q(l) < q(e); ) {
     let c = i.add(s, l), f = In(o, a) !== null;
     d.push({
       date: c,
@@ -9007,7 +9007,7 @@ Rn(dh);
 const uh = {
   allDaySlot: Boolean
 };
-var fh = te({
+var fh = ne({
   name: "@fullcalendar/timegrid",
   initialView: "timeGridWeek",
   optionRefiners: uh,
@@ -9281,7 +9281,7 @@ let Re = class extends HTMLElement {
 Re.elementStyles = [], Re.shadowRootOptions = { mode: "open" }, Re[Ve("elementProperties")] = /* @__PURE__ */ new Map(), Re[Ve("finalized")] = /* @__PURE__ */ new Map(), Ah?.({ ReactiveElement: Re }), (jt.reactiveElementVersions ??= []).push("2.1.2");
 const cr = globalThis, yi = (t) => t, Ot = cr.trustedTypes, Ei = Ot ? Ot.createPolicy("lit-html", { createHTML: (t) => t }) : void 0, Cl = "$lit$", ie = `lit$${Math.random().toFixed(9).slice(2)}$`, _l = "?" + ie, wh = `<${_l}>`, Ae = document, Ze = () => Ae.createComment(""), Xe = (t) => t === null || typeof t != "object" && typeof t != "function", dr = Array.isArray, Dh = (t) => dr(t) || typeof t?.[Symbol.iterator] == "function", dn = `[ 	
 \f\r]`, ze = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, Si = /-->/g, Ai = />/g, fe = RegExp(`>|${dn}(?:([^\\s"'>=/]+)(${dn}*=${dn}*(?:[^ 	
-\f\r"'\`<>=]|("|')|))|$)`, "g"), wi = /'/g, Di = /"/g, Rl = /^(?:script|style|textarea|title)$/i, Ch = (t) => (e, ...n) => ({ _$litType$: t, strings: e, values: n }), re = Ch(1), Pe = /* @__PURE__ */ Symbol.for("lit-noChange"), H = /* @__PURE__ */ Symbol.for("lit-nothing"), Ci = /* @__PURE__ */ new WeakMap(), me = Ae.createTreeWalker(Ae, 129);
+\f\r"'\`<>=]|("|')|))|$)`, "g"), wi = /'/g, Di = /"/g, Rl = /^(?:script|style|textarea|title)$/i, Ch = (t) => (e, ...n) => ({ _$litType$: t, strings: e, values: n }), G = Ch(1), Pe = /* @__PURE__ */ Symbol.for("lit-noChange"), H = /* @__PURE__ */ Symbol.for("lit-nothing"), Ci = /* @__PURE__ */ new WeakMap(), me = Ae.createTreeWalker(Ae, 129);
 function Tl(t, e) {
   if (!dr(t) || !t.hasOwnProperty("raw")) throw Error("invalid template strings array");
   return Ei !== void 0 ? Ei.createHTML(e) : e;
@@ -9563,7 +9563,7 @@ function fr(t) {
     return i.constructor.createProperty(s, r), l ? Object.getOwnPropertyDescriptor(i, s) : void 0;
   })(t, e, n);
 }
-function V(t) {
+function F(t) {
   return fr({ ...t, state: !0, attribute: !1 });
 }
 const Lh = (t, e, n) => (n.configurable = !0, n.enumerable = !0, Reflect.decorate && typeof e != "object" && Object.defineProperty(t, e, n), n);
@@ -9928,7 +9928,7 @@ var zh = Object.defineProperty, Fh = Object.getOwnPropertyDescriptor, L = (t, e,
 const _i = "#0078d4", jh = 500, Ri = "06:00:00", Ti = "22:00:00", xi = 7, Wh = [0, 250, 1e3, 2500];
 let P = class extends Ge {
   constructor() {
-    super(...arguments), this.activeCalendars = [], this.isCompact = !1, this.showModal = !1, this.editMode = !1, this.confirmDelete = !1, this.isAllDay = !1, this.currentEventId = "", this.currentRecurrenceId = "", this.newEventTitle = "", this.newEventCalendar = "", this.newEventStart = "", this.newEventEnd = "", this.newEventRecurrence = "", this.calendar = null, this.allFetchedEvents = [], this.visibleEvents = [], this.lastEntitySignature = "";
+    super(...arguments), this.activeCalendars = [], this.isCompact = !1, this.showModal = !1, this.editMode = !1, this.confirmDelete = !1, this.isAllDay = !1, this.currentEventId = "", this.currentRecurrenceId = "", this.newEventTitle = "", this.newEventCalendar = "", this.newEventStart = "", this.newEventEnd = "", this.newEventRecurrence = "", this.currentRrule = "", this.calendar = null, this.allFetchedEvents = [], this.visibleEvents = [], this.lastEntitySignature = "";
   }
   setConfig(t) {
     if (!t.entities?.length)
@@ -9940,7 +9940,7 @@ let P = class extends Ge {
   }
   // ---------------------------------------------------------------- Rendering
   render() {
-    return re`
+    return G`
       <ha-card>
         <div class="header">
           <div class="filters">
@@ -9964,7 +9964,7 @@ let P = class extends Ge {
   }
   /** Kleine Symbolschaltflaeche, etwa zu einer anderen Ansicht. */
   renderLink(t) {
-    return re`
+    return G`
       <button
         class="link-button"
         title=${t.name ?? t.path}
@@ -9983,7 +9983,7 @@ let P = class extends Ge {
   }
   renderFilterChip(t) {
     const e = this.config.colors?.[t] ?? _i, n = this.activeCalendars.includes(t);
-    return re`
+    return G`
       <button
         class="filter-chip ${n ? "active" : ""}"
         style="--chip-color: ${e}"
@@ -9995,9 +9995,9 @@ let P = class extends Ge {
     `;
   }
   renderModal() {
-    if (!this.showModal) return re``;
+    if (!this.showModal) return G``;
     const t = this.isAllDay ? "date" : "datetime-local";
-    return re`
+    return G`
       <div class="modal-overlay" @click=${() => this.closeModal()}>
         <div class="modal-content" @click=${(e) => e.stopPropagation()}>
           <h3>${this.editMode ? "Termin bearbeiten" : "Neuer Termin"}</h3>
@@ -10015,15 +10015,21 @@ let P = class extends Ge {
 
           <div class="form-group">
             <label>Kalender</label>
-            <select
-              .value=${this.newEventCalendar}
-              @change=${(e) => this.newEventCalendar = e.target.value}
-              ?disabled=${this.editMode}
-            >
-              ${this.config.entities.map(
-      (e) => re`<option value=${e}>${this.friendlyName(e)}</option>`
+            ${this.editMode ? (
+      // Beim Bearbeiten ist der Kalender ohnehin gesperrt. Als
+      // Auswahlliste zeigte er den ersten Eintrag statt des echten
+      // Werts, weil das Feld gesetzt wird, bevor die Optionen stehen.
+      G`<p class="readonly-value">${this.friendlyName(this.newEventCalendar)}</p>`
+    ) : G`
+                  <select
+                    .value=${this.newEventCalendar}
+                    @change=${(e) => this.newEventCalendar = e.target.value}
+                  >
+                    ${this.config.entities.map(
+      (e) => G`<option value=${e}>${this.friendlyName(e)}</option>`
     )}
-            </select>
+                  </select>
+                `}
           </div>
 
           <div class="form-group form-group--inline">
@@ -10057,16 +10063,18 @@ let P = class extends Ge {
 
           <div class="form-group">
             <label>Wiederholung</label>
-            <select
-              .value=${this.newEventRecurrence}
-              @change=${(e) => this.newEventRecurrence = e.target.value}
-              ?disabled=${this.editMode}
-            >
-              <option value="">Keine</option>
-              <option value="DAILY">Täglich</option>
-              <option value="WEEKLY">Wöchentlich</option>
-              <option value="MONTHLY">Monatlich</option>
-            </select>
+            ${this.editMode ? G`<p class="readonly-value">${Gh(this.currentRrule)}</p>` : G`
+                  <select
+                    .value=${this.newEventRecurrence}
+                    @change=${(e) => this.newEventRecurrence = e.target.value}
+                  >
+                    <option value="">Keine</option>
+                    <option value="DAILY">Täglich</option>
+                    <option value="WEEKLY">Wöchentlich</option>
+                    <option value="MONTHLY">Monatlich</option>
+                    <option value="YEARLY">Jährlich</option>
+                  </select>
+                `}
           </div>
 
           <div class="modal-actions">
@@ -10084,13 +10092,13 @@ let P = class extends Ge {
   }
   /** Zweistufiges Loeschen statt confirm(): erst Klick, dann Bestaetigung. */
   renderDeleteButton() {
-    return this.confirmDelete ? re`
+    return this.confirmDelete ? G`
       <button class="btn-delete btn-delete--confirm" @click=${() => {
       this.deleteEvent();
     }}>
         Wirklich löschen?
       </button>
-    ` : re`
+    ` : G`
         <button class="btn-delete" @click=${() => this.confirmDelete = !0}>Löschen</button>
       `;
   }
@@ -10184,7 +10192,8 @@ let P = class extends Ge {
     const n = this.config.colors?.[e] ?? _i, r = {
       entityId: e,
       uid: t.uid ?? "",
-      recurrenceId: t.recurrence_id ?? ""
+      recurrenceId: t.recurrence_id ?? "",
+      rrule: t.rrule ?? ""
     };
     return {
       id: t.uid,
@@ -10216,11 +10225,11 @@ let P = class extends Ge {
     t !== this.isAllDay && (this.isAllDay = t, this.newEventStart = this.reformat(this.newEventStart, t), this.newEventEnd = this.reformat(this.newEventEnd, t));
   }
   handleDateSelect(t) {
-    t.view.calendar.unselect(), this.isAllDay = t.allDay, this.newEventStart = this.formatForInput(t.start, t.allDay), this.newEventEnd = this.formatForInput(t.end, t.allDay), this.newEventTitle = "", this.newEventCalendar = this.config.entities[0] ?? "", this.newEventRecurrence = "", this.editMode = !1, this.confirmDelete = !1, this.showModal = !0;
+    t.view.calendar.unselect(), this.isAllDay = t.allDay, this.newEventStart = this.formatForInput(t.start, t.allDay), this.newEventEnd = this.formatForInput(t.end, t.allDay), this.newEventTitle = "", this.newEventCalendar = this.config.entities[0] ?? "", this.newEventRecurrence = "", this.currentRrule = "", this.editMode = !1, this.confirmDelete = !1, this.showModal = !0;
   }
   handleEventClick(t) {
     const e = t.event, n = e.extendedProps;
-    this.editMode = !0, this.confirmDelete = !1, this.isAllDay = e.allDay, this.currentEventId = n.uid || (e.id ?? ""), this.currentRecurrenceId = n.recurrenceId, this.newEventTitle = e.title, this.newEventCalendar = n.entityId, this.newEventStart = this.formatForInput(e.start, e.allDay), this.newEventEnd = this.formatForInput(e.end ?? e.start, e.allDay), this.newEventRecurrence = "", this.showModal = !0;
+    this.editMode = !0, this.confirmDelete = !1, this.isAllDay = e.allDay, this.currentEventId = n.uid || (e.id ?? ""), this.currentRecurrenceId = n.recurrenceId, this.newEventTitle = e.title, this.newEventCalendar = n.entityId, this.newEventStart = this.formatForInput(e.start, e.allDay), this.newEventEnd = this.formatForInput(e.end ?? e.start, e.allDay), this.currentRrule = n.rrule, this.newEventRecurrence = "", this.showModal = !0;
   }
   /** Termin wurde gezogen oder in der Dauer geaendert. */
   async handleEventMoved(t) {
@@ -10257,7 +10266,7 @@ let P = class extends Ge {
     return e ? r.slice(0, 10) : r.slice(0, 19);
   }
   closeModal() {
-    this.showModal = !1, this.editMode = !1, this.confirmDelete = !1, this.isAllDay = !1, this.currentEventId = "", this.currentRecurrenceId = "", this.newEventTitle = "", this.newEventCalendar = "", this.newEventStart = "", this.newEventEnd = "", this.newEventRecurrence = "";
+    this.showModal = !1, this.editMode = !1, this.confirmDelete = !1, this.isAllDay = !1, this.currentEventId = "", this.currentRecurrenceId = "", this.newEventTitle = "", this.newEventCalendar = "", this.newEventStart = "", this.newEventEnd = "", this.newEventRecurrence = "", this.currentRrule = "";
   }
   async saveEvent() {
     if (!this.newEventTitle.trim()) return this.notify("Bitte einen Titel eingeben.");
@@ -10359,6 +10368,12 @@ let P = class extends Ge {
 P.styles = [
   Uh,
   Dl`
+      .readonly-value {
+        margin: 0;
+        padding: 10px 0;
+        color: var(--text-primary);
+        font-size: 1rem;
+      }
       .link-button {
         display: inline-flex;
         align-items: center;
@@ -10407,50 +10422,71 @@ L([
   fr({ attribute: !1 })
 ], P.prototype, "config", 2);
 L([
-  V()
+  F()
 ], P.prototype, "activeCalendars", 2);
 L([
-  V()
+  F()
 ], P.prototype, "isCompact", 2);
 L([
-  V()
+  F()
 ], P.prototype, "showModal", 2);
 L([
-  V()
+  F()
 ], P.prototype, "editMode", 2);
 L([
-  V()
+  F()
 ], P.prototype, "confirmDelete", 2);
 L([
-  V()
+  F()
 ], P.prototype, "isAllDay", 2);
 L([
-  V()
+  F()
 ], P.prototype, "currentEventId", 2);
 L([
-  V()
+  F()
 ], P.prototype, "currentRecurrenceId", 2);
 L([
-  V()
+  F()
 ], P.prototype, "newEventTitle", 2);
 L([
-  V()
+  F()
 ], P.prototype, "newEventCalendar", 2);
 L([
-  V()
+  F()
 ], P.prototype, "newEventStart", 2);
 L([
-  V()
+  F()
 ], P.prototype, "newEventEnd", 2);
 L([
-  V()
+  F()
 ], P.prototype, "newEventRecurrence", 2);
+L([
+  F()
+], P.prototype, "currentRrule", 2);
 L([
   $h("#calendar")
 ], P.prototype, "calendarEl", 2);
 P = L([
   Ph("family-calendar")
 ], P);
+const Vh = {
+  DAILY: "Täglich",
+  WEEKLY: "Wöchentlich",
+  MONTHLY: "Monatlich",
+  YEARLY: "Jährlich"
+};
+function Gh(t) {
+  if (!t) return "Keine";
+  const e = /FREQ=([A-Z]+)/.exec(t)?.[1] ?? "", n = Vh[e];
+  if (!n) return t;
+  const r = /UNTIL=(\d{4})(\d{2})(\d{2})/.exec(t);
+  if (r) {
+    const [, s, l, o] = r;
+    return `${n}, bis ${o}.${l}.${s}`;
+  }
+  const i = /COUNT=(\d+)/.exec(t)?.[1];
+  return i ? `${n}, ${i}-mal` : n;
+}
 window.customCards = window.customCards ?? [];
 window.customCards.push({
   type: "family-calendar",

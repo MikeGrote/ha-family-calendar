@@ -38,6 +38,8 @@ export interface EventExtendedProps {
   entityId: string;
   uid: string;
   recurrenceId: string;
+  /** Wiederholungsregel des Termins, leer bei Einzelterminen. */
+  rrule: string;
 }
 
 /** Nutzlast fuer calendar/event/create und calendar/event/update. */
@@ -50,7 +52,7 @@ export interface CalendarEventPayload {
   rrule?: string;
 }
 
-export type RecurrenceFrequency = '' | 'DAILY' | 'WEEKLY' | 'MONTHLY';
+export type RecurrenceFrequency = '' | 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
 
 /** hass.callApi ist in custom-card-helpers zu locker typisiert. */
 export type HassWithApi = HomeAssistant & {

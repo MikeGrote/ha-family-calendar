@@ -53,6 +53,7 @@ export class FamilyCalendar extends LitElement {
   @state() private newEventStart = '';
   @state() private newEventEnd = '';
   @state() private newEventRecurrence: RecurrenceFrequency = '';
+  @state() private currentRrule = '';
 
   @query('#calendar') private calendarEl!: HTMLElement;
 
@@ -163,15 +164,23 @@ export class FamilyCalendar extends LitElement {
 
           <div class="form-group">
             <label>Kalender</label>
-            <select
-              .value=${this.newEventCalendar}
-              @change=${(e: Event) => (this.newEventCalendar = (e.target as HTMLSelectElement).value)}
-              ?disabled=${this.editMode}
-            >
-              ${this.config.entities.map(
-                (entityId) => html`<option value=${entityId}>${this.friendlyName(entityId)}</option>`,
-              )}
-            </select>
+            ${this.editMode
+              ? // Beim Bearbeiten ist der Kalender ohnehin gesperrt. Als
+                // Auswahlliste zeigte er den ersten Eintrag statt des echten
+                // Werts, weil das Feld gesetzt wird, bevor die Optionen stehen.
+                html`<p class="readonly-value">${this.friendlyName(this.newEventCalendar)}</p>`
+              : html`
+                  <select
+                    .value=${this.newEventCalendar}
+                    @change=${(e: Event) =>
+                      (this.newEventCalendar = (e.target as HTMLSelectElement).value)}
+                  >
+                    ${this.config.entities.map(
+                      (entityId) =>
+                        html`<option value=${entityId}>${this.friendlyName(entityId)}</option>`,
+                    )}
+                  </select>
+                `}
           </div>
 
           <div class="form-group form-group--inline">
@@ -205,17 +214,22 @@ export class FamilyCalendar extends LitElement {
 
           <div class="form-group">
             <label>Wiederholung</label>
-            <select
-              .value=${this.newEventRecurrence}
-              @change=${(e: Event) =>
-                (this.newEventRecurrence = (e.target as HTMLSelectElement).value as RecurrenceFrequency)}
-              ?disabled=${this.editMode}
-            >
-              <option value="">Keine</option>
-              <option value="DAILY">Täglich</option>
-              <option value="WEEKLY">Wöchentlich</option>
-              <option value="MONTHLY">Monatlich</option>
-            </select>
+            ${this.editMode
+              ? html`<p class="readonly-value">${describeRecurrence(this.currentRrule)}</p>`
+              : html`
+                  <select
+                    .value=${this.newEventRecurrence}
+                    @change=${(e: Event) =>
+                      (this.newEventRecurrence = (e.target as HTMLSelectElement)
+                        .value as RecurrenceFrequency)}
+                  >
+                    <option value="">Keine</option>
+                    <option value="DAILY">Täglich</option>
+                    <option value="WEEKLY">Wöchentlich</option>
+                    <option value="MONTHLY">Monatlich</option>
+                    <option value="YEARLY">Jährlich</option>
+                  </select>
+                `}
           </div>
 
           <div class="modal-actions">
@@ -397,6 +411,7 @@ export class FamilyCalendar extends LitElement {
       entityId,
       uid: event.uid ?? '',
       recurrenceId: event.recurrence_id ?? '',
+      rrule: event.rrule ?? '',
     };
     return {
       id: event.uid,
@@ -457,6 +472,7 @@ export class FamilyCalendar extends LitElement {
     this.newEventTitle = '';
     this.newEventCalendar = this.config.entities[0] ?? '';
     this.newEventRecurrence = '';
+    this.currentRrule = '';
     this.editMode = false;
     this.confirmDelete = false;
     this.showModal = true;
@@ -475,6 +491,7 @@ export class FamilyCalendar extends LitElement {
     this.newEventCalendar = props.entityId;
     this.newEventStart = this.formatForInput(event.start, event.allDay);
     this.newEventEnd = this.formatForInput(event.end ?? event.start, event.allDay);
+    this.currentRrule = props.rrule;
     this.newEventRecurrence = '';
     this.showModal = true;
   }
@@ -537,6 +554,7 @@ export class FamilyCalendar extends LitElement {
     this.newEventStart = '';
     this.newEventEnd = '';
     this.newEventRecurrence = '';
+    this.currentRrule = '';
   }
 
   private async saveEvent(): Promise<void> {
@@ -684,6 +702,12 @@ export class FamilyCalendar extends LitElement {
   static styles = [
     calendarStyles,
     css`
+      .readonly-value {
+        margin: 0;
+        padding: 10px 0;
+        color: var(--text-primary);
+        font-size: 1rem;
+      }
       .link-button {
         display: inline-flex;
         align-items: center;
@@ -725,6 +749,35 @@ export class FamilyCalendar extends LitElement {
       }
     `,
   ];
+}
+
+const FREQUENCY_LABELS: Record<string, string> = {
+  DAILY: 'Täglich',
+  WEEKLY: 'Wöchentlich',
+  MONTHLY: 'Monatlich',
+  YEARLY: 'Jährlich',
+};
+
+/** Macht aus einer Wiederholungsregel einen lesbaren Satz. */
+function describeRecurrence(rrule: string): string {
+  if (!rrule) return 'Keine';
+
+  const frequency = /FREQ=([A-Z]+)/.exec(rrule)?.[1] ?? '';
+  const label = FREQUENCY_LABELS[frequency];
+  // Unbekannte oder zusammengesetzte Regeln lieber roh zeigen als falsch
+  // zusammenfassen - "Keine" waere hier die schlechteste Antwort.
+  if (!label) return rrule;
+
+  const until = /UNTIL=(\d{4})(\d{2})(\d{2})/.exec(rrule);
+  if (until) {
+    const [, year, month, day] = until;
+    return `${label}, bis ${day}.${month}.${year}`;
+  }
+
+  const count = /COUNT=(\d+)/.exec(rrule)?.[1];
+  if (count) return `${label}, ${count}-mal`;
+
+  return label;
 }
 
 declare global {
