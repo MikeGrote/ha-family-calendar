@@ -74,9 +74,12 @@ jobs:
         with:
           category: integration
           comment: false
-          # brands: Ein Eintrag in home-assistant/brands ist fuer ein
-          #   eigenes Repo weder vorhanden noch vorgesehen.
-          # topics: Besser waere, auf GitHub echte Topics zu setzen
-          #   (Settings -> About -> Topics, z.B. home-assistant, hacs,
-          #   lovelace, calendar). Dann kann topics hier raus.
-          ignore: brands topics
+          # brands:  Ein Eintrag in home-assistant/brands ist fuer ein
+          #          eigenes Repo weder vorhanden noch vorgesehen.
+          # license: Das Projekt steht unter CC BY-NC 4.0. GitHubs
+          #          Lizenzerkennung kennt von den CC-Lizenzen nur CC0,
+          #          CC-BY-4.0 und CC-BY-SA-4.0 und meldet fuer alles
+          #          andere NOASSERTION. Der Check kann damit nie gruen
+          #          werden, ohne die Nicht-kommerziell-Klausel
+          #          aufzugeben - und die ist gewollt.
+          ignore: brands license
