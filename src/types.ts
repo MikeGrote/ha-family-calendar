@@ -78,3 +78,35 @@ export interface NavConfig {
   /** Nur Symbole ohne Beschriftung. Standard: mit Beschriftung. */
   compact?: boolean;
 }
+
+/** Konfiguration der Uebersichtskarte. */
+export interface AgendaConfig {
+  type?: string;
+  entities: string[];
+  colors?: Record<string, string>;
+  /** Wie viele Tage ab heute gezeigt werden. Standard: 7. */
+  days?: number;
+  /** Tage ohne Termine ausblenden. Standard: false. */
+  hideEmptyDays?: boolean;
+  /** Entprellung der Aktualisierung in Millisekunden. Standard: 500. */
+  refreshDebounceMs?: number;
+}
+
+/** Ein Termin, aufbereitet fuer die Uebersicht. */
+export interface AgendaEntry {
+  uid: string;
+  summary: string;
+  location?: string;
+  color: string;
+  calendarName: string;
+  allDay: boolean;
+  start: Date;
+  end: Date;
+}
+
+/** Ein Tag der Uebersicht mit seinen Terminen. */
+export interface AgendaDay {
+  date: Date;
+  label: string;
+  entries: AgendaEntry[];
+}
