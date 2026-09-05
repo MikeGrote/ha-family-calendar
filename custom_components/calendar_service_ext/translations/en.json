@@ -1,0 +1,13 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Family Calendar",
+        "description": "Registers the Family Calendar card in the frontend. There is nothing to configure - just confirm."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Family Calendar is already set up."
+    }
+  }
+}

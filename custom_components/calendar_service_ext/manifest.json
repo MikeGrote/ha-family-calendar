@@ -1,12 +1,18 @@
 {
   "domain": "calendar_service_ext",
-  "name": "Calendar Delete Service Extension",
-  "version": "1.0.0",
-  "documentation": "https://github.com/dein_user/dein_repo",
-  "dependencies": [],
-  "codeowners": [],
-  "requirements": [],
-  "iot_class": "local_push",
+  "name": "Family Calendar",
+  "codeowners": [
+    "@MikeGrote"
+  ],
+  "config_flow": true,
+  "dependencies": [
+    "http",
+    "frontend"
+  ],
+  "documentation": "https://github.com/MikeGrote/ha-family-calendar",
   "integration_type": "service",
-  "config_flow": true
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/MikeGrote/ha-family-calendar/issues",
+  "requirements": [],
+  "version": "1.1.0"
 }

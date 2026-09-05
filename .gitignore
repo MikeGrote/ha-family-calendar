@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Build-Artefakt, wird beim Deploy erzeugt
+custom_components/calendar_service_ext/www/*.js.gz
