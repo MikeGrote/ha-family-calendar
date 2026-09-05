@@ -28,6 +28,8 @@ const SLOT_MIN_FALLBACK = '06:00:00';
 const SLOT_MAX_FALLBACK = '22:00:00';
 /** Puffer in Tagen, der ueber den sichtbaren Bereich hinaus geladen wird. */
 const FETCH_BUFFER_DAYS = 7;
+/** Zeitpunkte nach dem Aufbau, zu denen die Groesse nachgemessen wird (ms). */
+const INITIAL_SIZE_CHECKS = [0, 250, 1000, 2500];
 
 @customElement('family-calendar')
 export class FamilyCalendar extends LitElement {
@@ -57,6 +59,8 @@ export class FamilyCalendar extends LitElement {
   /** Signatur der beobachteten Kalender-Entities beim letzten Fetch. */
   private lastEntitySignature = '';
   private refreshTimer?: number;
+  private resizeObserver?: ResizeObserver;
+  private resizeTimer?: number;
 
   setConfig(config: CalendarConfig): void {
     if (!config.entities?.length) {
@@ -245,6 +249,32 @@ export class FamilyCalendar extends LitElement {
       events: [],
     });
     this.calendar.render();
+
+    // FullCalendar berechnet sein Raster nur beim Rendern und beim
+    // Fenster-Resize. Aendert sich die Containerbreite aus einem anderen
+    // Grund - etwa weil Kiosk-Mode die Sidebar entfernt - bleiben die
+    // Spaltenbreiten stehen und das Raster faellt zusammen.
+    // FullCalendar berechnet die Spaltenbreiten nur beim Rendern und beim
+    // Fenster-Resize. Aendert sich die Containerbreite aus einem anderen
+    // Grund - Kiosk-Mode blendet die Sidebar aus, ein Panel klappt auf -
+    // bleiben die Spalten stehen und das Raster faellt in sich zusammen.
+    this.resizeObserver = new ResizeObserver(() => this.scheduleResize());
+    this.resizeObserver.observe(this.calendarEl);
+
+    // Der Beobachter deckt spaetere Aenderungen ab, nicht aber die, die
+    // waehrend des ersten Aufbaus passieren. Deshalb zusaetzlich ein paar
+    // Nachmessungen. updateSize() ist idempotent und guenstig.
+    for (const delay of INITIAL_SIZE_CHECKS) {
+      window.setTimeout(() => this.calendar?.updateSize(), delay);
+    }
+  }
+
+  private scheduleResize(): void {
+    if (this.resizeTimer !== undefined) clearTimeout(this.resizeTimer);
+    this.resizeTimer = window.setTimeout(() => {
+      this.resizeTimer = undefined;
+      this.calendar?.updateSize();
+    }, 100);
   }
 
   updated(changedProps: PropertyValues): void {
@@ -262,6 +292,12 @@ export class FamilyCalendar extends LitElement {
   disconnectedCallback(): void {
     super.disconnectedCallback();
     this.clearRefreshTimer();
+    if (this.resizeTimer !== undefined) {
+      clearTimeout(this.resizeTimer);
+      this.resizeTimer = undefined;
+    }
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = undefined;
     this.calendar?.destroy();
     this.calendar = null;
   }
@@ -358,6 +394,7 @@ export class FamilyCalendar extends LitElement {
 
     const view = this.calendar.view;
     this.adjustTimeRange(view.activeStart, view.activeEnd);
+    this.calendar.updateSize();
   }
 
   // -------------------------------------------------------------- Interaktion

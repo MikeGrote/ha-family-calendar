@@ -9918,7 +9918,7 @@ var zh = Object.defineProperty, Fh = Object.getOwnPropertyDescriptor, L = (t, e,
     (l = t[s]) && (i = (r ? l(e, n, i) : l(i)) || i);
   return r && i && zh(e, n, i), i;
 };
-const _i = "#0078d4", jh = 500, Ri = "06:00:00", Ti = "22:00:00", xi = 7;
+const _i = "#0078d4", jh = 500, Ri = "06:00:00", Ti = "22:00:00", xi = 7, Wh = [0, 250, 1e3, 2500];
 let P = class extends Ge {
   constructor() {
     super(...arguments), this.activeCalendars = [], this.isCompact = !1, this.showModal = !1, this.editMode = !1, this.confirmDelete = !1, this.isAllDay = !1, this.currentEventId = "", this.currentRecurrenceId = "", this.newEventTitle = "", this.newEventCalendar = "", this.newEventStart = "", this.newEventEnd = "", this.newEventRecurrence = "", this.calendar = null, this.allFetchedEvents = [], this.visibleEvents = [], this.lastEntitySignature = "";
@@ -10069,30 +10069,39 @@ let P = class extends Ge {
   }
   // ------------------------------------------------------------- Lebenszyklus
   firstUpdated() {
-    this.calendarEl && (this.calendar = new ku(this.calendarEl, {
-      plugins: [fh, sf, Rf],
-      initialView: "timeGridWeek",
-      locale: Iu,
-      selectable: !0,
-      selectMirror: !0,
-      select: (t) => this.handleDateSelect(t),
-      eventClick: (t) => this.handleEventClick(t),
-      headerToolbar: {
-        left: "prev,next today",
-        center: "title",
-        right: "timeGridWeek,dayGridMonth"
-      },
-      height: "85vh",
-      allDaySlot: !0,
-      slotMinTime: Ri,
-      slotMaxTime: Ti,
-      slotLabelFormat: { hour: "2-digit", minute: "2-digit", hour12: !1 },
-      eventTimeFormat: { hour: "2-digit", minute: "2-digit", meridiem: !1 },
-      datesSet: (t) => {
-        this.adjustTimeRange(t.start, t.end), this.scheduleFetch();
-      },
-      events: []
-    }), this.calendar.render());
+    if (this.calendarEl) {
+      this.calendar = new ku(this.calendarEl, {
+        plugins: [fh, sf, Rf],
+        initialView: "timeGridWeek",
+        locale: Iu,
+        selectable: !0,
+        selectMirror: !0,
+        select: (t) => this.handleDateSelect(t),
+        eventClick: (t) => this.handleEventClick(t),
+        headerToolbar: {
+          left: "prev,next today",
+          center: "title",
+          right: "timeGridWeek,dayGridMonth"
+        },
+        height: "85vh",
+        allDaySlot: !0,
+        slotMinTime: Ri,
+        slotMaxTime: Ti,
+        slotLabelFormat: { hour: "2-digit", minute: "2-digit", hour12: !1 },
+        eventTimeFormat: { hour: "2-digit", minute: "2-digit", meridiem: !1 },
+        datesSet: (t) => {
+          this.adjustTimeRange(t.start, t.end), this.scheduleFetch();
+        },
+        events: []
+      }), this.calendar.render(), this.resizeObserver = new ResizeObserver(() => this.scheduleResize()), this.resizeObserver.observe(this.calendarEl);
+      for (const t of Wh)
+        window.setTimeout(() => this.calendar?.updateSize(), t);
+    }
+  }
+  scheduleResize() {
+    this.resizeTimer !== void 0 && clearTimeout(this.resizeTimer), this.resizeTimer = window.setTimeout(() => {
+      this.resizeTimer = void 0, this.calendar?.updateSize();
+    }, 100);
   }
   updated(t) {
     if (!t.has("hass")) return;
@@ -10100,7 +10109,7 @@ let P = class extends Ge {
     e !== this.lastEntitySignature && (this.lastEntitySignature = e, this.scheduleFetch());
   }
   disconnectedCallback() {
-    super.disconnectedCallback(), this.clearRefreshTimer(), this.calendar?.destroy(), this.calendar = null;
+    super.disconnectedCallback(), this.clearRefreshTimer(), this.resizeTimer !== void 0 && (clearTimeout(this.resizeTimer), this.resizeTimer = void 0), this.resizeObserver?.disconnect(), this.resizeObserver = void 0, this.calendar?.destroy(), this.calendar = null;
   }
   /** Aendert sich nur, wenn einer der konfigurierten Kalender sich meldet. */
   entitySignature() {
@@ -10159,7 +10168,7 @@ let P = class extends Ge {
       (e) => this.activeCalendars.includes(e.extendedProps.entityId)
     ), this.calendar.removeAllEventSources(), this.calendar.addEventSource(this.visibleEvents);
     const t = this.calendar.view;
-    this.adjustTimeRange(t.activeStart, t.activeEnd);
+    this.adjustTimeRange(t.activeStart, t.activeEnd), this.calendar.updateSize();
   }
   // -------------------------------------------------------------- Interaktion
   toggleCompact() {
