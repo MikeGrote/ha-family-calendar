@@ -1,0 +1,212 @@
+# ==============================================================================
+#  FAMILY CALENDAR - BACKEND PACKAGE
+# ==============================================================================
+#  Liefert die Helfer und Skripte, die das Wand-Dashboard anspricht.
+#
+#  Die Filter arbeiten mit regulaeren Ausdruecken, die per
+#  config-template-card an die week-planner-card durchgereicht werden:
+#    ".*"  = Kalender wird angezeigt
+#    "^$"  = Kalender wird ausgeblendet
+#
+#  Wird ueber configuration.yaml eingebunden:
+#    homeassistant:
+#      packages: !include_dir_named packages
+# ==============================================================================
+
+input_text:
+  mike_calendar_filter:
+    name: Mike Filter
+    initial: ".*"
+  anja_calendar_filter:
+    name: Anja Filter
+    initial: ".*"
+  kjell_calendar_filter:
+    name: Kjell Filter
+    initial: ".*"
+  family_calendar_filter:
+    name: Family Filter
+    initial: ".*"
+  birthdays_calendar_filter:
+    name: Birthdays Filter
+    initial: ".*"
+  holidays_calendar_filter:
+    name: Holidays Filter
+    initial: ".*"
+
+  calendar_event_title:
+    name: Event Title
+    icon: mdi:format-title
+  calendar_event_description:
+    name: Event Description
+    icon: mdi:text
+
+input_select:
+  calendar_select:
+    name: Select Calendar
+    icon: mdi:calendar-check
+    options:
+      - Mike
+      - Anja
+      - Kjell
+      - Family
+      - Birthdays
+      - Holidays
+
+  calendar_view:
+    name: Calendar View
+    initial: Week
+    options:
+      - Today
+      - Tomorrow
+      - Week
+      - Biweek
+      - Month
+
+input_datetime:
+  calendar_event_start:
+    has_date: true
+    has_time: true
+  calendar_event_end:
+    has_date: true
+    has_time: true
+  calendar_day_event_start:
+    has_date: true
+    has_time: false
+  calendar_day_event_end:
+    has_date: true
+    has_time: false
+
+input_boolean:
+  calendar_all_day_event:
+    name: All Day Event
+    icon: mdi:calendar-clock
+  family_calendar_show:
+    name: Show Family Calendar
+
+script:
+  mike_calendar_visible_filter:
+    alias: Toggle Mike Calendar
+    mode: single
+    sequence:
+      - action: input_text.set_value
+        target:
+          entity_id: input_text.mike_calendar_filter
+        data:
+          value: >-
+            {{ '^$' if is_state('input_text.mike_calendar_filter', '.*') else '.*' }}
+
+  anja_calendar_visible_filter:
+    alias: Toggle Anja Calendar
+    mode: single
+    sequence:
+      - action: input_text.set_value
+        target:
+          entity_id: input_text.anja_calendar_filter
+        data:
+          value: >-
+            {{ '^$' if is_state('input_text.anja_calendar_filter', '.*') else '.*' }}
+
+  kjell_calendar_visible_filter:
+    alias: Toggle Kjell Calendar
+    mode: single
+    sequence:
+      - action: input_text.set_value
+        target:
+          entity_id: input_text.kjell_calendar_filter
+        data:
+          value: >-
+            {{ '^$' if is_state('input_text.kjell_calendar_filter', '.*') else '.*' }}
+
+  family_calendar_visible_filter:
+    alias: Toggle Family Calendar
+    mode: single
+    sequence:
+      - action: input_text.set_value
+        target:
+          entity_id: input_text.family_calendar_filter
+        data:
+          value: >-
+            {{ '^$' if is_state('input_text.family_calendar_filter', '.*') else '.*' }}
+
+  birthdays_calendar_visible_filter:
+    alias: Toggle Birthdays Calendar
+    mode: single
+    sequence:
+      - action: input_text.set_value
+        target:
+          entity_id: input_text.birthdays_calendar_filter
+        data:
+          value: >-
+            {{ '^$' if is_state('input_text.birthdays_calendar_filter', '.*') else '.*' }}
+
+  holidays_calendar_visible_filter:
+    alias: Toggle Holidays Calendar
+    mode: single
+    sequence:
+      - action: input_text.set_value
+        target:
+          entity_id: input_text.holidays_calendar_filter
+        data:
+          value: >-
+            {{ '^$' if is_state('input_text.holidays_calendar_filter', '.*') else '.*' }}
+
+  add_google_calendar_event:
+    alias: Termin anlegen
+    mode: single
+    sequence:
+      - variables:
+          # Dropdown-Beschriftung -> Kalender-Entity
+          calendar_map:
+            "Mike": "calendar.mike"
+            "Anja": "calendar.anja"
+            "Kjell": "calendar.kjell"
+            "Family": "calendar.family"
+            "Birthdays": "calendar.birthdays"
+            "Holidays": "calendar.holidays"
+          target_calendar: >-
+            {{ calendar_map.get(states('input_select.calendar_select'), 'calendar.family') }}
+          event_title: "{{ states('input_text.calendar_event_title') | trim }}"
+
+      # Ohne Titel legt Home Assistant einen namenlosen Termin an - abbrechen.
+      - condition: template
+        value_template: "{{ event_title != '' }}"
+
+      - choose:
+          - alias: Ganztaegiger Termin
+            conditions:
+              - condition: state
+                entity_id: input_boolean.calendar_all_day_event
+                state: "on"
+            sequence:
+              - action: calendar.create_event
+                target:
+                  entity_id: "{{ target_calendar }}"
+                data:
+                  summary: "{{ event_title }}"
+                  description: "{{ states('input_text.calendar_event_description') }}"
+                  start_date: "{{ states('input_datetime.calendar_day_event_start') }}"
+                  end_date: "{{ states('input_datetime.calendar_day_event_end') }}"
+        default:
+          - alias: Termin mit Uhrzeit
+            action: calendar.create_event
+            target:
+              entity_id: "{{ target_calendar }}"
+            data:
+              summary: "{{ event_title }}"
+              description: "{{ states('input_text.calendar_event_description') }}"
+              start_date_time: "{{ states('input_datetime.calendar_event_start') }}"
+              end_date_time: "{{ states('input_datetime.calendar_event_end') }}"
+
+      - action: input_text.set_value
+        target:
+          entity_id:
+            - input_text.calendar_event_title
+            - input_text.calendar_event_description
+        data:
+          value: ""
+
+      # Schlaegt nur fehl, wenn browser_mod nicht eingerichtet ist. Der Termin
+      # ist zu diesem Zeitpunkt bereits angelegt - also nicht abbrechen.
+      - action: browser_mod.close_popup
+        data: {}
+        continue_on_error: true
