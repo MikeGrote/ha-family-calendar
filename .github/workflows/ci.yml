@@ -52,7 +52,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: astral-sh/ruff-action@v4
+      # Kein v4-Major-Tag vorhanden - exakte Version referenzieren.
+      - uses: astral-sh/ruff-action@v4.1.0
         with:
           version: 0.15.15
           args: check custom_components/
@@ -72,6 +73,9 @@ jobs:
       - uses: hacs/action@main
         with:
           category: integration
-          # Eine Marke in home-assistant/brands gibt es fuer dieses private
-          # Repo nicht und ist auch nicht vorgesehen.
-          ignore: brands
+          # brands: Ein Eintrag in home-assistant/brands ist fuer ein
+          #   eigenes Repo weder vorhanden noch vorgesehen.
+          # topics: Besser waere, auf GitHub echte Topics zu setzen
+          #   (Settings -> About -> Topics, z.B. home-assistant, hacs,
+          #   lovelace, calendar). Dann kann topics hier raus.
+          ignore: brands topics
