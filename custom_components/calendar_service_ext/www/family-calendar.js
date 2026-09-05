@@ -9579,6 +9579,11 @@ const $h = Dl`
   :host {
     display: block;
     width: 100%;
+    /* Native Bedienelemente (Eingabefelder, Datumswaehler, Auswahllisten)
+       erben keine Farben. Ohne color-scheme zeichnet der Browser sie nach
+       seiner eigenen Einstellung - auf einem dunkel eingestellten Panel
+       also weiss, und damit unsichtbar auf unserem hellen Grund. */
+    color-scheme: light;
     /* Leichter bläulicher Verlauf für mehr Tiefe - Transparenter für Glass Effekt */
     --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.6), rgba(235, 245, 255, 0.5));
     --glass-border: rgba(255, 255, 255, 0.4);
@@ -9823,6 +9828,7 @@ const $h = Dl`
 
   .modal-content {
     background: rgba(255, 255, 255, 0.95);
+    color: var(--text-primary);
     backdrop-filter: blur(20px);
     padding: 24px;
     border-radius: 16px;
@@ -9853,6 +9859,7 @@ const $h = Dl`
 
   .form-group input, .form-group select {
     width: 100%;
+    color: var(--text-primary);
     padding: 10px;
     border-radius: 8px;
     border: 1px solid rgba(0,0,0,0.1);
