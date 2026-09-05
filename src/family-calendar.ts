@@ -54,6 +54,7 @@ export class FamilyCalendar extends LitElement {
   @state() private newEventEnd = '';
   @state() private newEventRecurrence: RecurrenceFrequency = '';
   @state() private currentRrule = '';
+  @state() private newEventUntil = '';
 
   @query('#calendar') private calendarEl!: HTMLElement;
 
@@ -216,25 +217,7 @@ export class FamilyCalendar extends LitElement {
             />
           </div>
 
-          <div class="form-group">
-            <label>Wiederholung</label>
-            ${this.editMode
-              ? html`<p class="readonly-value">${describeRecurrence(this.currentRrule)}</p>`
-              : html`
-                  <select
-                    .value=${this.newEventRecurrence}
-                    @change=${(e: Event) =>
-                      (this.newEventRecurrence = (e.target as HTMLSelectElement)
-                        .value as RecurrenceFrequency)}
-                  >
-                    <option value="">Keine</option>
-                    <option value="DAILY">Täglich</option>
-                    <option value="WEEKLY">Wöchentlich</option>
-                    <option value="MONTHLY">Monatlich</option>
-                    <option value="YEARLY">Jährlich</option>
-                  </select>
-                `}
-          </div>
+          ${this.renderRecurrence()}
 
           <div class="modal-actions">
             ${this.editMode ? this.renderDeleteButton() : ''}
@@ -246,6 +229,62 @@ export class FamilyCalendar extends LitElement {
         </div>
       </div>
     `;
+  }
+
+  /** Wiederholung und Serienende.
+
+   * Beim Bearbeiten laesst Home Assistant die Regel nur aendern, wenn eine
+   * Serieninstanz angesprochen wird - fuer einen Einzeltermin ist der Weg
+   * versperrt. Deshalb erscheinen die Felder dort nicht.
+   */
+  private renderRecurrence(): TemplateResult {
+    const isSeries = this.editMode && this.currentRrule !== '';
+
+    if (this.editMode && !isSeries) {
+      return html`
+        <div class="form-group">
+          <label>Wiederholung</label>
+          <p class="readonly-value">Keine</p>
+        </div>
+      `;
+    }
+
+    return html`
+      <div class="form-group">
+        <label>Wiederholung</label>
+        <select
+          .value=${this.newEventRecurrence}
+          @change=${(e: Event) => this.setFrequency((e.target as HTMLSelectElement).value)}
+        >
+          ${isSeries ? '' : html`<option value="">Keine</option>`}
+          <option value="DAILY">Täglich</option>
+          <option value="WEEKLY">Wöchentlich</option>
+          <option value="MONTHLY">Monatlich</option>
+          <option value="YEARLY">Jährlich</option>
+        </select>
+      </div>
+      ${this.newEventRecurrence
+        ? html`
+            <div class="form-group">
+              <label>Serie endet am</label>
+              <input
+                type="date"
+                .value=${this.newEventUntil}
+                @input=${(e: Event) => (this.newEventUntil = (e.target as HTMLInputElement).value)}
+              />
+              <p class="field-hint">
+                ${this.newEventUntil ? '' : 'Leer lassen für eine Serie ohne Ende. '}
+                ${isSeries ? 'Änderungen gelten ab diesem Termin, frühere bleiben stehen.' : ''}
+              </p>
+            </div>
+          `
+        : ''}
+    `;
+  }
+
+  private setFrequency(value: string): void {
+    this.newEventRecurrence = value as RecurrenceFrequency;
+    if (!value) this.newEventUntil = '';
   }
 
   /** Zweistufiges Loeschen statt confirm(): erst Klick, dann Bestaetigung. */
@@ -486,6 +525,7 @@ export class FamilyCalendar extends LitElement {
     this.newEventTitle = '';
     this.newEventCalendar = this.config.entities[0] ?? '';
     this.newEventRecurrence = '';
+    this.newEventUntil = '';
     this.currentRrule = '';
     this.editMode = false;
     this.confirmDelete = false;
@@ -500,6 +540,7 @@ export class FamilyCalendar extends LitElement {
     this.newEventTitle = '';
     this.newEventCalendar = this.config.entities[0] ?? '';
     this.newEventRecurrence = '';
+    this.newEventUntil = '';
     this.currentRrule = '';
     this.editMode = false;
     this.confirmDelete = false;
@@ -520,7 +561,9 @@ export class FamilyCalendar extends LitElement {
     this.newEventStart = this.formatForInput(event.start, event.allDay);
     this.newEventEnd = this.formatForInput(event.end ?? event.start, event.allDay);
     this.currentRrule = props.rrule;
-    this.newEventRecurrence = '';
+    const parsed = parseRrule(props.rrule);
+    this.newEventRecurrence = parsed.frequency;
+    this.newEventUntil = parsed.until;
     this.showModal = true;
   }
 
@@ -582,6 +625,7 @@ export class FamilyCalendar extends LitElement {
     this.newEventStart = '';
     this.newEventEnd = '';
     this.newEventRecurrence = '';
+    this.newEventUntil = '';
     this.currentRrule = '';
   }
 
@@ -595,9 +639,8 @@ export class FamilyCalendar extends LitElement {
       dtstart: this.newEventStart,
       dtend: this.newEventEnd,
     };
-    if (this.newEventRecurrence && !this.editMode) {
-      event.rrule = `FREQ=${this.newEventRecurrence}`;
-    }
+    const rrule = buildRrule(this.newEventRecurrence, this.newEventUntil);
+    if (rrule) event.rrule = rrule;
 
     try {
       if (this.editMode && this.currentEventId) {
@@ -730,6 +773,12 @@ export class FamilyCalendar extends LitElement {
   static styles = [
     calendarStyles,
     css`
+      .field-hint {
+        margin: 6px 0 0;
+        font-size: 0.78rem;
+        line-height: 1.35;
+        color: var(--text-secondary);
+      }
       .add-button {
         display: inline-flex;
         align-items: center;
@@ -801,33 +850,30 @@ export class FamilyCalendar extends LitElement {
   ];
 }
 
-const FREQUENCY_LABELS: Record<string, string> = {
-  DAILY: 'Täglich',
-  WEEKLY: 'Wöchentlich',
-  MONTHLY: 'Monatlich',
-  YEARLY: 'Jährlich',
-};
+const KNOWN_FREQUENCIES = ['DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'];
 
-/** Macht aus einer Wiederholungsregel einen lesbaren Satz. */
-function describeRecurrence(rrule: string): string {
-  if (!rrule) return 'Keine';
-
+/** Zerlegt eine Wiederholungsregel in Haeufigkeit und Enddatum. */
+function parseRrule(rrule: string): { frequency: RecurrenceFrequency; until: string } {
   const frequency = /FREQ=([A-Z]+)/.exec(rrule)?.[1] ?? '';
-  const label = FREQUENCY_LABELS[frequency];
-  // Unbekannte oder zusammengesetzte Regeln lieber roh zeigen als falsch
-  // zusammenfassen - "Keine" waere hier die schlechteste Antwort.
-  if (!label) return rrule;
-
   const until = /UNTIL=(\d{4})(\d{2})(\d{2})/.exec(rrule);
-  if (until) {
-    const [, year, month, day] = until;
-    return `${label}, bis ${day}.${month}.${year}`;
-  }
+  return {
+    frequency: (KNOWN_FREQUENCIES.includes(frequency)
+      ? frequency
+      : '') as RecurrenceFrequency,
+    until: until ? `${until[1]}-${until[2]}-${until[3]}` : '',
+  };
+}
 
-  const count = /COUNT=(\d+)/.exec(rrule)?.[1];
-  if (count) return `${label}, ${count}-mal`;
+/** Baut die Wiederholungsregel fuer die Kalender-Schnittstelle. */
+function buildRrule(frequency: RecurrenceFrequency, until: string): string | undefined {
+  if (!frequency) return undefined;
+  if (!until) return `FREQ=${frequency}`;
 
-  return label;
+  // UNTIL muss laut Norm in UTC stehen. Gemeint ist das Ende des gewaehlten
+  // Tages in Ortszeit - toISOString rechnet die Verschiebung mit.
+  const endOfDay = new Date(`${until}T23:59:59`);
+  const utc = endOfDay.toISOString().replace(/[-:]/g, '').slice(0, 15);
+  return `FREQ=${frequency};UNTIL=${utc}Z`;
 }
 
 declare global {

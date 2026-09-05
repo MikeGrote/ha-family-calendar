@@ -11,6 +11,7 @@ direkt aufruft.
 
 from __future__ import annotations
 
+import hashlib
 import logging
 from pathlib import Path
 
@@ -76,7 +77,18 @@ async def _async_register_frontend(hass: HomeAssistant) -> None:
     await hass.http.async_register_static_paths(
         [StaticPathConfig(URL_BASE, str(www_dir), cache_headers=False)]
     )
-    frontend.add_extra_js_url(hass, f"{URL_BASE}/{FRONTEND_SCRIPT}")
+
+    # Die URL bekommt eine Kennung aus dem Dateiinhalt. Ohne sie bleibt sie
+    # ueber alle Versionen gleich, und Browser laden das Modul nach einem
+    # Update nicht neu - das Panel zeigt dann weiter die alte Karte.
+    version = await hass.async_add_executor_job(_file_fingerprint, www_dir / FRONTEND_SCRIPT)
+    frontend.add_extra_js_url(hass, f"{URL_BASE}/{FRONTEND_SCRIPT}?v={version}")
 
     hass.data[_FRONTEND_REGISTERED] = True
-    _LOGGER.debug("Frontend registriert: %s/%s", URL_BASE, FRONTEND_SCRIPT)
+    _LOGGER.info("Frontend registriert: %s/%s?v=%s", URL_BASE, FRONTEND_SCRIPT, version)
+
+
+def _file_fingerprint(path: Path) -> str:
+    """Kurze Kennung des Dateiinhalts. Laeuft blockierend im Thread."""
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    return digest[:12]

@@ -65,7 +65,7 @@ function mr(t) {
     Ie = !1;
   }
 }
-function j(t, e) {
+function W(t, e) {
   this.props = t, this.context = e;
 }
 function qe(t, e) {
@@ -147,7 +147,7 @@ function _n(t, e, n, r, i, s, l, o, a) {
   n.__h != null && (a = n.__h, o = e.__e = n.__e, e.__h = null, s = [o]), (d = S.__b) && d(e);
   try {
     e: if (typeof _ == "function") {
-      if (b = e.props, y = (d = _.contextType) && r[d.__c], E = d ? y ? y.props.value : d.__ : r, n.__c ? v = (c = e.__c = n.__c).__ = c.__E : ("prototype" in _ && _.prototype.render ? e.__c = c = new _(b, E) : (e.__c = c = new j(b, E), c.constructor = _, c.render = Pl), y && y.sub(c), c.props = b, c.state || (c.state = {}), c.context = E, c.__n = r, f = c.__d = !0, c.__h = [], c._sb = []), c.__s == null && (c.__s = c.state), _.getDerivedStateFromProps != null && (c.__s == c.state && (c.__s = se({}, c.__s)), se(c.__s, _.getDerivedStateFromProps(b, c.__s))), h = c.props, u = c.state, c.__v = e, f) _.getDerivedStateFromProps == null && c.componentWillMount != null && c.componentWillMount(), c.componentDidMount != null && c.__h.push(c.componentDidMount);
+      if (b = e.props, y = (d = _.contextType) && r[d.__c], E = d ? y ? y.props.value : d.__ : r, n.__c ? v = (c = e.__c = n.__c).__ = c.__E : ("prototype" in _ && _.prototype.render ? e.__c = c = new _(b, E) : (e.__c = c = new W(b, E), c.constructor = _, c.render = Pl), y && y.sub(c), c.props = b, c.state || (c.state = {}), c.context = E, c.__n = r, f = c.__d = !0, c.__h = [], c._sb = []), c.__s == null && (c.__s = c.state), _.getDerivedStateFromProps != null && (c.__s == c.state && (c.__s = se({}, c.__s)), se(c.__s, _.getDerivedStateFromProps(b, c.__s))), h = c.props, u = c.state, c.__v = e, f) _.getDerivedStateFromProps == null && c.componentWillMount != null && c.componentWillMount(), c.componentDidMount != null && c.__h.push(c.componentDidMount);
       else {
         if (_.getDerivedStateFromProps == null && b !== h && c.componentWillReceiveProps != null && c.componentWillReceiveProps(b, E), !c.__e && c.shouldComponentUpdate != null && c.shouldComponentUpdate(b, c.__s, E) === !1 || e.__v === n.__v) {
           for (e.__v !== n.__v && (c.props = b, c.state = c.__s, c.__d = !1), e.__e = n.__e, e.__k = n.__k, e.__k.forEach(function(re) {
@@ -265,12 +265,12 @@ Pt = Oi.slice, S = { __e: function(t, e, n, r) {
   throw t;
 } }, Mi = 0, ki = function(t) {
   return t != null && t.constructor === void 0;
-}, Ie = !1, j.prototype.setState = function(t, e) {
+}, Ie = !1, W.prototype.setState = function(t, e) {
   var n;
   n = this.__s != null && this.__s !== this.state ? this.__s : this.__s = se({}, this.state), typeof t == "function" && (t = t(se({}, n), this.props)), t && se(n, t), t != null && this.__v && (e && this._sb.push(e), un(this));
-}, j.prototype.forceUpdate = function(t) {
+}, W.prototype.forceUpdate = function(t) {
   this.__v && (this.__e = !0, t && this.__h.push(t), un(this));
-}, j.prototype.render = x, pe = [], Ii = typeof Promise == "function" ? Promise.prototype.then.bind(Promise.resolve()) : setTimeout, yt.__r = 0, Ni = 0;
+}, W.prototype.render = x, pe = [], Ii = typeof Promise == "function" ? Promise.prototype.then.bind(Promise.resolve()) : setTimeout, yt.__r = 0, Ni = 0;
 var Q, Vt, vr, Wi = [], Gt = [], br = S.__b, yr = S.__r, Er = S.diffed, Sr = S.__c, Ar = S.unmount;
 function Bl() {
   for (var t; t = Wi.shift(); ) if (t.__P && t.__H) try {
@@ -343,7 +343,7 @@ function Dr(t, e) {
 function Cr(t) {
   this.props = t;
 }
-(Cr.prototype = new j()).isPureReactComponent = !0, Cr.prototype.shouldComponentUpdate = function(t, e) {
+(Cr.prototype = new W()).isPureReactComponent = !0, Cr.prototype.shouldComponentUpdate = function(t, e) {
   return Dr(this.props, t) || Dr(this.state, e);
 };
 var _r = S.__b;
@@ -383,7 +383,7 @@ function rt() {
 S.unmount = function(t) {
   var e = t.__c;
   e && e.__R && e.__R(), e && t.__h === !0 && (t.type = null), Rr && Rr(t);
-}, (qt.prototype = new j()).__c = function(t, e) {
+}, (qt.prototype = new W()).__c = function(t, e) {
   var n = e.__c, r = this;
   r.t == null && (r.t = []), r.t.push(n);
   var i = qi(r.__v), s = !1, l = function() {
@@ -442,7 +442,7 @@ function jl(t, e) {
   var n = g(Fl, { __v: t, i: e });
   return n.containerInfo = e, n;
 }
-(rt.prototype = new j()).__a = function(t) {
+(rt.prototype = new W()).__a = function(t) {
   var e = this, n = qi(e.__v), r = e.o.get(t);
   return r[0]++, function(i) {
     var s = function() {
@@ -465,8 +465,8 @@ function jl(t, e) {
 var Wl = typeof Symbol < "u" && Symbol.for && /* @__PURE__ */ Symbol.for("react.element") || 60103, Vl = /^(?:accent|alignment|arabic|baseline|cap|clip(?!PathU)|color|dominant|fill|flood|font|glyph(?!R)|horiz|image|letter|lighting|marker(?!H|W|U)|overline|paint|pointer|shape|stop|strikethrough|stroke|text(?!L)|transform|underline|unicode|units|v|vector|vert|word|writing|x(?!C))[A-Z]/, Gl = typeof document < "u", ql = function(t) {
   return (typeof Symbol < "u" && typeof /* @__PURE__ */ Symbol() == "symbol" ? /fil|che|rad/i : /fil|che|ra/i).test(t);
 };
-j.prototype.isReactComponent = {}, ["componentWillMount", "componentWillReceiveProps", "componentWillUpdate"].forEach(function(t) {
-  Object.defineProperty(j.prototype, t, { configurable: !0, get: function() {
+W.prototype.isReactComponent = {}, ["componentWillMount", "componentWillReceiveProps", "componentWillUpdate"].forEach(function(t) {
+  Object.defineProperty(W.prototype, t, { configurable: !0, get: function() {
     return this["UNSAFE_" + t];
   }, set: function(e) {
     Object.defineProperty(this, t, { configurable: !0, writable: !0, value: e });
@@ -868,15 +868,15 @@ function ce(t, e, n) {
 const _o = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 function Lr(t, e) {
   let n = le(t);
-  return n[2] += e * 7, z(n);
+  return n[2] += e * 7, j(n);
 }
-function B(t, e) {
+function L(t, e) {
   let n = le(t);
-  return n[2] += e, z(n);
+  return n[2] += e, j(n);
 }
 function de(t, e) {
   let n = le(t);
-  return n[6] += e, z(n);
+  return n[6] += e, j(n);
 }
 function Ro(t, e) {
   return De(t, e) / 7;
@@ -910,14 +910,14 @@ function St(t, e) {
   return oe(t) === oe(e) ? Math.round(De(t, e)) : null;
 }
 function M(t) {
-  return z([
+  return j([
     t.getUTCFullYear(),
     t.getUTCMonth(),
     t.getUTCDate()
   ]);
 }
 function No(t) {
-  return z([
+  return j([
     t.getUTCFullYear(),
     t.getUTCMonth(),
     t.getUTCDate(),
@@ -925,7 +925,7 @@ function No(t) {
   ]);
 }
 function Oo(t) {
-  return z([
+  return j([
     t.getUTCFullYear(),
     t.getUTCMonth(),
     t.getUTCDate(),
@@ -934,7 +934,7 @@ function Oo(t) {
   ]);
 }
 function Po(t) {
-  return z([
+  return j([
     t.getUTCFullYear(),
     t.getUTCMonth(),
     t.getUTCDate(),
@@ -951,12 +951,12 @@ function Ho(t, e, n) {
   return s >= 1 ? Math.min(i, s) : i;
 }
 function Qt(t, e, n, r) {
-  let i = z([e, 0, 1 + Bo(e, n, r)]), s = M(t), l = Math.round(De(i, s));
+  let i = j([e, 0, 1 + Bo(e, n, r)]), s = M(t), l = Math.round(De(i, s));
   return Math.floor(l / 7) + 1;
 }
 function Bo(t, e, n) {
   let r = 7 + e - n;
-  return -((7 + z([t, 0, r]).getUTCDay() - e) % 7) + r - 1;
+  return -((7 + j([t, 0, r]).getUTCDay() - e) % 7) + r - 1;
 }
 function $r(t) {
   return [
@@ -991,7 +991,7 @@ function le(t) {
     t.getUTCMilliseconds()
   ];
 }
-function z(t) {
+function j(t) {
   return t.length === 1 && (t = t.concat([0])), new Date(Date.UTC(...t));
 }
 function ns(t) {
@@ -1628,7 +1628,7 @@ class ca {
     return e.getUTCDate();
   }
   arrayToMarker(e) {
-    return z(e);
+    return j(e);
   }
   markerToArray(e) {
     return le(e);
@@ -1662,13 +1662,13 @@ class fa {
     return n === null ? null : n.marker;
   }
   createNowMarker() {
-    return this.canComputeOffset ? this.timestampToMarker((/* @__PURE__ */ new Date()).valueOf()) : z($r(/* @__PURE__ */ new Date()));
+    return this.canComputeOffset ? this.timestampToMarker((/* @__PURE__ */ new Date()).valueOf()) : j($r(/* @__PURE__ */ new Date()));
   }
   createMarkerMeta(e) {
     if (typeof e == "string")
       return this.parse(e);
     let n = null;
-    return typeof e == "number" ? n = this.timestampToMarker(e) : e instanceof Date ? (e = e.valueOf(), isNaN(e) || (n = this.timestampToMarker(e))) : Array.isArray(e) && (n = z(e)), n === null || !ns(n) ? null : { marker: n, isTimeUnspecified: !1, forcedTzo: null };
+    return typeof e == "number" ? n = this.timestampToMarker(e) : e instanceof Date ? (e = e.valueOf(), isNaN(e) || (n = this.timestampToMarker(e))) : Array.isArray(e) && (n = j(e)), n === null || !ns(n) ? null : { marker: n, isTimeUnspecified: !1, forcedTzo: null };
   }
   parse(e) {
     let n = ua(e);
@@ -1775,7 +1775,7 @@ class fa {
   }
   // TimeZone
   timestampToMarker(e) {
-    return this.timeZone === "local" ? z($r(new Date(e))) : this.timeZone === "UTC" || !this.namedTimeZoneImpl ? new Date(e) : z(this.namedTimeZoneImpl.timestampToArray(e));
+    return this.timeZone === "local" ? j($r(new Date(e))) : this.timeZone === "UTC" || !this.namedTimeZoneImpl ? new Date(e) : j(this.namedTimeZoneImpl.timestampToArray(e));
   }
   offsetForMarker(e) {
     return this.timeZone === "local" ? -Ur(le(e)).getTimezoneOffset() : this.timeZone === "UTC" ? 0 : this.namedTimeZoneImpl ? this.namedTimeZoneImpl.offsetForArray(le(e)) : null;
@@ -1828,7 +1828,7 @@ function Ct(t) {
     n.shift()();
   S.debounceRendering = e;
 }
-class ha extends j {
+class ha extends W {
   render() {
     return g("div", {});
   }
@@ -1907,7 +1907,7 @@ function pa(t, e, n, r, i, s, l, o, a, d, c, f, h, u) {
     unregisterInteractiveComponent: u
   };
 }
-class Ce extends j {
+class Ce extends W {
   // debug: boolean
   shouldComponentUpdate(e, n) {
     return !Kt(
@@ -2022,7 +2022,7 @@ function ba(t) {
   return !!t;
 }
 const as = ls(0);
-class V extends j {
+class G extends W {
   constructor() {
     super(...arguments), this.InnerContent = ya.bind(void 0, this), this.handleEl = (e) => {
       this.el = e, this.props.elRef && (Z(this.props.elRef, e), e && this.didMountMisfire && this.componentDidMount());
@@ -2045,7 +2045,7 @@ class V extends j {
     (n = (e = this.props).willUnmount) === null || n === void 0 || n.call(e, Object.assign(Object.assign({}, this.props.renderProps), { el: this.el }));
   }
 }
-V.contextType = as;
+G.contextType = as;
 function ya(t, e) {
   const n = t.props;
   return g(Ln, Object.assign({ renderProps: n.renderProps, generatorName: n.generatorName, customGenerator: n.customGenerator, defaultGenerator: n.defaultGenerator, renderId: t.context }, e));
@@ -2057,7 +2057,7 @@ function Ea(t, e) {
 class _t extends R {
   render() {
     let { props: e, context: n } = this, { options: r } = n, i = { view: n.viewApi };
-    return g(V, { elRef: e.elRef, elTag: e.elTag || "div", elAttrs: e.elAttrs, elClasses: [
+    return g(G, { elRef: e.elRef, elTag: e.elTag || "div", elAttrs: e.elAttrs, elClasses: [
       ...cs(e.viewSpec),
       ...e.elClasses || []
     ], elStyle: e.elStyle, renderProps: i, classNameGenerator: r.viewClassNames, generatorName: void 0, didMount: r.viewDidMount, willUnmount: r.viewWillUnmount }, () => e.children);
@@ -2102,7 +2102,7 @@ function Da(t, e) {
   return e.start != null && t < e.start ? e.start : e.end != null && t >= e.end ? new Date(e.end.valueOf() - 1) : t;
 }
 function ds(t) {
-  let e = Math.floor(De(t.start, t.end)) || 1, n = M(t.start), r = B(n, e);
+  let e = Math.floor(De(t.start, t.end)) || 1, n = M(t.start), r = L(n, e);
   return { start: n, end: r };
 }
 function us(t, e = C(0)) {
@@ -2110,9 +2110,9 @@ function us(t, e = C(0)) {
   if (t.end) {
     r = M(t.end);
     let i = t.end.valueOf() - r.valueOf();
-    i && i >= q(e) && (r = B(r, 1));
+    i && i >= q(e) && (r = L(r, 1));
   }
-  return t.start && (n = M(t.start), r && r <= n && (r = B(n, 1))), { start: n, end: r };
+  return t.start && (n = M(t.start), r && r <= n && (r = L(n, 1))), { start: n, end: r };
 }
 function Te(t, e, n, r) {
   return r === "year" ? C(n.diffWholeYears(t, e), "year") : r === "month" ? C(n.diffWholeMonths(t, e), "month") : ko(t, e);
@@ -2195,7 +2195,7 @@ class fs {
   // slotMinTime or slotMaxTime causes the range to expand.
   adjustActiveRange(e) {
     let { dateEnv: n, usesMinMaxTime: r, slotMinTime: i, slotMaxTime: s } = this.props, { start: l, end: o } = e;
-    return r && (Me(i) < 0 && (l = M(l), l = n.add(l, i)), Me(s) > 1 && (o = M(o), o = B(o, -1), o = n.add(o, s))), { start: l, end: o };
+    return r && (Me(i) < 0 && (l = M(l), l = n.add(l, i)), Me(s) > 1 && (o = M(o), o = L(o, -1), o = n.add(o, s))), { start: l, end: o };
   }
   // Builds the "current" range when it is specified as an explicit duration.
   // `unit` is the already-computed greatestDurationDenominator unit of duration.
@@ -2216,7 +2216,7 @@ class fs {
     let { dateEnv: i, dateAlignment: s } = this.props, l = 0, o = e, a;
     s && (o = i.startOf(o, s)), o = M(o), o = this.skipHiddenDays(o, n), a = o;
     do
-      a = B(a, 1), this.isHiddenDay(a) || (l += 1);
+      a = L(a, 1), this.isHiddenDay(a) || (l += 1);
     while (l < r);
     return { start: o, end: a };
   }
@@ -2274,7 +2274,7 @@ class fs {
   // `inc` defaults to `1` (increment one day forward each time)
   skipHiddenDays(e, n = 1, r = !1) {
     for (; this.isHiddenDayHash[(e.getUTCDay() + (r ? n : 0) + 7) % 7]; )
-      e = B(e, n);
+      e = L(e, n);
     return e;
   }
 }
@@ -2402,14 +2402,14 @@ function xa(t, e) {
   return t && (n = t.defaultAllDay), n == null && (n = e.options.defaultAllDay), n;
 }
 function Qe(t, e, n, r, i, s) {
-  let l = W(), o = zn(n);
+  let l = V(), o = zn(n);
   for (let a of t) {
     let d = gs(a, e, n, r, o, i, s);
     d && bn(d, l);
   }
   return l;
 }
-function bn(t, e = W()) {
+function bn(t, e = V()) {
   return e.defs[t.def.defId] = t.def, t.instance && (e.instances[t.instance.instanceId] = t.instance), e;
 }
 function Fn(t, e) {
@@ -2418,12 +2418,12 @@ function Fn(t, e) {
     let r = t.defs[n.defId], i = $t(t, (s) => Ma(r, s));
     return i.defs[r.defId] = r, i.instances[n.instanceId] = n, i;
   }
-  return W();
+  return V();
 }
 function Ma(t, e) {
   return !!(t.groupId && t.groupId === e.groupId);
 }
-function W() {
+function V() {
   return { defs: {}, instances: {} };
 }
 function jn(t, e) {
@@ -2591,7 +2591,7 @@ function Ba(t, e, n, r, i) {
     case "REMOVE_ALL_EVENT_SOURCES":
       return $t(t, (s) => !s.sourceId);
     case "REMOVE_ALL_EVENTS":
-      return W();
+      return V();
     default:
       return t;
   }
@@ -2724,7 +2724,7 @@ function Zr(t, e, n) {
   return t ? (s = M(s), s = r.add(s, i.defaultAllDayEventDuration)) : s = r.add(s, i.defaultTimedEventDuration), s;
 }
 function Vn(t, e, n, r) {
-  let i = xt(t.defs, e), s = W();
+  let i = xt(t.defs, e), s = V();
   for (let l in t.defs) {
     let o = t.defs[l];
     s.defs[l] = Qa(o, i[l], n, r);
@@ -3323,7 +3323,7 @@ function Gn(t) {
   };
 }
 const yn = {};
-class Le extends j {
+class Le extends W {
   constructor(e, n) {
     super(e, n), this.handleRefresh = () => {
       let r = this.computeTiming();
@@ -3370,7 +3370,7 @@ class Le extends j {
 }
 Le.contextType = te;
 function pc(t) {
-  let e = M(t), n = B(e, 1);
+  let e = M(t), n = L(e, 1);
   return { start: e, end: n };
 }
 class mc {
@@ -3690,7 +3690,7 @@ function Ec(t, e) {
     top: t.top - e.top
   };
 }
-const en = W();
+const en = V();
 class Sc {
   constructor() {
     this.getKeysForEventDefs = A(this._getKeysForEventDefs), this.splitDateSelection = A(this._splitDateSpan), this.splitEventStore = A(this._splitEventStore), this.splitIndividualUi = A(this._splitIndividualUi), this.splitEventDrag = A(this._splitInteraction), this.splitEventResize = A(this._splitInteraction), this.eventUiBuilders = {};
@@ -3728,7 +3728,7 @@ class Sc {
     let { defs: r, instances: i } = e, s = {};
     for (let l in r)
       for (let o of n[l])
-        s[o] || (s[o] = W()), s[o].defs[l] = r[l];
+        s[o] || (s[o] = V()), s[o].defs[l] = r[l];
     for (let l in i) {
       let o = i[l];
       for (let a of n[o.defId])
@@ -4219,7 +4219,7 @@ class Lc extends R {
     let { dateEnv: e, options: n, theme: r, viewApi: i } = this.context, { props: s } = this, { date: l, dateProfile: o } = s, a = Is(l, s.todayRange, null, o), d = [Hs].concat(qn(a, r)), c = e.format(l, s.dayHeaderFormat), f = !a.isDisabled && s.colCnt > 1 ? Mt(this.context, l) : {}, h = e.toDate(l);
     e.namedTimeZoneImpl && (h = de(h, 36e5));
     let u = Object.assign(Object.assign(Object.assign({ date: h, view: i }, s.extraRenderProps), { text: c }), a);
-    return g(V, { elTag: "th", elClasses: d, elAttrs: Object.assign({ role: "columnheader", colSpan: s.colSpan, "data-date": a.isDisabled ? void 0 : Nn(l) }, s.extraDataAttrs), renderProps: u, generatorName: "dayHeaderContent", customGenerator: n.dayHeaderContent, defaultGenerator: Bs, classNameGenerator: n.dayHeaderClassNames, didMount: n.dayHeaderDidMount, willUnmount: n.dayHeaderWillUnmount }, (p) => g("div", { className: "fc-scrollgrid-sync-inner" }, !a.isDisabled && g(p, { elTag: "a", elAttrs: f, elClasses: [
+    return g(G, { elTag: "th", elClasses: d, elAttrs: Object.assign({ role: "columnheader", colSpan: s.colSpan, "data-date": a.isDisabled ? void 0 : Nn(l) }, s.extraDataAttrs), renderProps: u, generatorName: "dayHeaderContent", customGenerator: n.dayHeaderContent, defaultGenerator: Bs, classNameGenerator: n.dayHeaderClassNames, didMount: n.dayHeaderDidMount, willUnmount: n.dayHeaderWillUnmount }, (p) => g("div", { className: "fc-scrollgrid-sync-inner" }, !a.isDisabled && g(p, { elTag: "a", elAttrs: f, elClasses: [
       "fc-col-header-cell-cushion",
       s.isSticky && "fc-sticky"
     ] })));
@@ -4228,7 +4228,7 @@ class Lc extends R {
 const $c = N({ weekday: "long" });
 class Uc extends R {
   render() {
-    let { props: e } = this, { dateEnv: n, theme: r, viewApi: i, options: s } = this.context, l = B(/* @__PURE__ */ new Date(2592e5), e.dow), o = {
+    let { props: e } = this, { dateEnv: n, theme: r, viewApi: i, options: s } = this.context, l = L(/* @__PURE__ */ new Date(2592e5), e.dow), o = {
       dow: e.dow,
       isDisabled: !1,
       isFuture: !1,
@@ -4239,7 +4239,7 @@ class Uc extends R {
       // TODO: make this public?
       date: l
     }, o), { view: i }), e.extraRenderProps), { text: a });
-    return g(V, { elTag: "th", elClasses: [
+    return g(G, { elTag: "th", elClasses: [
       Hs,
       ...qn(o, r),
       ...e.extraClassNames || []
@@ -4276,11 +4276,11 @@ class $s {
   constructor(e, n) {
     let r = e.start, { end: i } = e, s = [], l = [], o = -1;
     for (; r < i; )
-      n.isHiddenDay(r) ? s.push(o + 0.5) : (o += 1, s.push(o), l.push(r)), r = B(r, 1);
+      n.isHiddenDay(r) ? s.push(o + 0.5) : (o += 1, s.push(o), l.push(r)), r = L(r, 1);
     this.dates = l, this.indices = s, this.cnt = l.length;
   }
   sliceRange(e) {
-    let n = this.getDateDayIndex(e.start), r = this.getDateDayIndex(B(e.end, -1)), i = Math.max(0, n), s = Math.min(this.cnt - 1, r);
+    let n = this.getDateDayIndex(e.start), r = this.getDateDayIndex(L(e.end, -1)), i = Math.max(0, n), s = Math.min(this.cnt - 1, r);
     return i = Math.ceil(i), s = Math.floor(s), i <= s ? {
       firstIndex: i,
       lastIndex: s,
@@ -4429,7 +4429,7 @@ class zs {
     let r = e.range;
     this.forceDayIfListItem && e.ui.display === "list-item" && (r = {
       start: r.start,
-      end: B(r.start, 1)
+      end: L(r.start, 1)
     });
     let i = this.sliceRange(r, ...n);
     for (let s of i)
@@ -4808,7 +4808,7 @@ class Jn extends R {
       isDragging: !!e.isDragging,
       isResizing: !!e.isResizing
     };
-    return g(V, { elRef: this.handleEl, elTag: e.elTag, elAttrs: e.elAttrs, elClasses: [
+    return g(G, { elRef: this.handleEl, elTag: e.elTag, elAttrs: e.elAttrs, elClasses: [
       ...nc(o),
       ...i.eventRange.ui.classNames,
       ...e.elClasses || []
@@ -4854,7 +4854,7 @@ const tr = (t) => g(te.Consumer, null, (e) => {
     date: e.dateEnv.toDate(t.date),
     view: e.viewApi
   };
-  return g(V, { elRef: t.elRef, elTag: t.elTag || "div", elAttrs: t.elAttrs, elClasses: t.elClasses, elStyle: t.elStyle, renderProps: r, generatorName: "nowIndicatorContent", customGenerator: n.nowIndicatorContent, classNameGenerator: n.nowIndicatorClassNames, didMount: n.nowIndicatorDidMount, willUnmount: n.nowIndicatorWillUnmount }, t.children);
+  return g(G, { elRef: t.elRef, elTag: t.elTag || "div", elAttrs: t.elAttrs, elClasses: t.elClasses, elStyle: t.elStyle, renderProps: r, generatorName: "nowIndicatorContent", customGenerator: n.nowIndicatorContent, classNameGenerator: n.nowIndicatorClassNames, didMount: n.nowIndicatorDidMount, willUnmount: n.nowIndicatorWillUnmount }, t.children);
 }), ld = N({ day: "numeric" });
 class nr extends R {
   constructor() {
@@ -4872,7 +4872,7 @@ class nr extends R {
       dateEnv: n.dateEnv,
       monthStartFormat: r.monthStartFormat
     });
-    return g(V, { elRef: e.elRef, elTag: e.elTag, elAttrs: Object.assign(Object.assign({}, e.elAttrs), i.isDisabled ? {} : { "data-date": Nn(e.date) }), elClasses: [
+    return g(G, { elRef: e.elRef, elTag: e.elTag, elAttrs: Object.assign(Object.assign({}, e.elAttrs), i.isDisabled ? {} : { "data-date": Nn(e.date) }), elClasses: [
       ...qn(i, n.theme),
       ...e.elClasses || []
     ], elStyle: e.elStyle, renderProps: i, generatorName: "dayCellContent", customGenerator: r.dayCellContent, defaultGenerator: e.defaultGenerator, classNameGenerator: (
@@ -4907,7 +4907,7 @@ function Ys(t) {
 const Qs = (t) => g(te.Consumer, null, (e) => {
   let { dateEnv: n, options: r } = e, { date: i } = t, s = r.weekNumberFormat || t.defaultFormat, l = n.computeWeekNumber(i), o = n.format(i, s), a = { num: l, text: o, date: i };
   return g(
-    V,
+    G,
     { elRef: t.elRef, elTag: t.elTag, elAttrs: t.elAttrs, elClasses: t.elClasses, elStyle: t.elStyle, renderProps: a, generatorName: "weekNumberContent", customGenerator: r.weekNumberContent, defaultGenerator: cd, classNameGenerator: r.weekNumberClassNames, didMount: r.weekNumberDidMount, willUnmount: r.weekNumberWillUnmount },
     t.children
   );
@@ -5049,7 +5049,7 @@ class Zs extends R {
       return g(
         x,
         null,
-        !!e.moreCnt && g(V, { elTag: e.elTag || "a", elRef: this.handleLinkEl, elClasses: [
+        !!e.moreCnt && g(G, { elTag: e.elTag || "a", elRef: this.handleLinkEl, elClasses: [
           ...e.elClasses || [],
           "fc-more-link"
         ], elStyle: e.elStyle, elAttrs: Object.assign(Object.assign(Object.assign({}, e.elAttrs), es(this.handleClick)), { title: f, "aria-expanded": n.isPopoverOpen, "aria-controls": n.isPopoverOpen ? n.popoverId : "" }), renderProps: h, generatorName: "moreLinkContent", customGenerator: s.moreLinkContent, defaultGenerator: e.defaultGenerator || fd, classNameGenerator: s.moreLinkClassNames, didMount: s.moreLinkDidMount, willUnmount: s.moreLinkWillUnmount }, e.children),
@@ -5074,7 +5074,7 @@ function ei(t) {
   if (t.allDayDate)
     return {
       start: t.allDayDate,
-      end: B(t.allDayDate, 1)
+      end: L(t.allDayDate, 1)
     };
   let { hiddenSegs: e } = t;
   return {
@@ -5374,7 +5374,7 @@ function _d(t) {
   };
 }
 function ni(t) {
-  return (e) => g(te.Consumer, null, (n) => g(V, { elTag: "div", elClasses: cs(n.viewSpec), renderProps: Object.assign(Object.assign({}, e), { nextDayThreshold: n.options.nextDayThreshold }), generatorName: void 0, customGenerator: t.content, classNameGenerator: t.classNames, didMount: t.didMount, willUnmount: t.willUnmount }));
+  return (e) => g(te.Consumer, null, (n) => g(G, { elTag: "div", elClasses: cs(n.viewSpec), renderProps: Object.assign(Object.assign({}, e), { nextDayThreshold: n.options.nextDayThreshold }), generatorName: void 0, customGenerator: t.content, classNameGenerator: t.classNames, didMount: t.didMount, willUnmount: t.willUnmount }));
 }
 function Rd(t, e, n, r) {
   let i = ti(t), s = ti(e.views), l = Dd(i, s);
@@ -5786,9 +5786,9 @@ const lu = ne({
 });
 function ou(t, e, n, r, i) {
   let s = t ? is(t) : null, l = M(i.start), o = i.end, a = [];
-  for (e && (e.milliseconds < 0 ? o = B(o, 1) : e.milliseconds >= 1e3 * 60 * 60 * 24 && (l = B(l, -1))); l < o; ) {
+  for (e && (e.milliseconds < 0 ? o = L(o, 1) : e.milliseconds >= 1e3 * 60 * 60 * 24 && (l = L(l, -1))); l < o; ) {
     let d;
-    (!s || s[l.getUTCDay()]) && (e ? d = r.add(l, e) : d = l, a.push(r.createMarker(n.toDate(d)))), l = B(l, 1);
+    (!s || s[l.getUTCDay()]) && (e ? d = r.add(l, e) : d = l, a.push(r.createMarker(n.toDate(d)))), l = L(l, 1);
   }
   return a;
 }
@@ -5946,8 +5946,8 @@ class pu {
       businessHours: this.parseContextBusinessHours(l),
       eventSources: d,
       eventUiBases: {},
-      eventStore: W(),
-      renderableEventStore: W(),
+      eventStore: V(),
+      renderableEventStore: V(),
       dateSelection: null,
       eventSelection: "",
       eventDrag: null,
@@ -6841,7 +6841,7 @@ function ke(t, e, n, r) {
     return t;
   let i = t.eventRange, s = i.range, l = Ee(s, {
     start: r[e].date,
-    end: B(r[n - 1].date, 1)
+    end: L(r[n - 1].date, 1)
   });
   return Object.assign(Object.assign({}, t), { firstCol: e, lastCol: n - 1, eventRange: {
     def: i.def,
@@ -7126,7 +7126,7 @@ class qu extends X {
     return this.rowRefs.currentMap[e].getCellEls()[n];
   }
   getCellRange(e, n) {
-    let r = this.props.cells[e][n].date, i = B(r, 1);
+    let r = this.props.cells[e][n].date, i = L(r, 1);
     return { start: r, end: i };
   }
 }
@@ -7242,7 +7242,7 @@ class tf extends fs {
 function nf(t) {
   let { dateEnv: e, currentRange: n } = t, { start: r, end: i } = n, s;
   if (t.snapToWeek && (r = e.startOfWeek(r), s = e.startOfWeek(i), s.valueOf() !== i.valueOf() && (i = Lr(s, 1))), t.fixedWeekCount) {
-    let l = e.startOfWeek(e.startOfMonth(B(n.end, -1))), o = Math.ceil(
+    let l = e.startOfWeek(e.startOfMonth(L(n.end, -1))), o = Math.ceil(
       // could be partial weeks due to hiddenDays
       Ro(l, i)
     );
@@ -7864,13 +7864,13 @@ class tt extends Be {
         return;
       let a = this.relevantEvents, d = this.hitDragging.initialHit, c = this.component.context, f = null, h = null, u = null, p = !1, v = {
         affectedEvents: a,
-        mutatedEvents: W(),
+        mutatedEvents: V(),
         isEvent: !0
       };
       if (l) {
         f = l.context;
         let b = f.options;
-        c === f || b.editable && b.droppable ? (h = Ef(d, l, this.eventRange.instance.range.start, f.getCurrentData().pluginHooks.eventDragMutationMassagers), h && (u = Vn(a, f.getCurrentData().eventUiBases, h, f), v.mutatedEvents = u, Fs(v, l.dateProfile, f) || (p = !0, h = null, u = null, v.mutatedEvents = W()))) : f = null;
+        c === f || b.editable && b.droppable ? (h = Ef(d, l, this.eventRange.instance.range.start, f.getCurrentData().pluginHooks.eventDragMutationMassagers), h && (u = Vn(a, f.getCurrentData().eventUiBases, h, f), v.mutatedEvents = u, Fs(v, l.dateProfile, f) || (p = !0, h = null, u = null, v.mutatedEvents = V()))) : f = null;
       }
       this.displayDrag(f, v), p ? Mn() : kn(), o || (c === f && // TODO: write test for this
       Ft(d, l) && (h = null), this.dragging.setMirrorNeedsRevert(!h), this.dragging.setMirrorIsVisible(!l || !this.subjectEl.getRootNode().querySelector(".fc-event-mirror")), this.receivingContext = f, this.validMutation = h, this.mutatedRelevantEvents = u);
@@ -7961,7 +7961,7 @@ class tt extends Be {
       type: "SET_EVENT_DRAG",
       state: {
         affectedEvents: n.affectedEvents,
-        mutatedEvents: W(),
+        mutatedEvents: V(),
         isEvent: !0
       }
     }) : i.dispatch({ type: "UNSET_EVENT_DRAG" })), e && e.dispatch({ type: "SET_EVENT_DRAG", state: n });
@@ -8010,7 +8010,7 @@ class Af extends Be {
     }, this.handleHitUpdate = (s, l, o) => {
       let { context: a } = this.component, d = this.relevantEvents, c = this.hitDragging.initialHit, f = this.eventRange.instance, h = null, u = null, p = !1, v = {
         affectedEvents: d,
-        mutatedEvents: W(),
+        mutatedEvents: V(),
         isEvent: !0
       };
       s && (s.componentId === c.componentId && this.isHitComboAllowed && !this.isHitComboAllowed(c, s) || (h = wf(c, s, o.subjectEl.classList.contains("fc-event-resizer-start"), f.range))), h && (u = Vn(d, a.getCurrentData().eventUiBases, h, a), v.mutatedEvents = u, Fs(v, s.dateProfile, a) || (p = !0, h = null, u = null, v.mutatedEvents = null)), u ? a.dispatch({
@@ -8157,7 +8157,7 @@ function El(t) {
       view: s,
       text: r.format(t.date, l)
     };
-    return g(V, { elTag: "td", elClasses: e, elAttrs: {
+    return g(G, { elTag: "td", elClasses: e, elAttrs: {
       "data-time": t.isoTimeStr
     }, renderProps: o, generatorName: "slotLabelContent", customGenerator: i.slotLabelContent, defaultGenerator: Mf, classNameGenerator: i.slotLabelClassNames, didMount: i.slotLabelDidMount, willUnmount: i.slotLabelWillUnmount }, (a) => g(
       "div",
@@ -8220,7 +8220,7 @@ class Of extends X {
       };
       return (
         // TODO: make reusable hook. used in list view too
-        g(V, { elTag: "td", elClasses: [
+        g(G, { elTag: "td", elClasses: [
           "fc-timegrid-axis",
           "fc-scrollgrid-shrink"
         ], elAttrs: {
@@ -8450,7 +8450,7 @@ class Bf extends R {
         "tr",
         { key: s.key, ref: i.createRef(s.key) },
         e.axis && g(El, Object.assign({}, s)),
-        g(V, { elTag: "td", elClasses: [
+        g(G, { elTag: "td", elClasses: [
           "fc-timegrid-slot",
           "fc-timegrid-slot-lane",
           !s.isLabeled && "fc-timegrid-slot-minor"
@@ -9281,7 +9281,7 @@ let Re = class extends HTMLElement {
 Re.elementStyles = [], Re.shadowRootOptions = { mode: "open" }, Re[Ve("elementProperties")] = /* @__PURE__ */ new Map(), Re[Ve("finalized")] = /* @__PURE__ */ new Map(), Ah?.({ ReactiveElement: Re }), (jt.reactiveElementVersions ??= []).push("2.1.2");
 const cr = globalThis, yi = (t) => t, Ot = cr.trustedTypes, Ei = Ot ? Ot.createPolicy("lit-html", { createHTML: (t) => t }) : void 0, Cl = "$lit$", ie = `lit$${Math.random().toFixed(9).slice(2)}$`, _l = "?" + ie, wh = `<${_l}>`, Ae = document, Ze = () => Ae.createComment(""), Xe = (t) => t === null || typeof t != "object" && typeof t != "function", dr = Array.isArray, Dh = (t) => dr(t) || typeof t?.[Symbol.iterator] == "function", dn = `[ 	
 \f\r]`, ze = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, Si = /-->/g, Ai = />/g, fe = RegExp(`>|${dn}(?:([^\\s"'>=/]+)(${dn}*=${dn}*(?:[^ 	
-\f\r"'\`<>=]|("|')|))|$)`, "g"), wi = /'/g, Di = /"/g, Rl = /^(?:script|style|textarea|title)$/i, Ch = (t) => (e, ...n) => ({ _$litType$: t, strings: e, values: n }), G = Ch(1), Pe = /* @__PURE__ */ Symbol.for("lit-noChange"), H = /* @__PURE__ */ Symbol.for("lit-nothing"), Ci = /* @__PURE__ */ new WeakMap(), me = Ae.createTreeWalker(Ae, 129);
+\f\r"'\`<>=]|("|')|))|$)`, "g"), wi = /'/g, Di = /"/g, Rl = /^(?:script|style|textarea|title)$/i, Ch = (t) => (e, ...n) => ({ _$litType$: t, strings: e, values: n }), F = Ch(1), Pe = /* @__PURE__ */ Symbol.for("lit-noChange"), B = /* @__PURE__ */ Symbol.for("lit-nothing"), Ci = /* @__PURE__ */ new WeakMap(), me = Ae.createTreeWalker(Ae, 129);
 function Tl(t, e) {
   if (!dr(t) || !t.hasOwnProperty("raw")) throw Error("invalid template strings array");
   return Ei !== void 0 ? Ei.createHTML(e) : e;
@@ -9374,7 +9374,7 @@ class nt {
     return this._$AM?._$AU ?? this._$Cv;
   }
   constructor(e, n, r, i) {
-    this.type = 2, this._$AH = H, this._$AN = void 0, this._$AA = e, this._$AB = n, this._$AM = r, this.options = i, this._$Cv = i?.isConnected ?? !0;
+    this.type = 2, this._$AH = B, this._$AN = void 0, this._$AA = e, this._$AB = n, this._$AM = r, this.options = i, this._$Cv = i?.isConnected ?? !0;
   }
   get parentNode() {
     let e = this._$AA.parentNode;
@@ -9388,7 +9388,7 @@ class nt {
     return this._$AB;
   }
   _$AI(e, n = this) {
-    e = He(this, e, n), Xe(e) ? e === H || e == null || e === "" ? (this._$AH !== H && this._$AR(), this._$AH = H) : e !== this._$AH && e !== Pe && this._(e) : e._$litType$ !== void 0 ? this.$(e) : e.nodeType !== void 0 ? this.T(e) : Dh(e) ? this.k(e) : this._(e);
+    e = He(this, e, n), Xe(e) ? e === B || e == null || e === "" ? (this._$AH !== B && this._$AR(), this._$AH = B) : e !== this._$AH && e !== Pe && this._(e) : e._$litType$ !== void 0 ? this.$(e) : e.nodeType !== void 0 ? this.T(e) : Dh(e) ? this.k(e) : this._(e);
   }
   O(e) {
     return this._$AA.parentNode.insertBefore(e, this._$AB);
@@ -9397,7 +9397,7 @@ class nt {
     this._$AH !== e && (this._$AR(), this._$AH = this.O(e));
   }
   _(e) {
-    this._$AH !== H && Xe(this._$AH) ? this._$AA.nextSibling.data = e : this.T(Ae.createTextNode(e)), this._$AH = e;
+    this._$AH !== B && Xe(this._$AH) ? this._$AA.nextSibling.data = e : this.T(Ae.createTextNode(e)), this._$AH = e;
   }
   $(e) {
     const { values: n, _$litType$: r } = e, i = typeof r == "number" ? this._$AC(e) : (r.el === void 0 && (r.el = Ke.createElement(Tl(r.h, r.h[0]), this.options)), r);
@@ -9436,7 +9436,7 @@ class Wt {
     return this._$AM._$AU;
   }
   constructor(e, n, r, i, s) {
-    this.type = 1, this._$AH = H, this._$AN = void 0, this.element = e, this.name = n, this._$AM = i, this.options = s, r.length > 2 || r[0] !== "" || r[1] !== "" ? (this._$AH = Array(r.length - 1).fill(new String()), this.strings = r) : this._$AH = H;
+    this.type = 1, this._$AH = B, this._$AN = void 0, this.element = e, this.name = n, this._$AM = i, this.options = s, r.length > 2 || r[0] !== "" || r[1] !== "" ? (this._$AH = Array(r.length - 1).fill(new String()), this.strings = r) : this._$AH = B;
   }
   _$AI(e, n = this, r, i) {
     const s = this.strings;
@@ -9445,12 +9445,12 @@ class Wt {
     else {
       const o = e;
       let a, d;
-      for (e = s[0], a = 0; a < s.length - 1; a++) d = He(this, o[r + a], n, a), d === Pe && (d = this._$AH[a]), l ||= !Xe(d) || d !== this._$AH[a], d === H ? e = H : e !== H && (e += (d ?? "") + s[a + 1]), this._$AH[a] = d;
+      for (e = s[0], a = 0; a < s.length - 1; a++) d = He(this, o[r + a], n, a), d === Pe && (d = this._$AH[a]), l ||= !Xe(d) || d !== this._$AH[a], d === B ? e = B : e !== B && (e += (d ?? "") + s[a + 1]), this._$AH[a] = d;
     }
     l && !i && this.j(e);
   }
   j(e) {
-    e === H ? this.element.removeAttribute(this.name) : this.element.setAttribute(this.name, e ?? "");
+    e === B ? this.element.removeAttribute(this.name) : this.element.setAttribute(this.name, e ?? "");
   }
 }
 class Th extends Wt {
@@ -9458,7 +9458,7 @@ class Th extends Wt {
     super(...arguments), this.type = 3;
   }
   j(e) {
-    this.element[this.name] = e === H ? void 0 : e;
+    this.element[this.name] = e === B ? void 0 : e;
   }
 }
 class xh extends Wt {
@@ -9466,7 +9466,7 @@ class xh extends Wt {
     super(...arguments), this.type = 4;
   }
   j(e) {
-    this.element.toggleAttribute(this.name, !!e && e !== H);
+    this.element.toggleAttribute(this.name, !!e && e !== B);
   }
 }
 class Mh extends Wt {
@@ -9474,8 +9474,8 @@ class Mh extends Wt {
     super(e, n, r, i, s), this.type = 5;
   }
   _$AI(e, n = this) {
-    if ((e = He(this, e, n, 0) ?? H) === Pe) return;
-    const r = this._$AH, i = e === H && r !== H || e.capture !== r.capture || e.once !== r.once || e.passive !== r.passive, s = e !== H && (r === H || i);
+    if ((e = He(this, e, n, 0) ?? B) === Pe) return;
+    const r = this._$AH, i = e === B && r !== B || e.capture !== r.capture || e.once !== r.once || e.passive !== r.passive, s = e !== B && (r === B || i);
     i && this.element.removeEventListener(this.name, this, r), s && this.element.addEventListener(this.name, this, e), this._$AH = e;
   }
   handleEvent(e) {
@@ -9563,7 +9563,7 @@ function fr(t) {
     return i.constructor.createProperty(s, r), l ? Object.getOwnPropertyDescriptor(i, s) : void 0;
   })(t, e, n);
 }
-function F(t) {
+function z(t) {
   return fr({ ...t, state: !0, attribute: !1 });
 }
 const Lh = (t, e, n) => (n.configurable = !0, n.enumerable = !0, Reflect.decorate && typeof e != "object" && Object.defineProperty(t, e, n), n);
@@ -9920,7 +9920,7 @@ const Uh = Dl`
     to { transform: translateY(0); opacity: 1; }
   }
 `;
-var zh = Object.defineProperty, Fh = Object.getOwnPropertyDescriptor, L = (t, e, n, r) => {
+var zh = Object.defineProperty, Fh = Object.getOwnPropertyDescriptor, H = (t, e, n, r) => {
   for (var i = r > 1 ? void 0 : r ? Fh(e, n) : e, s = t.length - 1, l; s >= 0; s--)
     (l = t[s]) && (i = (r ? l(e, n, i) : l(i)) || i);
   return r && i && zh(e, n, i), i;
@@ -9928,7 +9928,7 @@ var zh = Object.defineProperty, Fh = Object.getOwnPropertyDescriptor, L = (t, e,
 const _i = "#0078d4", jh = 500, Ri = "06:00:00", Ti = "22:00:00", xi = 7, Wh = [0, 250, 1e3, 2500];
 let P = class extends Ge {
   constructor() {
-    super(...arguments), this.activeCalendars = [], this.isCompact = !1, this.showModal = !1, this.editMode = !1, this.confirmDelete = !1, this.isAllDay = !1, this.currentEventId = "", this.currentRecurrenceId = "", this.newEventTitle = "", this.newEventCalendar = "", this.newEventStart = "", this.newEventEnd = "", this.newEventRecurrence = "", this.currentRrule = "", this.calendar = null, this.allFetchedEvents = [], this.visibleEvents = [], this.lastEntitySignature = "";
+    super(...arguments), this.activeCalendars = [], this.isCompact = !1, this.showModal = !1, this.editMode = !1, this.confirmDelete = !1, this.isAllDay = !1, this.currentEventId = "", this.currentRecurrenceId = "", this.newEventTitle = "", this.newEventCalendar = "", this.newEventStart = "", this.newEventEnd = "", this.newEventRecurrence = "", this.currentRrule = "", this.newEventUntil = "", this.calendar = null, this.allFetchedEvents = [], this.visibleEvents = [], this.lastEntitySignature = "";
   }
   setConfig(t) {
     if (!t.entities?.length)
@@ -9940,7 +9940,7 @@ let P = class extends Ge {
   }
   // ---------------------------------------------------------------- Rendering
   render() {
-    return G`
+    return F`
       <ha-card>
         <div class="header">
           <div class="filters">
@@ -9968,7 +9968,7 @@ let P = class extends Ge {
   }
   /** Kleine Symbolschaltflaeche, etwa zu einer anderen Ansicht. */
   renderLink(t) {
-    return G`
+    return F`
       <button
         class="link-button"
         title=${t.name ?? t.path}
@@ -9987,7 +9987,7 @@ let P = class extends Ge {
   }
   renderFilterChip(t) {
     const e = this.config.colors?.[t] ?? _i, n = this.activeCalendars.includes(t);
-    return G`
+    return F`
       <button
         class="filter-chip ${n ? "active" : ""}"
         style="--chip-color: ${e}"
@@ -9999,9 +9999,9 @@ let P = class extends Ge {
     `;
   }
   renderModal() {
-    if (!this.showModal) return G``;
+    if (!this.showModal) return F``;
     const t = this.isAllDay ? "date" : "datetime-local";
-    return G`
+    return F`
       <div class="modal-overlay" @click=${() => this.closeModal()}>
         <div class="modal-content" @click=${(e) => e.stopPropagation()}>
           <h3>${this.editMode ? "Termin bearbeiten" : "Neuer Termin"}</h3>
@@ -10023,14 +10023,14 @@ let P = class extends Ge {
       // Beim Bearbeiten ist der Kalender ohnehin gesperrt. Als
       // Auswahlliste zeigte er den ersten Eintrag statt des echten
       // Werts, weil das Feld gesetzt wird, bevor die Optionen stehen.
-      G`<p class="readonly-value">${this.friendlyName(this.newEventCalendar)}</p>`
-    ) : G`
+      F`<p class="readonly-value">${this.friendlyName(this.newEventCalendar)}</p>`
+    ) : F`
                   <select
                     .value=${this.newEventCalendar}
                     @change=${(e) => this.newEventCalendar = e.target.value}
                   >
                     ${this.config.entities.map(
-      (e) => G`<option value=${e}>${this.friendlyName(e)}</option>`
+      (e) => F`<option value=${e}>${this.friendlyName(e)}</option>`
     )}
                   </select>
                 `}
@@ -10065,21 +10065,7 @@ let P = class extends Ge {
             />
           </div>
 
-          <div class="form-group">
-            <label>Wiederholung</label>
-            ${this.editMode ? G`<p class="readonly-value">${Gh(this.currentRrule)}</p>` : G`
-                  <select
-                    .value=${this.newEventRecurrence}
-                    @change=${(e) => this.newEventRecurrence = e.target.value}
-                  >
-                    <option value="">Keine</option>
-                    <option value="DAILY">Täglich</option>
-                    <option value="WEEKLY">Wöchentlich</option>
-                    <option value="MONTHLY">Monatlich</option>
-                    <option value="YEARLY">Jährlich</option>
-                  </select>
-                `}
-          </div>
+          ${this.renderRecurrence()}
 
           <div class="modal-actions">
             ${this.editMode ? this.renderDeleteButton() : ""}
@@ -10094,15 +10080,61 @@ let P = class extends Ge {
       </div>
     `;
   }
+  /** Wiederholung und Serienende.
+  
+     * Beim Bearbeiten laesst Home Assistant die Regel nur aendern, wenn eine
+     * Serieninstanz angesprochen wird - fuer einen Einzeltermin ist der Weg
+     * versperrt. Deshalb erscheinen die Felder dort nicht.
+     */
+  renderRecurrence() {
+    const t = this.editMode && this.currentRrule !== "";
+    return this.editMode && !t ? F`
+        <div class="form-group">
+          <label>Wiederholung</label>
+          <p class="readonly-value">Keine</p>
+        </div>
+      ` : F`
+      <div class="form-group">
+        <label>Wiederholung</label>
+        <select
+          .value=${this.newEventRecurrence}
+          @change=${(e) => this.setFrequency(e.target.value)}
+        >
+          ${t ? "" : F`<option value="">Keine</option>`}
+          <option value="DAILY">Täglich</option>
+          <option value="WEEKLY">Wöchentlich</option>
+          <option value="MONTHLY">Monatlich</option>
+          <option value="YEARLY">Jährlich</option>
+        </select>
+      </div>
+      ${this.newEventRecurrence ? F`
+            <div class="form-group">
+              <label>Serie endet am</label>
+              <input
+                type="date"
+                .value=${this.newEventUntil}
+                @input=${(e) => this.newEventUntil = e.target.value}
+              />
+              <p class="field-hint">
+                ${this.newEventUntil ? "" : "Leer lassen für eine Serie ohne Ende. "}
+                ${t ? "Änderungen gelten ab diesem Termin, frühere bleiben stehen." : ""}
+              </p>
+            </div>
+          ` : ""}
+    `;
+  }
+  setFrequency(t) {
+    this.newEventRecurrence = t, t || (this.newEventUntil = "");
+  }
   /** Zweistufiges Loeschen statt confirm(): erst Klick, dann Bestaetigung. */
   renderDeleteButton() {
-    return this.confirmDelete ? G`
+    return this.confirmDelete ? F`
       <button class="btn-delete btn-delete--confirm" @click=${() => {
       this.deleteEvent();
     }}>
         Wirklich löschen?
       </button>
-    ` : G`
+    ` : F`
         <button class="btn-delete" @click=${() => this.confirmDelete = !0}>Löschen</button>
       `;
   }
@@ -10238,14 +10270,16 @@ let P = class extends Ge {
     const t = /* @__PURE__ */ new Date();
     t.setMinutes(0, 0, 0), t.setHours(t.getHours() + 1);
     const e = new Date(t.getTime() + 3600 * 1e3);
-    this.isAllDay = !1, this.newEventStart = this.formatForInput(t, !1), this.newEventEnd = this.formatForInput(e, !1), this.newEventTitle = "", this.newEventCalendar = this.config.entities[0] ?? "", this.newEventRecurrence = "", this.currentRrule = "", this.editMode = !1, this.confirmDelete = !1, this.showModal = !0;
+    this.isAllDay = !1, this.newEventStart = this.formatForInput(t, !1), this.newEventEnd = this.formatForInput(e, !1), this.newEventTitle = "", this.newEventCalendar = this.config.entities[0] ?? "", this.newEventRecurrence = "", this.newEventUntil = "", this.currentRrule = "", this.editMode = !1, this.confirmDelete = !1, this.showModal = !0;
   }
   handleDateSelect(t) {
-    t.view.calendar.unselect(), this.isAllDay = t.allDay, this.newEventStart = this.formatForInput(t.start, t.allDay), this.newEventEnd = this.formatForInput(t.end, t.allDay), this.newEventTitle = "", this.newEventCalendar = this.config.entities[0] ?? "", this.newEventRecurrence = "", this.currentRrule = "", this.editMode = !1, this.confirmDelete = !1, this.showModal = !0;
+    t.view.calendar.unselect(), this.isAllDay = t.allDay, this.newEventStart = this.formatForInput(t.start, t.allDay), this.newEventEnd = this.formatForInput(t.end, t.allDay), this.newEventTitle = "", this.newEventCalendar = this.config.entities[0] ?? "", this.newEventRecurrence = "", this.newEventUntil = "", this.currentRrule = "", this.editMode = !1, this.confirmDelete = !1, this.showModal = !0;
   }
   handleEventClick(t) {
     const e = t.event, n = e.extendedProps;
-    this.editMode = !0, this.confirmDelete = !1, this.isAllDay = e.allDay, this.currentEventId = n.uid || (e.id ?? ""), this.currentRecurrenceId = n.recurrenceId, this.newEventTitle = e.title, this.newEventCalendar = n.entityId, this.newEventStart = this.formatForInput(e.start, e.allDay), this.newEventEnd = this.formatForInput(e.end ?? e.start, e.allDay), this.currentRrule = n.rrule, this.newEventRecurrence = "", this.showModal = !0;
+    this.editMode = !0, this.confirmDelete = !1, this.isAllDay = e.allDay, this.currentEventId = n.uid || (e.id ?? ""), this.currentRecurrenceId = n.recurrenceId, this.newEventTitle = e.title, this.newEventCalendar = n.entityId, this.newEventStart = this.formatForInput(e.start, e.allDay), this.newEventEnd = this.formatForInput(e.end ?? e.start, e.allDay), this.currentRrule = n.rrule;
+    const r = Gh(n.rrule);
+    this.newEventRecurrence = r.frequency, this.newEventUntil = r.until, this.showModal = !0;
   }
   /** Termin wurde gezogen oder in der Dauer geaendert. */
   async handleEventMoved(t) {
@@ -10282,7 +10316,7 @@ let P = class extends Ge {
     return e ? r.slice(0, 10) : r.slice(0, 19);
   }
   closeModal() {
-    this.showModal = !1, this.editMode = !1, this.confirmDelete = !1, this.isAllDay = !1, this.currentEventId = "", this.currentRecurrenceId = "", this.newEventTitle = "", this.newEventCalendar = "", this.newEventStart = "", this.newEventEnd = "", this.newEventRecurrence = "", this.currentRrule = "";
+    this.showModal = !1, this.editMode = !1, this.confirmDelete = !1, this.isAllDay = !1, this.currentEventId = "", this.currentRecurrenceId = "", this.newEventTitle = "", this.newEventCalendar = "", this.newEventStart = "", this.newEventEnd = "", this.newEventRecurrence = "", this.newEventUntil = "", this.currentRrule = "";
   }
   async saveEvent() {
     if (!this.newEventTitle.trim()) return this.notify("Bitte einen Titel eingeben.");
@@ -10292,8 +10326,8 @@ let P = class extends Ge {
       summary: this.newEventTitle.trim(),
       dtstart: this.newEventStart,
       dtend: this.newEventEnd
-    };
-    this.newEventRecurrence && !this.editMode && (t.rrule = `FREQ=${this.newEventRecurrence}`);
+    }, e = qh(this.newEventRecurrence, this.newEventUntil);
+    e && (t.rrule = e);
     try {
       this.editMode && this.currentEventId ? await this.hass.callWS({
         type: "calendar/event/update",
@@ -10306,8 +10340,8 @@ let P = class extends Ge {
         entity_id: this.newEventCalendar,
         event: t
       }), this.closeModal(), this.scheduleFetch();
-    } catch (e) {
-      console.error("Family Calendar: Speichern fehlgeschlagen", e), this.notify(`Termin konnte nicht gespeichert werden: ${this.errorText(e)}`);
+    } catch (n) {
+      console.error("Family Calendar: Speichern fehlgeschlagen", n), this.notify(`Termin konnte nicht gespeichert werden: ${this.errorText(n)}`);
     }
   }
   async deleteEvent() {
@@ -10384,6 +10418,12 @@ let P = class extends Ge {
 P.styles = [
   Uh,
   Dl`
+      .field-hint {
+        margin: 6px 0 0;
+        font-size: 0.78rem;
+        line-height: 1.35;
+        color: var(--text-secondary);
+      }
       .add-button {
         display: inline-flex;
         align-items: center;
@@ -10453,77 +10493,76 @@ P.styles = [
       }
     `
 ];
-L([
+H([
   fr({ attribute: !1 })
 ], P.prototype, "hass", 2);
-L([
+H([
   fr({ attribute: !1 })
 ], P.prototype, "config", 2);
-L([
-  F()
+H([
+  z()
 ], P.prototype, "activeCalendars", 2);
-L([
-  F()
+H([
+  z()
 ], P.prototype, "isCompact", 2);
-L([
-  F()
+H([
+  z()
 ], P.prototype, "showModal", 2);
-L([
-  F()
+H([
+  z()
 ], P.prototype, "editMode", 2);
-L([
-  F()
+H([
+  z()
 ], P.prototype, "confirmDelete", 2);
-L([
-  F()
+H([
+  z()
 ], P.prototype, "isAllDay", 2);
-L([
-  F()
+H([
+  z()
 ], P.prototype, "currentEventId", 2);
-L([
-  F()
+H([
+  z()
 ], P.prototype, "currentRecurrenceId", 2);
-L([
-  F()
+H([
+  z()
 ], P.prototype, "newEventTitle", 2);
-L([
-  F()
+H([
+  z()
 ], P.prototype, "newEventCalendar", 2);
-L([
-  F()
+H([
+  z()
 ], P.prototype, "newEventStart", 2);
-L([
-  F()
+H([
+  z()
 ], P.prototype, "newEventEnd", 2);
-L([
-  F()
+H([
+  z()
 ], P.prototype, "newEventRecurrence", 2);
-L([
-  F()
+H([
+  z()
 ], P.prototype, "currentRrule", 2);
-L([
+H([
+  z()
+], P.prototype, "newEventUntil", 2);
+H([
   $h("#calendar")
 ], P.prototype, "calendarEl", 2);
-P = L([
+P = H([
   Ph("family-calendar")
 ], P);
-const Vh = {
-  DAILY: "Täglich",
-  WEEKLY: "Wöchentlich",
-  MONTHLY: "Monatlich",
-  YEARLY: "Jährlich"
-};
+const Vh = ["DAILY", "WEEKLY", "MONTHLY", "YEARLY"];
 function Gh(t) {
-  if (!t) return "Keine";
-  const e = /FREQ=([A-Z]+)/.exec(t)?.[1] ?? "", n = Vh[e];
-  if (!n) return t;
-  const r = /UNTIL=(\d{4})(\d{2})(\d{2})/.exec(t);
-  if (r) {
-    const [, s, l, o] = r;
-    return `${n}, bis ${o}.${l}.${s}`;
-  }
-  const i = /COUNT=(\d+)/.exec(t)?.[1];
-  return i ? `${n}, ${i}-mal` : n;
+  const e = /FREQ=([A-Z]+)/.exec(t)?.[1] ?? "", n = /UNTIL=(\d{4})(\d{2})(\d{2})/.exec(t);
+  return {
+    frequency: Vh.includes(e) ? e : "",
+    until: n ? `${n[1]}-${n[2]}-${n[3]}` : ""
+  };
+}
+function qh(t, e) {
+  if (!t) return;
+  if (!e) return `FREQ=${t}`;
+  const r = (/* @__PURE__ */ new Date(`${e}T23:59:59`)).toISOString().replace(/[-:]/g, "").slice(0, 15);
+  return `FREQ=${t};UNTIL=${r}Z`;
 }
 window.customCards = window.customCards ?? [];
 window.customCards.push({
