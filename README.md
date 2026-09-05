@@ -42,6 +42,14 @@ invitations into calendar entries.
 *   **Shell card** — a sidebar plus areas that stay mounted. Switching between
     areas is instant and nothing reloads.
 
+**Tasks and lists**
+
+*   **Task card** — one card for chores per person and for shopping lists.
+*   **Recurring tasks** — daily, weekly, monthly or yearly, with an interval.
+    Home Assistant has no recurrence rule for tasks, so the integration
+    rebuilds it: tick a task off and the next one appears.
+*   Tap the text to correct a task, change its rhythm or delete it.
+
 ### Requirements
 
 *   Home Assistant 2025.7 or newer.
@@ -219,6 +227,17 @@ Besprechungsanfragen in Kalendereinträge verwandelt.
     heute und morgen ansteht, ohne einen Stundenplan lesen zu müssen.
 *   **Hüllkarte** — Seitenleiste mit Bereichen, die geladen bleiben. Das
     Umschalten geht ohne Verzögerung, es wird nichts neu aufgebaut.
+
+**Aufgaben und Listen**
+
+*   **Aufgabenkarte** — eine Karte für Pflichten je Person und für
+    Einkaufslisten.
+*   **Wiederkehrende Aufgaben** — täglich, wöchentlich, monatlich oder
+    jährlich, mit Intervall. Home Assistant kennt für Aufgaben keine
+    Wiederholungsregel, die Integration baut sie nach: abhaken, und die
+    nächste erscheint.
+*   Ein Tipp auf den Text korrigiert eine Aufgabe, ändert den Rhythmus oder
+    löscht sie.
 
 ### Voraussetzungen
 

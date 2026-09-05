@@ -32,6 +32,7 @@ def _stub_homeassistant() -> None:
         "homeassistant.helpers",
         "homeassistant.helpers.event",
         "homeassistant.helpers.storage",
+        "homeassistant.helpers.start",
     ):
         sys.modules.setdefault(name, types.ModuleType(name))
 
@@ -46,6 +47,13 @@ def _stub_homeassistant() -> None:
         lambda *args, **kwargs: None
     )
     sys.modules["homeassistant.helpers.storage"].Store = object
+    sys.modules["homeassistant.helpers.event"].async_track_state_change_event = (
+        lambda *args, **kwargs: None
+    )
+    sys.modules["homeassistant.helpers.start"].async_at_started = (
+        lambda *args, **kwargs: None
+    )
+    sys.modules["homeassistant.core"].Event = object
 
 
 _stub_homeassistant()

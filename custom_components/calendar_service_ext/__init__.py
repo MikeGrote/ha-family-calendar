@@ -19,9 +19,11 @@ from homeassistant.components import frontend
 from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.start import async_at_started
 
 from .const import CONF_ENABLED, DOMAIN, FRONTEND_SCRIPT, URL_BASE
 from .invite_sync import InviteSync
+from .todo_recurrence import TodoRecurrenceWatcher
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -38,6 +40,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         sync = InviteSync(hass, entry)
         await sync.async_start()
         hass.data.setdefault(DOMAIN, {})[entry.entry_id] = sync
+
+    # Erst wenn Home Assistant fertig hochgefahren ist: Vorher gibt es die
+    # Aufgabenlisten noch nicht, die beobachtet werden sollen.
+    watcher = TodoRecurrenceWatcher(hass)
+    entry.async_on_unload(async_at_started(hass, lambda _: watcher.async_start()))
+    entry.async_on_unload(watcher.async_stop)
 
     entry.async_on_unload(entry.add_update_listener(_async_update_listener))
     return True

@@ -5,12 +5,22 @@ import { customElement, property, state } from 'lit/decorators.js';
 import {
   addItem,
   clearCompleted,
+  removeItem,
   setStatus,
   subscribeList,
+  updateItem,
   type TodoItem,
 } from './lib/todo-api';
 import { tasksStyles } from './styles/tasks';
-import { renderTasks } from './templates/tasks';
+import {
+  buildDescription,
+  parseMarker,
+  stripMarker,
+  type TaskFrequency,
+} from './lib/todo-recurrence';
+import { renderTaskDialog } from './templates/task-dialog';
+import { renderTasks, type TaskDraft } from './templates/tasks';
+import { html, nothing } from 'lit';
 import type { TasksConfig } from './types';
 
 /** Aufgaben und Listen nebeneinander.
@@ -28,7 +38,16 @@ export class FamilyTasks extends LitElement {
   @property({ attribute: false }) config!: TasksConfig;
 
   @state() private items = new Map<string, TodoItem[]>();
-  @state() private drafts = new Map<string, string>();
+  @state() private drafts = new Map<string, TaskDraft>();
+  @state() private open: {
+    entityId: string;
+    item: TodoItem;
+    title: string;
+    due: string;
+    frequency: TaskFrequency;
+    interval: number;
+    confirmDelete: boolean;
+  } | null = null;
 
   private unsubscribes: (() => void)[] = [];
   private subscribed = false;
@@ -60,6 +79,41 @@ export class FamilyTasks extends LitElement {
   }
 
   render(): TemplateResult {
+    return html`${this.renderCard()}${this.renderDialog()}`;
+  }
+
+  private renderDialog(): TemplateResult | typeof nothing {
+    const offen = this.open;
+    if (!offen) return nothing;
+
+    const liste = this.config.lists.find((l) => l.entity === offen.entityId);
+    const patch = (changes: Partial<NonNullable<typeof this.open>>): void => {
+      if (this.open) this.open = { ...this.open, ...changes };
+    };
+
+    return renderTaskDialog({
+      title: offen.title,
+      due: offen.due,
+      frequency: offen.frequency,
+      interval: offen.interval,
+      listName: liste?.name ?? this.nameOf(offen.entityId),
+      confirmDelete: offen.confirmDelete,
+      onTitle: (value) => patch({ title: value }),
+      onDue: (value) => patch({ due: value }),
+      onFrequency: (value) => patch({ frequency: value }),
+      onInterval: (value) => patch({ interval: value }),
+      onConfirmDelete: () => patch({ confirmDelete: true }),
+      onDelete: () => void this.deleteOpen(),
+      onCancel: () => (this.open = null),
+      onSave: () => void this.saveOpen(),
+    });
+  }
+
+  private nameOf(entityId: string): string {
+    return this.hass?.states[entityId]?.attributes?.friendly_name ?? entityId;
+  }
+
+  private renderCard(): TemplateResult {
     return renderTasks({
       lists: this.config.lists,
       items: this.items,
@@ -67,10 +121,10 @@ export class FamilyTasks extends LitElement {
       showCompleted: this.config.showCompleted ?? false,
       showDue: this.config.showDue ?? true,
       title: this.config.title,
-      nameOf: (entityId) =>
-        this.hass?.states[entityId]?.attributes?.friendly_name ?? entityId,
+      nameOf: (entityId) => this.nameOf(entityId),
       onToggle: (entityId, item) => void this.toggle(entityId, item),
-      onDraft: (entityId, value) => this.setDraft(entityId, value),
+      onOpen: (entityId, item) => this.openItem(entityId, item),
+      onDraft: (entityId, changes) => this.patchDraft(entityId, changes),
       onAdd: (entityId) => void this.add(entityId),
       onClearCompleted: (entityId) => void clearCompleted(this.hass, entityId),
     });
@@ -99,23 +153,99 @@ export class FamilyTasks extends LitElement {
     }
   }
 
-  private setDraft(entityId: string, value: string): void {
-    this.drafts = new Map(this.drafts).set(entityId, value);
+  private draftOf(entityId: string): TaskDraft {
+    return (
+      this.drafts.get(entityId) ?? {
+        text: '',
+        due: '',
+        frequency: '',
+        interval: 1,
+        expanded: false,
+      }
+    );
+  }
+
+  private patchDraft(entityId: string, changes: Partial<TaskDraft>): void {
+    this.drafts = new Map(this.drafts).set(entityId, {
+      ...this.draftOf(entityId),
+      ...changes,
+    });
   }
 
   private async add(entityId: string): Promise<void> {
-    const text = (this.drafts.get(entityId) ?? '').trim();
+    const entwurf = this.draftOf(entityId);
+    const text = entwurf.text.trim();
     if (!text) return;
 
     // Das Feld sofort leeren: Das Abonnement liefert den neuen Eintrag
     // ohnehin nach, und ein stehenbleibender Text wirkt wie ein Fehler.
-    this.setDraft(entityId, '');
+    this.patchDraft(entityId, { text: '', due: '', frequency: '', interval: 1 });
+
     try {
-      await addItem(this.hass, entityId, text);
+      await addItem(this.hass, entityId, text, {
+        dueDate: entwurf.due || undefined,
+        // Die Wiederholung reist in der Beschreibung mit - die Integration
+        // liest sie beim Abhaken und legt die naechste Aufgabe an.
+        description: entwurf.frequency
+          ? buildDescription('', entwurf.frequency, entwurf.interval)
+          : undefined,
+      });
     } catch (err) {
       console.error('Family Tasks: Anlegen fehlgeschlagen', err);
-      this.setDraft(entityId, text);
+      this.patchDraft(entityId, entwurf);
       this.notify('Die Aufgabe ließ sich nicht anlegen.');
+    }
+  }
+
+  /** Detailansicht mit den aktuellen Werten fuellen. */
+  private openItem(entityId: string, item: TodoItem): void {
+    const wiederholung = parseMarker(item.description);
+    this.open = {
+      entityId,
+      item,
+      title: item.summary,
+      due: item.due ? item.due.slice(0, 10) : '',
+      frequency: wiederholung?.frequency ?? '',
+      interval: wiederholung?.interval ?? 1,
+      confirmDelete: false,
+    };
+  }
+
+  private async saveOpen(): Promise<void> {
+    const offen = this.open;
+    if (!offen) return;
+
+    const titel = offen.title.trim();
+    if (!titel) return this.notify('Bitte einen Titel eingeben.');
+
+    // Die Wiederholung steht in der Beschreibung. Auf "Keine" gestellt
+    // bleibt der freie Text erhalten, nur die Regelzeile faellt weg.
+    const rumpf = stripMarker(offen.item.description);
+    const beschreibung = buildDescription(rumpf, offen.frequency, offen.interval);
+
+    this.open = null;
+    try {
+      await updateItem(this.hass, offen.entityId, offen.item, {
+        rename: titel,
+        dueDate: offen.due || undefined,
+        description: beschreibung,
+      });
+    } catch (err) {
+      console.error('Family Tasks: Aendern fehlgeschlagen', err);
+      this.notify('Die Aufgabe ließ sich nicht ändern.');
+    }
+  }
+
+  private async deleteOpen(): Promise<void> {
+    const offen = this.open;
+    if (!offen) return;
+
+    this.open = null;
+    try {
+      await removeItem(this.hass, offen.entityId, offen.item);
+    } catch (err) {
+      console.error('Family Tasks: Löschen fehlgeschlagen', err);
+      this.notify('Die Aufgabe ließ sich nicht löschen.');
     }
   }
 

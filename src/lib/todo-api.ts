@@ -43,16 +43,23 @@ export async function subscribeList(
   });
 }
 
+/** Zusatzangaben beim Anlegen. */
+export interface NewItemOptions {
+  dueDate?: string;
+  description?: string;
+}
+
 export async function addItem(
   hass: HomeAssistant,
   entityId: string,
   summary: string,
-  dueDate?: string,
+  options: NewItemOptions = {},
 ): Promise<void> {
   await hass.callService('todo', 'add_item', {
     entity_id: entityId,
     item: summary,
-    ...(dueDate ? { due_date: dueDate } : {}),
+    ...(options.dueDate ? { due_date: options.dueDate } : {}),
+    ...(options.description ? { description: options.description } : {}),
   });
 }
 
@@ -67,6 +74,33 @@ export async function setStatus(
     entity_id: entityId,
     item: item.uid,
     status,
+  });
+}
+
+/** Aenderungen an einem Eintrag. */
+export interface ItemChanges {
+  rename?: string;
+  dueDate?: string;
+  description?: string;
+}
+
+/** Titel, Faelligkeit oder Beschreibung aendern.
+ *
+ * Eine leere Beschreibung entfernt eine vorhandene Wiederholung - die Regel
+ * steht ja genau dort.
+ */
+export async function updateItem(
+  hass: HomeAssistant,
+  entityId: string,
+  item: TodoItem,
+  changes: ItemChanges,
+): Promise<void> {
+  await hass.callService('todo', 'update_item', {
+    entity_id: entityId,
+    item: item.uid,
+    ...(changes.rename !== undefined ? { rename: changes.rename } : {}),
+    ...(changes.dueDate !== undefined ? { due_date: changes.dueDate } : {}),
+    ...(changes.description !== undefined ? { description: changes.description } : {}),
   });
 }
 
