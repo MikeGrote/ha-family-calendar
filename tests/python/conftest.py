@@ -1,13 +1,12 @@
-"""Laedt invite_sync.py ohne laufendes Home Assistant.
+"""Macht die Module der Integration ohne laufendes Home Assistant importierbar.
 
-Die Datei importiert HA-Module, die im Testlauf nicht vorhanden sind. Sie
-werden durch Platzhalter ersetzt - geprueft werden ohnehin nur die reinen
-Funktionen: Parser, Routing und Absenderfilter.
+Parser, Zuordnung und Absenderfilter selbst kommen ohne Home Assistant aus.
+Nur das Paket-__init__ importiert HA-Symbole, und die werden hier durch
+Platzhalter ersetzt, damit der Import durchlaeuft.
 """
 
 from __future__ import annotations
 
-import importlib.util
 import pathlib
 import sys
 import types
@@ -22,9 +21,12 @@ COMPONENT = (
 
 
 def _stub_homeassistant() -> None:
-    """Lege Platzhalter fuer die HA-Importe an."""
+    """Platzhalter fuer die Importe in calendar_service_ext/__init__.py."""
     for name in (
         "homeassistant",
+        "homeassistant.components",
+        "homeassistant.components.frontend",
+        "homeassistant.components.http",
         "homeassistant.config_entries",
         "homeassistant.core",
         "homeassistant.helpers",
@@ -33,6 +35,10 @@ def _stub_homeassistant() -> None:
     ):
         sys.modules.setdefault(name, types.ModuleType(name))
 
+    sys.modules["homeassistant.components"].frontend = sys.modules[
+        "homeassistant.components.frontend"
+    ]
+    sys.modules["homeassistant.components.http"].StaticPathConfig = object
     sys.modules["homeassistant.config_entries"].ConfigEntry = object
     sys.modules["homeassistant.core"].HomeAssistant = object
     sys.modules["homeassistant.core"].callback = lambda func: func
@@ -42,28 +48,8 @@ def _stub_homeassistant() -> None:
     sys.modules["homeassistant.helpers.storage"].Store = object
 
 
-def _load(name: str, path: pathlib.Path, rewrite: dict[str, str] | None = None):
-    """Lade ein Modul aus einer Datei, optional mit ersetzten Importzeilen."""
-    spec = importlib.util.spec_from_file_location(name, path)
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[name] = module  # dataclass braucht das Modul in sys.modules
-    source = path.read_text(encoding="utf-8")
-    for old, new in (rewrite or {}).items():
-        source = source.replace(old, new)
-    exec(compile(source, str(path), "exec"), module.__dict__)  # noqa: S102
-    return module
-
-
-@pytest.fixture(scope="session")
-def invite_sync():
-    """Das Modul invite_sync mit aufgeloesten Abhaengigkeiten."""
-    _stub_homeassistant()
-    _load("const", COMPONENT / "const.py")
-    return _load(
-        "invite_sync",
-        COMPONENT / "invite_sync.py",
-        {"from .const import": "from const import"},
-    )
+_stub_homeassistant()
+sys.path.insert(0, str(COMPONENT.parent))
 
 
 @pytest.fixture(scope="session")
