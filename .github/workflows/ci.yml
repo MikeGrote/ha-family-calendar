@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontend:
+    name: Frontend (TypeScript)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      # Das gebaute Bundle liegt im Repo, damit die Integration ohne
+      # Node-Toolchain installierbar ist. Dann muss es aber auch zum
+      # Quellcode passen - sonst deployt jemand eine veraltete Karte.
+      - name: Bundle stimmt mit dem Quellcode ueberein
+        run: |
+          if ! git diff --exit-code -- custom_components/calendar_service_ext/www/; then
+            echo "::error::Das eingecheckte Bundle ist veraltet. Bitte 'npm run build' ausfuehren und das Ergebnis committen."
+            exit 1
+          fi
+
+  python:
+    name: Python (Ruff)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/ruff-action@v4
+        with:
+          version: 0.15.15
+          args: check custom_components/
+
+  hassfest:
+    name: Home Assistant hassfest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: home-assistant/actions/hassfest@master
+
+  hacs:
+    name: HACS-Validierung
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: hacs/action@main
+        with:
+          category: integration
+          # Eine Marke in home-assistant/brands gibt es fuer dieses private
+          # Repo nicht und ist auch nicht vorgesehen.
+          ignore: brands
