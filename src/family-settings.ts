@@ -2,10 +2,12 @@ import type { HomeAssistant } from 'custom-card-helpers';
 import { LitElement, type TemplateResult, html } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 
+import { browserId } from './lib/browser-id';
 import { type ImageEntry, listImageEntries, resolveImage } from './lib/media-source';
 import {
   type AppSettings,
   DEFAULT_SETTINGS,
+  type PanelSettings,
   type PhotoSettings,
   deletePhoto,
   patchSettings,
@@ -15,6 +17,7 @@ import {
 import { settingsStyles } from './styles/settings';
 import { type SettingsSection, renderComingSoon, renderSettingsFrame } from './templates/settings';
 import { renderInfo } from './templates/settings-info';
+import { renderPanelSettings } from './templates/settings-panel';
 import { type PhotoTile, renderPhotoSettings } from './templates/settings-photos';
 import type { SettingsConfig } from './types';
 
@@ -29,7 +32,7 @@ const SECTIONS: SettingsSection[] = [
   { id: 'fotos', icon: 'mdi:image-multiple', name: 'Fotos', ready: true },
   { id: 'kalender', icon: 'mdi:calendar-month', name: 'Kalender', ready: false },
   { id: 'aufgaben', icon: 'mdi:checkbox-marked-outline', name: 'Aufgaben', ready: false },
-  { id: 'panel', icon: 'mdi:tablet-dashboard', name: 'Panel', ready: false },
+  { id: 'panel', icon: 'mdi:tablet-dashboard', name: 'Panel', ready: true },
   { id: 'info', icon: 'mdi:information-outline', name: 'Über', ready: true },
 ];
 
@@ -106,6 +109,14 @@ export class FamilySettings extends LitElement {
         onOpenIntegration: () =>
           this.navigate('/config/integrations/integration/calendar_service_ext'),
         onOpenTimeZone: () => this.navigate('/config/general'),
+      });
+    }
+
+    if (this.section === 'panel') {
+      return renderPanelSettings({
+        settings: this.settings.panel,
+        eigeneId: browserId(),
+        onLead: (leadBrowser) => void this.savePanel({ leadBrowser }),
       });
     }
 
@@ -213,6 +224,16 @@ export class FamilySettings extends LitElement {
     } catch (err) {
       console.error('Family Settings: Löschen fehlgeschlagen', err);
       this.notify('Das Bild konnte nicht gelöscht werden.');
+    }
+  }
+
+  private async savePanel(patch: Partial<PanelSettings>): Promise<void> {
+    this.settings = { ...this.settings, panel: { ...this.settings.panel, ...patch } };
+    try {
+      await patchSettings(this.hass, { panel: patch });
+    } catch (err) {
+      console.error('Family Settings: Speichern fehlgeschlagen', err);
+      this.notify('Die Einstellung konnte nicht gespeichert werden.');
     }
   }
 

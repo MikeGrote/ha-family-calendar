@@ -30,6 +30,13 @@ DEFAULTS: dict[str, Any] = {
         "showClock": True,
         "rescanMinutes": 60,
     },
+    "panel": {
+        # BrowserID (browser_mod) des Geraets, das seinen Bereich in den
+        # Auswahlhelfer zurueckmeldet. Der Helfer ist eine einzige globale
+        # Entitaet - ohne diese Einschraenkung zieht jeder Klick auf
+        # irgendeinem Bildschirm alle anderen mit. Leer: alle melden.
+        "leadBrowser": "",
+    },
 }
 
 

@@ -17,8 +17,14 @@ export interface PhotoSettings {
   rescanMinutes: number;
 }
 
+export interface PanelSettings {
+  /** BrowserID des Geraets, das den Bereich zurueckmeldet. Leer: alle. */
+  leadBrowser: string;
+}
+
 export interface AppSettings {
   photos: PhotoSettings;
+  panel: PanelSettings;
 }
 
 /** Vorgaben, solange nichts geladen ist - deckungsgleich mit der Integration. */
@@ -29,15 +35,34 @@ export const DEFAULT_SETTINGS: AppSettings = {
     showClock: true,
     rescanMinutes: 60,
   },
+  panel: {
+    leadBrowser: '',
+  },
 };
 
 /** Tief verschachtelter Ausschnitt; alles darf fehlen. */
 export type SettingsPatch = {
   photos?: Partial<PhotoSettings>;
+  panel?: Partial<PanelSettings>;
 };
 
+/** Fuellt fehlende Abschnitte und Felder aus den Vorgaben auf.
+ *
+ * Noetig, weil das Bundle und die Integration nicht im selben Moment neu
+ * geladen werden: Nach einem Update laeuft die alte Integration noch im
+ * Speicher weiter, bis Home Assistant neu startet, und kennt Abschnitte
+ * nicht, die es im Bundle schon gibt. Ohne dieses Auffuellen zerbricht die
+ * Karte am fehlenden Feld - genau dann, wenn jemand gerade aktualisiert hat.
+ */
+export function withDefaults(roh: Partial<AppSettings> | null | undefined): AppSettings {
+  return {
+    photos: { ...DEFAULT_SETTINGS.photos, ...(roh?.photos ?? {}) },
+    panel: { ...DEFAULT_SETTINGS.panel, ...(roh?.panel ?? {}) },
+  };
+}
+
 export async function fetchSettings(hass: HomeAssistant): Promise<AppSettings> {
-  return hass.callWS<AppSettings>({ type: `${DOMAIN}/settings/get` });
+  return withDefaults(await hass.callWS<Partial<AppSettings>>({ type: `${DOMAIN}/settings/get` }));
 }
 
 /** Schreibt einen Ausschnitt und liefert den neuen Gesamtstand. */
@@ -45,12 +70,14 @@ export async function patchSettings(
   hass: HomeAssistant,
   patch: SettingsPatch,
 ): Promise<AppSettings> {
-  return hass.callWS<AppSettings>({ type: `${DOMAIN}/settings/set`, patch });
+  return withDefaults(
+    await hass.callWS<Partial<AppSettings>>({ type: `${DOMAIN}/settings/set`, patch }),
+  );
 }
 
 interface HassConnection {
   subscribeMessage: (
-    callback: (settings: AppSettings) => void,
+    callback: (settings: Partial<AppSettings>) => void,
     payload: Record<string, unknown>,
   ) => Promise<() => void>;
 }
@@ -65,7 +92,9 @@ export async function subscribeSettings(
   onChange: (settings: AppSettings) => void,
 ): Promise<() => void> {
   const connection = (hass as unknown as { connection: HassConnection }).connection;
-  return connection.subscribeMessage(onChange, { type: `${DOMAIN}/settings/subscribe` });
+  return connection.subscribeMessage((roh) => onChange(withDefaults(roh)), {
+    type: `${DOMAIN}/settings/subscribe`,
+  });
 }
 
 // ------------------------------------------------------------------- Bilder

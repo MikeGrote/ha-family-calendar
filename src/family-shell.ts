@@ -2,6 +2,8 @@ import type { HomeAssistant } from 'custom-card-helpers';
 import { LitElement, html, type PropertyValues, type TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
+import { browserId } from './lib/browser-id';
+import { subscribeSettings } from './lib/settings-api';
 import { navStyles } from './styles/nav';
 import { shellStyles } from './styles/shell';
 import { renderNav } from './templates/nav';
@@ -44,6 +46,9 @@ export class FamilyShell extends LitElement {
   @state() private ready = false;
 
   private readonly cards = new Map<string, LovelaceCardElement>();
+  /** Geraet, das den Bereich zurueckmelden darf. Leer: alle duerfen. */
+  private leadBrowser = '';
+  private unsubscribeSettings?: () => void;
   private idleTimer?: number;
   private previousId = '';
   private readonly onActivity = (): void => this.noteActivity();
@@ -77,10 +82,13 @@ export class FamilyShell extends LitElement {
       window.removeEventListener(typ, this.onActivity);
     }
     if (this.idleTimer !== undefined) clearTimeout(this.idleTimer);
+    this.unsubscribeSettings?.();
+    this.unsubscribeSettings = undefined;
   }
 
   firstUpdated(): void {
     void this.buildAreas();
+    void this.watchLead();
   }
 
   /** Legt die Karten der Bereiche einmalig an. */
@@ -140,6 +148,18 @@ export class FamilyShell extends LitElement {
     `;
   }
 
+  /** Beobachtet, welches Geraet die Bereichswahl fuehren soll. */
+  private async watchLead(): Promise<void> {
+    try {
+      this.unsubscribeSettings = await subscribeSettings(this.hass, (settings) => {
+        this.leadBrowser = settings.panel?.leadBrowser ?? '';
+      });
+    } catch (err) {
+      // Ohne Integration bleibt es beim bisherigen Verhalten.
+      console.warn('Family Shell: Einstellungen nicht erreichbar', err);
+    }
+  }
+
   private pathOf(id: string): string | undefined {
     return this.config.areas.find((area) => area.id === id)?.path;
   }
@@ -187,15 +207,34 @@ export class FamilyShell extends LitElement {
     window.setTimeout(() => window.dispatchEvent(new Event('resize')), 50);
   }
 
-  /** Schreibt den Bereich in den Auswahlhelfer zurueck. */
+  /** Schreibt den Bereich in den Auswahlhelfer zurueck.
+   *
+   * Nur, wenn dieses Geraet die Fuehrung hat. Der Helfer ist eine einzige
+   * globale Entitaet: Ohne diese Einschraenkung zieht ein Klick auf
+   * irgendeinem Bildschirm alle anderen mit. Gesetzt wird die Fuehrung im
+   * Einstellungsbereich, an dem Geraet, das fuehren soll.
+   */
   private reportToSyncEntity(id: string): void {
     const entityId = this.config.syncEntity;
-    if (!entityId || this.hass?.states[entityId]?.state === id) return;
+    if (!entityId || !this.darfMelden() || this.hass?.states[entityId]?.state === id) return;
 
     void this.hass?.callService('input_select', 'select_option', {
       entity_id: entityId,
       option: id,
     });
+  }
+
+  /** Fuehrt dieses Geraet die Bereichswahl?
+   *
+   * Ohne festgelegtes Geraet melden alle zurueck - so war es vorher, und so
+   * bleibt es, solange niemand etwas einstellt. Ist eines festgelegt, dessen
+   * Kennung sich hier aber nicht ermitteln laesst, schweigt dieser Browser
+   * lieber: Ein stummer Bildschirm ist harmloser als einer, der ungefragt
+   * alle anderen umschaltet.
+   */
+  private darfMelden(): boolean {
+    if (!this.leadBrowser) return true;
+    return browserId() === this.leadBrowser;
   }
 
   /** Eine Bedienung holt aus dem Ruhezustand zurueck. */

@@ -429,6 +429,26 @@ export const settingsStyles = css`
     justify-content: center;
   }
 
+  .set-fussnote {
+    margin: 2px 0 0;
+    padding-bottom: 4px;
+    font-size: 0.78rem;
+    line-height: 1.4;
+    color: var(--text-secondary);
+  }
+
+  .set-fussnote code {
+    font-size: 0.74rem;
+    padding: 1px 5px;
+    border-radius: 5px;
+    background: rgba(60, 60, 67, 0.08);
+  }
+
+  .set-gut {
+    color: #1d7a35;
+    font-weight: 600;
+  }
+
   .set-leer {
     display: flex;
     align-items: center;

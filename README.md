@@ -63,6 +63,11 @@ invitations into calendar entries.
     configuration, so they survive every rebuild of the view.
 *   What Home Assistant already provides is shown, not set a second time. The
     time zone is its example: two places to set it would mean two answers.
+*   **One screen leads** — the shell mirrors the current area into a helper so
+    automations can switch the panel. That helper is a single global entity, so
+    without this every click on any screen drags all the others along. Press
+    "Dieses Gerät" on the panel itself, and other browsers follow automations
+    but keep their own clicks to themselves.
 
 ### Requirements
 
@@ -277,6 +282,12 @@ Besprechungsanfragen in Kalendereinträge verwandelt.
 *   Was Home Assistant schon führt, wird gezeigt und nicht ein zweites Mal
     gesetzt. Die Zeitzone ist das Beispiel: zwei Orte dafür hießen zwei
     Antworten.
+*   **Ein Bildschirm führt** — die Hülle spiegelt den Bereich in einen Helfer,
+    damit Automationen das Panel umschalten können. Dieser Helfer ist eine
+    einzige globale Entität; ohne die Festlegung zieht jeder Klick auf
+    irgendeinem Bildschirm alle anderen mit. Am Panel selbst auf „Dieses
+    Gerät" tippen, dann folgen andere Browser weiter den Automationen,
+    behalten ihre Klicks aber für sich.
 
 ### Voraussetzungen
 
