@@ -19,6 +19,15 @@ export interface SlotRange {
   max: string;
 }
 
+/** Liegen Beginn und Ende auf verschiedenen Kalendertagen? */
+function ueberMitternacht(start: Date, end: Date): boolean {
+  return (
+    start.getFullYear() !== end.getFullYear() ||
+    start.getMonth() !== end.getMonth() ||
+    start.getDate() !== end.getDate()
+  );
+}
+
 /** Ermittelt den Zeitbereich fuer die Termine im sichtbaren Fenster. */
 export function slotRangeFor(
   events: EventInput[],
@@ -41,6 +50,17 @@ export function slotRangeFor(
   for (const event of timed) {
     const start = new Date(event.start as string);
     const end = new Date(event.end as string);
+
+    if (ueberMitternacht(start, end)) {
+      // Ein Termin ueber Mitternacht endet nach der Uhr vor seinem Beginn.
+      // Ohne Sonderfall waere die Obergrenze kleiner als die Untergrenze
+      // und das Raster bliebe leer. Er beruehrt beide Tagesenden, also
+      // zeigt das Raster den ganzen Tag.
+      earliest = 0;
+      latest = DAY_MINUTES;
+      continue;
+    }
+
     earliest = Math.min(earliest, start.getHours() * 60 + start.getMinutes());
     latest = Math.max(latest, end.getHours() * 60 + end.getMinutes());
   }

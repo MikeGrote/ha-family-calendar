@@ -20,7 +20,11 @@ export function toEventInput(
   };
 
   return {
-    id: event.uid,
+    // Alle Instanzen einer Serie tragen dieselbe uid. FullCalendar fasst
+    // Termine mit gleicher Kennung zu einer Gruppe zusammen und verschiebt
+    // sie gemeinsam - bei einer Serie, von der nur dieser und die
+    // folgenden Termine geaendert werden sollen, waere das falsch.
+    id: event.recurrence_id ? `${event.uid ?? ''}::${event.recurrence_id}` : event.uid,
     title: event.summary,
     start: event.start.dateTime ?? event.start.date,
     end: event.end.dateTime ?? event.end.date,

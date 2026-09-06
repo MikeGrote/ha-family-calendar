@@ -6,11 +6,17 @@
  * Verschiebung um den Zeitzonenversatz.
  */
 
-/** Verschiebt einen Zeitpunkt so, dass toISOString die Ortszeit liefert. */
+/** Verschiebt einen Zeitpunkt so, dass toISOString die Ortszeit liefert.
+ *
+ * Gerechnet wird auf dem Zeitstempel, nicht ueber setMinutes auf den
+ * oertlichen Feldern. Letzteres geht beim Ende der Sommerzeit um eine
+ * Stunde daneben: Die Verschiebung fuehrt dort ueber den Wechsel hinweg,
+ * und der Versatz aendert sich waehrenddessen. Ein Termin um 02:30 MESZ
+ * erschien so als 03:30.
+ */
 function toLocalIso(date: Date): string {
-  const local = new Date(date);
-  local.setMinutes(local.getMinutes() - local.getTimezoneOffset());
-  return local.toISOString();
+  const versatz = date.getTimezoneOffset() * 60_000;
+  return new Date(date.getTime() - versatz).toISOString();
 }
 
 /** Wert fuer `<input type="date">` beziehungsweise `type="datetime-local">`. */
