@@ -82,3 +82,35 @@ def test_spaet_abgehakt_staut_sich_nicht():
 
 def test_ohne_faelligkeit_wird_ab_heute_gerechnet():
     assert next_due(Recurrence("DAILY"), None, HEUTE) == dt.date(2026, 9, 7)
+
+
+# --- Vertrag zwischen Karte und Integration -------------------------------
+#
+# Die Regelzeile schreibt die Karte (src/lib/todo-recurrence.ts), gelesen
+# wird sie hier. Die folgenden Zeichenketten stehen wortgleich in
+# tests/js/todo-recurrence.test.ts. Aendert eine Seite ihr Format, faellt
+# es dort oder hier auf - nicht erst dann, wenn eine wiederkehrende
+# Aufgabe im Betrieb stumm nicht mehr nachrueckt.
+
+VON_DER_KARTE = [
+    ("[wdh: FREQ=DAILY]", "DAILY", 1),
+    ("Gelbe Tonne\n\n[wdh: FREQ=WEEKLY]", "WEEKLY", 1),
+    ("Gelbe Tonne\n\n[wdh: FREQ=WEEKLY;INTERVAL=2]", "WEEKLY", 2),
+    ("Aufgabe\n\n[wdh: FREQ=MONTHLY;INTERVAL=3]", "MONTHLY", 3),
+    ("Aufgabe\n\n[wdh: FREQ=YEARLY]", "YEARLY", 1),
+]
+
+
+@pytest.mark.parametrize(("beschreibung", "frequenz", "intervall"), VON_DER_KARTE)
+def test_liest_was_die_karte_schreibt(beschreibung, frequenz, intervall):
+    regel = parse_marker(beschreibung)
+
+    assert regel is not None
+    assert regel.frequency == frequenz
+    assert regel.interval == intervall
+
+
+def test_karte_ohne_wiederholung_ergibt_keine_regel():
+    # Beim Abstellen entfernt die Karte die Zeile vollstaendig.
+    assert parse_marker("Gelbe Tonne") is None
+    assert parse_marker("") is None

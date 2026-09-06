@@ -2,7 +2,7 @@ import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['custom_components/**', 'node_modules/**', 'tests/**'] },
+  { ignores: ['custom_components/**', 'node_modules/**', 'tests/python/**'] },
   js.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
   {
