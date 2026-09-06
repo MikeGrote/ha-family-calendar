@@ -2,5 +2,6 @@
 import './family-agenda';
 import './family-calendar';
 import './family-photos';
+import './family-settings';
 import './family-shell';
 import './family-tasks';

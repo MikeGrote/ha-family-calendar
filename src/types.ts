@@ -169,3 +169,13 @@ export interface PhotosConfig {
   /** Minuten, bis der Ordner erneut gelesen wird. Standard: 60. */
   rescanMinutes?: number;
 }
+
+/** Konfiguration des Einstellungsbereichs.
+ *
+ * Bewusst leer: Was der Bereich einstellt, liegt in der Integration - nicht
+ * in der Dashboard-Konfiguration. Sonst gaebe es zwei Orte fuer denselben
+ * Wert und keinen Grund, warum einer davon gewinnt.
+ */
+export interface SettingsConfig {
+  type?: string;
+}

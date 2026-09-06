@@ -20,6 +20,28 @@ interface ResolveResult {
   url: string;
 }
 
+/** Ein Bild der Ablage, so weit die Verwaltung es braucht. */
+export interface ImageEntry {
+  id: string;
+  title: string;
+}
+
+/** Bilder eines Ordners mit Namen, alphabetisch. */
+export async function listImageEntries(
+  hass: HomeAssistant,
+  folderId: string,
+): Promise<ImageEntry[]> {
+  const result = await hass.callWS<BrowseResult>({
+    type: 'media_source/browse_media',
+    media_content_id: folderId,
+  });
+
+  return (result.children ?? [])
+    .filter((child) => child.media_class === 'image')
+    .map((child) => ({ id: child.media_content_id, title: child.title }))
+    .sort((a, b) => a.title.localeCompare(b.title, 'de'));
+}
+
 /** Bildkennungen eines Ordners, alphabetisch. */
 export async function listImages(hass: HomeAssistant, folderId: string): Promise<string[]> {
   const result = await hass.callWS<BrowseResult>({

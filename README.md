@@ -22,7 +22,10 @@ invitations into calendar entries.
 *   **Create, edit and delete** events straight from the card, including all-day
     events and simple recurrence.
 *   **Per-calendar colours and filters** — toggle each calendar on and off.
-*   **Compact mode** — a space-saving block view.
+*   **Compact mode** — the same week on a squashed time axis. Every busy
+    minute keeps the same scale, so two events stay comparable in length,
+    while long empty stretches collapse into a marked break. The week fits
+    without scrolling.
 *   **Adaptive time axis** — the visible hours follow the events of the week.
 
 **Invitation sync** (optional)
@@ -49,6 +52,17 @@ invitations into calendar entries.
     Home Assistant has no recurrence rule for tasks, so the integration
     rebuilds it: tick a task off and the next one appears.
 *   Tap the text to correct a task, change its rhythm or delete it.
+
+**Photo frame and settings**
+
+*   **Photo frame** — pictures from a folder of the media store, with clock and
+    date. New pictures appear on their own; nobody maintains a list.
+*   **Settings area** — the parameters of the app, in the design of the app:
+    upload pictures, set up the frame, and see what Home Assistant already
+    holds. The values live in the integration, not in the dashboard
+    configuration, so they survive every rebuild of the view.
+*   What Home Assistant already provides is shown, not set a second time. The
+    time zone is its example: two places to set it would mean two answers.
 
 ### Requirements
 
@@ -102,6 +116,10 @@ refreshDebounceMs: 500
 One view holds everything; the sidebar switches between areas without
 reloading them.
 
+If you also set `syncEntity` so automations can switch the panel, every area
+id must be an option of that `input_select`. An area the helper cannot name
+snaps straight back to the previous one.
+
 ```yaml
 type: custom:family-shell
 initial: kalender
@@ -123,10 +141,16 @@ areas:
     icon: mdi:check-circle-outline
     name: Tasks
     disabled: true          # visible, not yet filled
+  - id: photos
+    icon: mdi:image-multiple-outline
+    name: Photos
+    card:
+      type: custom:family-photos
   - id: settings
     icon: mdi:cog-outline
     name: Settings
-    path: /config/dashboard # leaves the panel instead of switching
+    card:
+      type: custom:family-settings
 ```
 
 #### Invitation sync
@@ -206,7 +230,10 @@ Besprechungsanfragen in Kalendereinträge verwandelt.
     Termine und einfache Wiederholungen.
 *   **Farben und Filter je Kalender** — jeder Kalender einzeln ein- und
     ausblendbar.
-*   **Kompaktmodus** — platzsparende Blockansicht.
+*   **Kompaktmodus** — dieselbe Woche auf gestauchter Zeitachse. Belegte Zeit
+    behält überall denselben Maßstab, zwei Termine bleiben also in ihrer
+    Länge vergleichbar, während lange Leerstellen zu einem gekennzeichneten
+    Bruch zusammenfallen. Die Woche passt ohne Scrollen aufs Bild.
 *   **Mitwachsende Zeitachse** — der sichtbare Bereich richtet sich nach den
     Terminen der Woche.
 
@@ -238,6 +265,18 @@ Besprechungsanfragen in Kalendereinträge verwandelt.
     nächste erscheint.
 *   Ein Tipp auf den Text korrigiert eine Aufgabe, ändert den Rhythmus oder
     löscht sie.
+
+**Bilderrahmen und Einstellungen**
+
+*   **Bilderrahmen** — Bilder aus einem Ordner der Medienablage, mit Uhrzeit
+    und Datum. Neue Bilder erscheinen von selbst, niemand pflegt eine Liste.
+*   **Einstellungsbereich** — die Parameter der App, im Design der App: Bilder
+    hochladen, den Rahmen einstellen, und sehen, was Home Assistant ohnehin
+    führt. Die Werte liegen in der Integration, nicht in der
+    Dashboard-Konfiguration, und überstehen damit jeden Umbau der Ansicht.
+*   Was Home Assistant schon führt, wird gezeigt und nicht ein zweites Mal
+    gesetzt. Die Zeitzone ist das Beispiel: zwei Orte dafür hießen zwei
+    Antworten.
 
 ### Voraussetzungen
 
@@ -292,6 +331,11 @@ refreshDebounceMs: 500
 Eine Ansicht trägt alles; die Seitenleiste schaltet zwischen den Bereichen um,
 ohne sie neu zu laden.
 
+Wer zusätzlich `syncEntity` setzt, damit Automationen das Panel umschalten
+können, muss jede Bereichskennung als Option in diesem `input_select` führen.
+Ein Bereich, den der Helfer nicht benennen kann, springt sofort auf den
+vorherigen zurück.
+
 ```yaml
 type: custom:family-shell
 initial: kalender
@@ -313,10 +357,16 @@ areas:
     icon: mdi:check-circle-outline
     name: Aufgaben
     disabled: true          # sichtbar, noch ohne Inhalt
+  - id: fotos
+    icon: mdi:image-multiple-outline
+    name: Fotos
+    card:
+      type: custom:family-photos
   - id: einstellungen
     icon: mdi:cog-outline
     name: Einstellungen
-    path: /config/dashboard # verlässt das Panel statt umzuschalten
+    card:
+      type: custom:family-settings
 ```
 
 #### Einladungs-Abgleich

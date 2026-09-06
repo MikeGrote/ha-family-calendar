@@ -21,6 +21,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.start import async_at_started
 
+from . import websocket
 from .const import CONF_ENABLED, DOMAIN, FRONTEND_SCRIPT, URL_BASE
 from .invite_sync import InviteSync
 from .todo_recurrence import TodoRecurrenceWatcher
@@ -35,6 +36,7 @@ _FRONTEND_REGISTERED = f"{DOMAIN}_frontend_registered"
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Richte die Integration aus einem Config Entry ein."""
     await _async_register_frontend(hass)
+    websocket.async_register(hass)
 
     if entry.options.get(CONF_ENABLED):
         sync = InviteSync(hass, entry)

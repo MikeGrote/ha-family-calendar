@@ -19,6 +19,7 @@ input_select:
       - aufgaben
       - listen
       - fotos
+      - einstellungen
     initial: kalender
 
 automation:

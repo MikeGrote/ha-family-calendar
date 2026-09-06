@@ -24,3 +24,8 @@ DEFAULT_INTERVAL = 5
 
 STORAGE_KEY = f"{DOMAIN}.invites"
 STORAGE_VERSION = 1
+
+# --- Einstellungen der App --------------------------------------------------
+
+SETTINGS_KEY = f"{DOMAIN}.settings"
+SETTINGS_VERSION = 1
