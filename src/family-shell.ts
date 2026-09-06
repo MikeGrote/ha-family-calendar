@@ -131,6 +131,7 @@ export class FamilyShell extends LitElement {
           items: this.config.areas,
           isActive: (item) => item.id === this.activeId && !this.pathOf(item.id),
           onSelect: (item) => this.select(item.id),
+          onReload: () => location.reload(),
         })}
         <div class="content">
           ${this.ready ? this.config.areas.map((area) => this.renderArea(area)) : ''}

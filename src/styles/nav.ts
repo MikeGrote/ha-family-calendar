@@ -10,6 +10,8 @@ export const navStyles = css`
 
   ha-card {
     height: 100%;
+    display: flex;
+    flex-direction: column;
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(20px);
     border-radius: 24px;
@@ -23,6 +25,54 @@ export const navStyles = css`
     flex-direction: column;
     padding: 12px 8px;
     gap: 2px;
+  }
+
+  /* Zurueckhaltend: Er wird selten gebraucht und soll die Bereiche nicht
+     ueberstrahlen. Erst beim Beruehren tritt er hervor. */
+  .reload {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    margin: auto 0 10px;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 12px;
+    background: transparent;
+    color: #9aa0a6;
+    opacity: 0.55;
+    cursor: pointer;
+    transition: opacity 0.15s, background 0.15s, color 0.15s;
+  }
+
+  .reload ha-icon {
+    --mdc-icon-size: 20px;
+  }
+
+  .reload:hover,
+  .reload:focus-visible {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.05);
+    color: #1d1d1f;
+  }
+
+  .reload:active ha-icon {
+    /* Kurze Drehung als Rueckmeldung - bis das Neuladen greift, vergeht
+       auf dem Panel ein Moment. */
+    animation: reload-dreht 0.6s linear infinite;
+  }
+
+  @keyframes reload-dreht {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reload:active ha-icon {
+      animation: none;
+    }
   }
 
   .item {
