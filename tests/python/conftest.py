@@ -42,6 +42,16 @@ class FakeStore:
         self.writes += 1
 
 
+class _HAFehler(Exception):
+    """Platzhalter fuer HomeAssistantError."""
+
+
+class _Zustand:
+    """Platzhalter fuer ConfigEntryState - nur der Wert, der gebraucht wird."""
+
+    LOADED = "loaded"
+
+
 class _Marker:
     """Ersatz fuer vol.Required - muss als Schluesselwert taugen."""
 
@@ -69,14 +79,37 @@ def _stub_homeassistant() -> None:
         "homeassistant.helpers.storage",
         "homeassistant.helpers.start",
         "homeassistant.components.websocket_api",
+        "homeassistant.components.http.auth",
+        "homeassistant.exceptions",
+        "homeassistant.helpers.aiohttp_client",
         "voluptuous",
+        "aiohttp",
+        "aiohttp.web",
     ):
         sys.modules.setdefault(name, types.ModuleType(name))
 
     sys.modules["homeassistant.components"].frontend = sys.modules[
         "homeassistant.components.frontend"
     ]
-    sys.modules["homeassistant.components.http"].StaticPathConfig = object
+    http = sys.modules["homeassistant.components.http"]
+    http.StaticPathConfig = object
+    http.HomeAssistantView = object
+    http.KEY_HASS = "hass"
+    http.auth = sys.modules["homeassistant.components.http.auth"]
+    http.auth.async_sign_path = lambda hass, pfad, dauer: f"{pfad}&signiert"
+
+    sys.modules["homeassistant.config_entries"].ConfigEntryState = _Zustand
+    sys.modules["homeassistant.exceptions"].HomeAssistantError = _HAFehler
+    sys.modules["homeassistant.helpers.aiohttp_client"].async_get_clientsession = (
+        lambda hass: None
+    )
+
+    aiohttp = sys.modules["aiohttp"]
+    aiohttp.ClientError = _HAFehler
+    aiohttp.web = sys.modules["aiohttp.web"]
+    aiohttp.web.Request = object
+    aiohttp.web.Response = object
+    aiohttp.web.StreamResponse = object
     sys.modules["homeassistant.config_entries"].ConfigEntry = object
     sys.modules["homeassistant.core"].HomeAssistant = object
     sys.modules["homeassistant.core"].callback = lambda func: func

@@ -18,12 +18,13 @@ from pathlib import Path
 from homeassistant.components import frontend
 from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.start import async_at_started
 
 from . import websocket
 from .const import CONF_ENABLED, DOMAIN, FRONTEND_SCRIPT, URL_BASE
 from .invite_sync import InviteSync
+from .recipe_image import RecipeImageView
 from .todo_recurrence import TodoRecurrenceWatcher
 
 _LOGGER = logging.getLogger(__name__)
@@ -31,12 +32,14 @@ _LOGGER = logging.getLogger(__name__)
 # Static Path und JS-URL sind global und ueberleben einen Config-Entry-Reload.
 # Dieser Schluessel verhindert, dass sie doppelt registriert werden.
 _FRONTEND_REGISTERED = f"{DOMAIN}_frontend_registered"
+_VIEWS_REGISTERED = f"{DOMAIN}_views_registered"
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Richte die Integration aus einem Config Entry ein."""
     await _async_register_frontend(hass)
     websocket.async_register(hass)
+    _async_register_views(hass)
 
     if entry.options.get(CONF_ENABLED):
         sync = InviteSync(hass, entry)
@@ -68,6 +71,16 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def _async_update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Lade den Eintrag neu, wenn die Optionen geaendert wurden."""
     await hass.config_entries.async_reload(entry.entry_id)
+
+
+@callback
+def _async_register_views(hass: HomeAssistant) -> None:
+    """HTTP-Ansichten anmelden. Wie der Static Path nur einmal."""
+    if hass.data.get(_VIEWS_REGISTERED):
+        return
+
+    hass.http.register_view(RecipeImageView())
+    hass.data[_VIEWS_REGISTERED] = True
 
 
 async def _async_register_frontend(hass: HomeAssistant) -> None:

@@ -197,3 +197,10 @@ export interface PhotosConfig {
 export interface SettingsConfig {
   type?: string;
 }
+
+/** Konfiguration der Essensplan-Karte. */
+export interface MealsConfig {
+  type?: string;
+  /** Wie viele Tage nebeneinander stehen. Standard: 7. */
+  days?: number;
+}
