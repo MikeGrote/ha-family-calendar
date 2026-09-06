@@ -62,16 +62,22 @@ invitations into calendar entries.
     noticeably faster than it grew. Animated by transform, not by size: the
     latter is recalculated every frame and stutters on a panel.
 *   **Settings area** — the parameters of the app, in the design of the app:
-    upload pictures, set up the frame, and see what Home Assistant already
-    holds. The values live in the integration, not in the dashboard
+    calendars (name, colour, order, which ones start visible), the columns of
+    each task card, the photo frame including upload, and how the panel
+    behaves. The values live in the integration, not in the dashboard
     configuration, so they survive every rebuild of the view.
+*   **The dashboard stays the fallback** — what is set here wins; what is not
+    set falls back to the card's own configuration. An empty field means
+    "not set", never "empty", so a single setting can be given back without
+    taking the others with it.
 *   What Home Assistant already provides is shown, not set a second time. The
     time zone is its example: two places to set it would mean two answers.
-*   **One screen leads** — the shell mirrors the current area into a helper so
-    automations can switch the panel. That helper is a single global entity, so
-    without this every click on any screen drags all the others along. Press
-    "Dieses Gerät" on the panel itself, and other browsers follow automations
-    but keep their own clicks to themselves.
+*   **Every screen is on its own** — the shell can mirror the current area into
+    a helper so automations can switch the panel, but that helper is a single
+    global entity: without care, every click on any screen drags all the others
+    along. Screens therefore take part only if they are coupled, switched on at
+    the screen itself. Couple the wall panel so automations reach it; couple two
+    screens if they should show the same thing.
 
 ### Requirements
 
@@ -289,19 +295,25 @@ Besprechungsanfragen in Kalendereinträge verwandelt.
     Berührung holt ihn zurück, spürbar schneller als er gewachsen ist.
     Animiert wird der Transform, nicht die Größe: Letztere rechnet der
     Browser bei jedem Einzelbild neu und ruckelt auf einem Panel.
-*   **Einstellungsbereich** — die Parameter der App, im Design der App: Bilder
-    hochladen, den Rahmen einstellen, und sehen, was Home Assistant ohnehin
-    führt. Die Werte liegen in der Integration, nicht in der
+*   **Einstellungsbereich** — die Parameter der App, im Design der App:
+    Kalender (Name, Farbe, Reihenfolge, welche beim Start sichtbar sind), die
+    Spalten jeder Aufgabenkarte, der Bilderrahmen samt Upload, und wie sich
+    das Panel verhält. Die Werte liegen in der Integration, nicht in der
     Dashboard-Konfiguration, und überstehen damit jeden Umbau der Ansicht.
+*   **Das Dashboard bleibt der Rückfall** — was hier eingestellt ist, gewinnt;
+    was nicht eingestellt ist, kommt aus der Konfiguration der Karte. Ein
+    leeres Feld heißt „nicht eingestellt", nie „leer" — so lässt sich eine
+    einzelne Einstellung wieder abgeben, ohne die anderen mitzunehmen.
 *   Was Home Assistant schon führt, wird gezeigt und nicht ein zweites Mal
     gesetzt. Die Zeitzone ist das Beispiel: zwei Orte dafür hießen zwei
     Antworten.
-*   **Ein Bildschirm führt** — die Hülle spiegelt den Bereich in einen Helfer,
-    damit Automationen das Panel umschalten können. Dieser Helfer ist eine
-    einzige globale Entität; ohne die Festlegung zieht jeder Klick auf
-    irgendeinem Bildschirm alle anderen mit. Am Panel selbst auf „Dieses
-    Gerät" tippen, dann folgen andere Browser weiter den Automationen,
-    behalten ihre Klicks aber für sich.
+*   **Jeder Bildschirm ist für sich** — die Hülle kann den Bereich in einen
+    Helfer spiegeln, damit Automationen das Panel umschalten können. Dieser
+    Helfer ist aber eine einzige globale Entität: Ohne Weiteres zöge jeder
+    Klick auf irgendeinem Bildschirm alle anderen mit. Teil nimmt deshalb nur,
+    wer gekoppelt ist — eingeschaltet am Bildschirm selbst. Das Wandpanel
+    koppeln, damit Automationen es erreichen; zwei Bildschirme koppeln, wenn
+    sie dasselbe zeigen sollen.
 
 ### Voraussetzungen
 

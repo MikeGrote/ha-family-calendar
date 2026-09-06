@@ -2,6 +2,8 @@ import type { HomeAssistant } from 'custom-card-helpers';
 import { LitElement, type PropertyValues, type TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
+import { effectiveTaskLists } from './lib/effective-config';
+import { SettingsListener } from './lib/settings-listener';
 import {
   addItem,
   clearCompleted,
@@ -49,8 +51,26 @@ export class FamilyTasks extends LitElement {
     confirmDelete: boolean;
   } | null = null;
 
+  /** Zaehlt hoch, wenn sich die Einstellungen aendern. Gelesen wird der
+   *  Wert nirgends - er ist nur das Signal an Lit, neu zu zeichnen; der
+   *  Stand selbst liegt im Zuhoerer. */
+  @state() private settingsRevision = 0;
+
+  /** Kennung des Bereichs, in dem diese Karte steckt. Die Huelle setzt sie
+   *  beim Anlegen - ohne sie teilten sich zwei Aufgabenkarten einen
+   *  Eintrag im Speicher und ueberschrieben einander. */
+  settingsKey = '';
+
+  private readonly einstellungen = new SettingsListener('Family Tasks', () => {
+    this.settingsRevision++;
+    const kennung = this.listen.map((l) => l.entity).join('|');
+    if (kennung === this.letzteListen) return;
+    this.letzteListen = kennung;
+    void this.subscribeAll();
+  });
   private unsubscribes: (() => void)[] = [];
   private subscribed = false;
+  private letzteListen = '';
 
   setConfig(config: TasksConfig): void {
     if (!config.lists?.length) {
@@ -63,11 +83,22 @@ export class FamilyTasks extends LitElement {
     return 8;
   }
 
+  /** Die Spalten, wie der Einstellungsbereich sie vorgibt - ersatzweise wie
+   *  sie im Dashboard stehen. */
+  private get listen() {
+    return effectiveTaskLists(this.config, this.satz);
+  }
+
+  private get satz() {
+    return this.einstellungen.settings.tasks[this.settingsKey];
+  }
+
   updated(changed: PropertyValues): void {
     // Das Abonnement braucht hass, das erst nach dem ersten Rendern da ist.
     if (changed.has('hass') && this.hass && !this.subscribed) {
       this.subscribed = true;
       void this.subscribeAll();
+      void this.einstellungen.start(this.hass);
     }
   }
 
@@ -75,6 +106,7 @@ export class FamilyTasks extends LitElement {
     super.disconnectedCallback();
     for (const stop of this.unsubscribes) stop();
     this.unsubscribes = [];
+    this.einstellungen.stop();
     this.subscribed = false;
   }
 
@@ -86,7 +118,7 @@ export class FamilyTasks extends LitElement {
     const offen = this.open;
     if (!offen) return nothing;
 
-    const liste = this.config.lists.find((l) => l.entity === offen.entityId);
+    const liste = this.listen.find((l) => l.entity === offen.entityId);
     const patch = (changes: Partial<NonNullable<typeof this.open>>): void => {
       if (this.open) this.open = { ...this.open, ...changes };
     };
@@ -110,17 +142,18 @@ export class FamilyTasks extends LitElement {
   }
 
   private nameOf(entityId: string): string {
-    return this.hass?.states[entityId]?.attributes?.friendly_name ?? entityId;
+    const eigener = this.listen.find((l) => l.entity === entityId)?.name;
+    return eigener || this.hass?.states[entityId]?.attributes?.friendly_name || entityId;
   }
 
   private renderCard(): TemplateResult {
     return renderTasks({
-      lists: this.config.lists,
+      lists: this.listen,
       items: this.items,
       drafts: this.drafts,
-      showCompleted: this.config.showCompleted ?? false,
-      showDue: this.config.showDue ?? true,
-      title: this.config.title,
+      showCompleted: this.satz?.showCompleted ?? this.config.showCompleted ?? false,
+      showDue: this.satz?.showDue ?? this.config.showDue ?? true,
+      title: this.satz?.title ?? this.config.title,
       nameOf: (entityId) => this.nameOf(entityId),
       onToggle: (entityId, item) => void this.toggle(entityId, item),
       onOpen: (entityId, item) => this.openItem(entityId, item),
@@ -131,7 +164,10 @@ export class FamilyTasks extends LitElement {
   }
 
   private async subscribeAll(): Promise<void> {
-    for (const list of this.config.lists) {
+    for (const stop of this.unsubscribes) stop();
+    this.unsubscribes = [];
+
+    for (const list of this.listen) {
       try {
         const stop = await subscribeList(this.hass, list.entity, (items) => {
           this.items = new Map(this.items).set(list.entity, items);

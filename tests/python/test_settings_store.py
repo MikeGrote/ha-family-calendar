@@ -85,26 +85,49 @@ async def test_fehlende_felder_kommen_aus_den_vorgaben(store):
     assert stand["photos"]["folder"] == DEFAULTS["photos"]["folder"]
 
 
-async def test_ohne_festlegung_meldet_jedes_geraet(store):
-    # Der Ausgangszustand muss das bisherige Verhalten sein: Wer nichts
-    # einstellt, soll nichts merken.
-    assert (await store.async_load())["panel"]["leadBrowser"] == ""
+async def test_ohne_festlegung_ist_jeder_bildschirm_fuer_sich(store):
+    # Ein Bildschirm soll niemanden fernsteuern, solange das niemand
+    # eingestellt hat.
+    assert (await store.async_load())["panel"]["syncedBrowsers"] == []
+
+
+async def test_alte_fuehrung_wird_zur_kopplung(store):
+    # Frueher gab es genau ein fuehrendes Geraet. Wer das eingestellt hatte,
+    # soll nicht von vorn anfangen muessen.
+    store._store.saved = {"panel": {"leadBrowser": "browser_mod_wand"}}
+
+    stand = await store.async_load()
+
+    assert stand["panel"]["syncedBrowsers"] == ["browser_mod_wand"]
+    assert "leadBrowser" not in stand["panel"]
+
+
+async def test_uebernahme_ueberschreibt_keine_bestehende_kopplung(store):
+    store._store.saved = {
+        "panel": {"leadBrowser": "browser_mod_alt", "syncedBrowsers": ["browser_mod_neu"]}
+    }
+
+    stand = await store.async_load()
+
+    assert stand["panel"]["syncedBrowsers"] == ["browser_mod_neu"]
 
 
 async def test_abschnitte_stoeren_einander_nicht(store):
     # Zwei Bereiche der Einstellungen koennen gleichzeitig offen sein.
     await store.async_update({"photos": {"interval": 45}})
-    stand = await store.async_update({"panel": {"leadBrowser": "browser_mod_abc"}})
+    stand = await store.async_update({"panel": {"syncedBrowsers": ["browser_mod_abc"]}})
 
     assert stand["photos"]["interval"] == 45
-    assert stand["panel"]["leadBrowser"] == "browser_mod_abc"
+    assert stand["panel"]["syncedBrowsers"] == ["browser_mod_abc"]
 
 
-async def test_fuehrung_laesst_sich_wieder_aufheben(store):
-    await store.async_update({"panel": {"leadBrowser": "browser_mod_abc"}})
-    stand = await store.async_update({"panel": {"leadBrowser": ""}})
+async def test_kopplung_laesst_sich_wieder_aufheben(store):
+    # Die Liste wird als Ganzes ersetzt - sonst liesse sich kein Bildschirm
+    # wieder herausnehmen.
+    await store.async_update({"panel": {"syncedBrowsers": ["a", "b"]}})
+    stand = await store.async_update({"panel": {"syncedBrowsers": ["a"]}})
 
-    assert stand["panel"]["leadBrowser"] == ""
+    assert stand["panel"]["syncedBrowsers"] == ["a"]
 
 
 async def test_ausschnitt_laesst_nachbarn_stehen(store):

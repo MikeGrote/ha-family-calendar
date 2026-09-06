@@ -4,7 +4,9 @@ import { customElement, property, state } from 'lit/decorators.js';
 
 import { groupByDay, startOfDay, toEntry } from './lib/agenda';
 import { fetchEvents } from './lib/calendar-api';
+import { colorMap, effectiveCalendars } from './lib/effective-config';
 import { DEFAULT_COLOR } from './lib/event-mapping';
+import { SettingsListener } from './lib/settings-listener';
 import { agendaStyles } from './styles/agenda';
 import { renderAgenda } from './templates/agenda';
 import type { AgendaConfig, AgendaDay, AgendaEntry } from './types';
@@ -24,7 +26,15 @@ export class FamilyAgenda extends LitElement {
   @property({ attribute: false }) config!: AgendaConfig;
 
   @state() private days: AgendaDay[] = [];
+  /** Zaehlt hoch, wenn sich die Einstellungen aendern. Gelesen wird der
+   *  Wert nirgends - er ist nur das Signal an Lit, neu zu zeichnen; der
+   *  Stand selbst liegt im Zuhoerer. */
+  @state() private settingsRevision = 0;
 
+  private readonly einstellungen = new SettingsListener('Family Agenda', () => {
+    this.settingsRevision++;
+    this.scheduleLoad();
+  });
   private refreshTimer?: number;
   private lastSignature = '';
 
@@ -39,12 +49,30 @@ export class FamilyAgenda extends LitElement {
     return 8;
   }
 
+  /** Kalender und Farben kommen aus dem Einstellungsbereich, ersatzweise
+   *  aus dem Dashboard - dieselbe Auswahl wie in der Kalenderkarte. */
+  private get kalender() {
+    return effectiveCalendars(this.config, this.einstellungen.settings.calendars);
+  }
+
+  private get kalenderIds(): string[] {
+    return this.kalender.map((k) => k.entityId);
+  }
+
+  private get farben(): Record<string, string> {
+    return colorMap(this.kalender);
+  }
+
+  firstUpdated(): void {
+    void this.einstellungen.start(this.hass);
+  }
+
   updated(changedProps: PropertyValues): void {
     if (!changedProps.has('hass')) return;
 
     // hass wird bei jeder Zustandsaenderung im System neu zugewiesen -
     // ohne Vergleich wuerde die Karte staendig nachladen.
-    const signature = (this.config?.entities ?? [])
+    const signature = this.kalenderIds
       .map((id) => this.hass.states[id]?.last_updated ?? 'missing')
       .join('|');
     if (signature === this.lastSignature) return;
@@ -58,6 +86,7 @@ export class FamilyAgenda extends LitElement {
       clearTimeout(this.refreshTimer);
       this.refreshTimer = undefined;
     }
+    this.einstellungen.stop();
   }
 
   render(): TemplateResult {
@@ -84,7 +113,7 @@ export class FamilyAgenda extends LitElement {
     end.setDate(end.getDate() + anzahl);
 
     const entries: AgendaEntry[] = [];
-    for (const entityId of this.config.entities) {
+    for (const entityId of this.kalenderIds) {
       try {
         const events = await fetchEvents(
           this.hass,
@@ -92,8 +121,11 @@ export class FamilyAgenda extends LitElement {
           start.toISOString(),
           end.toISOString(),
         );
-        const color = this.config.colors?.[entityId] ?? DEFAULT_COLOR;
-        const name = this.hass.states[entityId]?.attributes?.friendly_name ?? entityId;
+        const color = this.farben[entityId] ?? DEFAULT_COLOR;
+        const name =
+          this.kalender.find((k) => k.entityId === entityId)?.name ||
+          this.hass.states[entityId]?.attributes?.friendly_name ||
+          entityId;
         entries.push(...events.map((event) => toEntry(event, color, name)));
       } catch (err) {
         console.error('Family Agenda: Laden fehlgeschlagen für', entityId, err);

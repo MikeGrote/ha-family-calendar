@@ -28,7 +28,7 @@ describe('withDefaults', () => {
   it('ergänzt einzelne Felder innerhalb eines Abschnitts', () => {
     const teilweise = { photos: { interval: 45 } };
 
-    const ergaenzt = withDefaults(teilweise as never);
+    const ergaenzt = withDefaults(teilweise);
 
     expect(ergaenzt.photos.interval).toBe(45);
     expect(ergaenzt.photos.folder).toBe(DEFAULT_SETTINGS.photos.folder);
@@ -39,16 +39,16 @@ describe('withDefaults', () => {
     // false und 0 duerfen nicht als "fehlt" gelten.
     const ergaenzt = withDefaults({
       photos: { ...DEFAULT_SETTINGS.photos, showClock: false },
-      panel: { leadBrowser: '' },
+      panel: { ...DEFAULT_SETTINGS.panel, syncedBrowsers: [] },
     });
 
     expect(ergaenzt.photos.showClock).toBe(false);
-    expect(ergaenzt.panel.leadBrowser).toBe('');
+    expect(ergaenzt.panel.syncedBrowsers).toEqual([]);
   });
 
-  it('übernimmt die Führung eines Geräts', () => {
-    const ergaenzt = withDefaults({ panel: { leadBrowser: 'browser_mod_abc' } });
-    expect(ergaenzt.panel.leadBrowser).toBe('browser_mod_abc');
+  it('übernimmt gekoppelte Bildschirme', () => {
+    const ergaenzt = withDefaults({ panel: { syncedBrowsers: ['browser_mod_abc'] } });
+    expect(ergaenzt.panel.syncedBrowsers).toEqual(['browser_mod_abc']);
   });
 
   it('gibt bei jedem Aufruf eigene Abschnitte zurück', () => {

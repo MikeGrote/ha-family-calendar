@@ -17,14 +17,56 @@ export interface PhotoSettings {
   rescanMinutes: number;
 }
 
+/** Leere Zeichenketten und Nullen heissen durchweg: nichts eingestellt, es
+ *  gilt der Eintrag im Dashboard. Nur so laesst sich eine einzelne
+ *  Einstellung wieder abgeben, ohne die anderen mitzunehmen. */
 export interface PanelSettings {
-  /** BrowserID des Geraets, das den Bereich zurueckmeldet. Leer: alle. */
-  leadBrowser: string;
+  /** Bildschirme, die sich den Auswahlhelfer teilen. Wer nicht darin
+   *  steht, ist fuer sich - das ist die Vorgabe. */
+  syncedBrowsers: string[];
+  initialArea: string;
+  idleAfter: number;
+  idleArea: string;
+  fullscreenArea: string;
+  fullscreenAfter: number;
+}
+
+/** Ein Kalender, so wie die App ihn zeigen soll. */
+export interface CalendarItem {
+  name: string;
+  color: string;
+  active: boolean;
+}
+
+export interface CalendarSettings {
+  /** Reihenfolge in der Kopfzeile. */
+  order: string[];
+  items: Record<string, CalendarItem>;
+  /** Mit der gestauchten Zeitachse beginnen. */
+  startCompact: boolean;
+}
+
+/** Eine Spalte einer Aufgabenkarte. */
+export interface TaskItem {
+  name: string;
+  color: string;
+}
+
+export interface TaskSetSettings {
+  order: string[];
+  items: Record<string, TaskItem>;
+  title: string;
+  showCompleted: boolean;
+  showDue: boolean;
 }
 
 export interface AppSettings {
   photos: PhotoSettings;
   panel: PanelSettings;
+  calendars: CalendarSettings;
+  /** Je Aufgabenkarte ein Eintrag, damit sich Aufgaben und Listen nicht
+   *  gegenseitig ueberschreiben. */
+  tasks: Record<string, TaskSetSettings>;
 }
 
 /** Vorgaben, solange nichts geladen ist - deckungsgleich mit der Integration. */
@@ -36,14 +78,32 @@ export const DEFAULT_SETTINGS: AppSettings = {
     rescanMinutes: 60,
   },
   panel: {
-    leadBrowser: '',
+    syncedBrowsers: [],
+    initialArea: '',
+    idleAfter: 0,
+    idleArea: '',
+    fullscreenArea: '',
+    fullscreenAfter: 0,
   },
+  calendars: { order: [], items: {}, startCompact: false },
+  tasks: {},
+};
+
+/** Vorgaben einer Aufgabenkarte, die es im Speicher noch nicht gibt. */
+export const DEFAULT_TASK_SET: TaskSetSettings = {
+  order: [],
+  items: {},
+  title: '',
+  showCompleted: false,
+  showDue: true,
 };
 
 /** Tief verschachtelter Ausschnitt; alles darf fehlen. */
 export type SettingsPatch = {
   photos?: Partial<PhotoSettings>;
   panel?: Partial<PanelSettings>;
+  calendars?: Partial<CalendarSettings>;
+  tasks?: Record<string, Partial<TaskSetSettings>>;
 };
 
 /** Fuellt fehlende Abschnitte und Felder aus den Vorgaben auf.
@@ -54,15 +114,19 @@ export type SettingsPatch = {
  * nicht, die es im Bundle schon gibt. Ohne dieses Auffuellen zerbricht die
  * Karte am fehlenden Feld - genau dann, wenn jemand gerade aktualisiert hat.
  */
-export function withDefaults(roh: Partial<AppSettings> | null | undefined): AppSettings {
+export type RohSettings = { [K in keyof AppSettings]?: Partial<AppSettings[K]> };
+
+export function withDefaults(roh: RohSettings | null | undefined): AppSettings {
   return {
     photos: { ...DEFAULT_SETTINGS.photos, ...(roh?.photos ?? {}) },
     panel: { ...DEFAULT_SETTINGS.panel, ...(roh?.panel ?? {}) },
+    calendars: { ...DEFAULT_SETTINGS.calendars, ...(roh?.calendars ?? {}) },
+    tasks: { ...(roh?.tasks ?? {}) } as Record<string, TaskSetSettings>,
   };
 }
 
 export async function fetchSettings(hass: HomeAssistant): Promise<AppSettings> {
-  return withDefaults(await hass.callWS<Partial<AppSettings>>({ type: `${DOMAIN}/settings/get` }));
+  return withDefaults(await hass.callWS<RohSettings>({ type: `${DOMAIN}/settings/get` }));
 }
 
 /** Schreibt einen Ausschnitt und liefert den neuen Gesamtstand. */
@@ -71,13 +135,13 @@ export async function patchSettings(
   patch: SettingsPatch,
 ): Promise<AppSettings> {
   return withDefaults(
-    await hass.callWS<Partial<AppSettings>>({ type: `${DOMAIN}/settings/set`, patch }),
+    await hass.callWS<RohSettings>({ type: `${DOMAIN}/settings/set`, patch }),
   );
 }
 
 interface HassConnection {
   subscribeMessage: (
-    callback: (settings: Partial<AppSettings>) => void,
+    callback: (settings: RohSettings) => void,
     payload: Record<string, unknown>,
   ) => Promise<() => void>;
 }

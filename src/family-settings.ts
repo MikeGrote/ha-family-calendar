@@ -3,22 +3,33 @@ import { LitElement, type TemplateResult, html } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 
 import { browserId } from './lib/browser-id';
-import { type ImageEntry, listImageEntries, resolveImage } from './lib/media-source';
+import { calendarContext, taskContexts } from './lib/settings-context';
+import {
+  type AreaInfo,
+  type TaskCardInfo,
+  dashboardPath,
+  findAreas,
+  findCalendarConfig,
+  findTaskCards,
+} from './lib/settings-discovery';
+import { PhotoLibrary } from './lib/photo-library';
 import {
   type AppSettings,
   DEFAULT_SETTINGS,
   type PanelSettings,
   type PhotoSettings,
-  deletePhoto,
+  type SettingsPatch,
   patchSettings,
   subscribeSettings,
-  uploadPhoto,
 } from './lib/settings-api';
 import { settingsStyles } from './styles/settings';
 import { type SettingsSection, renderComingSoon, renderSettingsFrame } from './templates/settings';
 import { renderInfo } from './templates/settings-info';
+import { renderCalendarSettings } from './templates/settings-calendars';
+import type { EntityChoice } from './templates/settings-entities';
 import { renderPanelSettings } from './templates/settings-panel';
-import { type PhotoTile, renderPhotoSettings } from './templates/settings-photos';
+import { renderTaskSettings } from './templates/settings-tasks';
+import { renderPhotoSettings } from './templates/settings-photos';
 import type { SettingsConfig } from './types';
 
 /** Einstellungen der App.
@@ -30,8 +41,8 @@ import type { SettingsConfig } from './types';
 
 const SECTIONS: SettingsSection[] = [
   { id: 'fotos', icon: 'mdi:image-multiple', name: 'Fotos', ready: true },
-  { id: 'kalender', icon: 'mdi:calendar-month', name: 'Kalender', ready: false },
-  { id: 'aufgaben', icon: 'mdi:checkbox-marked-outline', name: 'Aufgaben', ready: false },
+  { id: 'kalender', icon: 'mdi:calendar-month', name: 'Kalender', ready: true },
+  { id: 'aufgaben', icon: 'mdi:checkbox-marked-outline', name: 'Aufgaben', ready: true },
   { id: 'panel', icon: 'mdi:tablet-dashboard', name: 'Panel', ready: true },
   { id: 'info', icon: 'mdi:information-outline', name: 'Über', ready: true },
 ];
@@ -45,15 +56,24 @@ export class FamilySettings extends LitElement {
 
   @state() private settings: AppSettings = DEFAULT_SETTINGS;
   @state() private section = 'fotos';
-  @state() private tiles: PhotoTile[] = [];
-  @state() private loading = true;
-  @state() private uploading: { fertig: number; gesamt: number } | null = null;
   @state() private confirmDelete = '';
   @state() private message = '';
   @state() private appVersion = '';
+  @state() private taskCards: TaskCardInfo[] = [];
+  @state() private areas: AreaInfo[] = [];
+  @state() private dashboardFehler = '';
+
+  private kalenderImDashboard: { entities: string[]; colors: Record<string, string> } = {
+    entities: [],
+    colors: {},
+  };
 
   @query('#dateiwahl') private fileInput?: HTMLInputElement;
 
+  private readonly bilder = new PhotoLibrary(
+    () => this.requestUpdate(),
+    (message) => this.notify(message),
+  );
   private unsubscribe?: () => void;
   private started = false;
   private hinweisTimer?: number;
@@ -116,7 +136,24 @@ export class FamilySettings extends LitElement {
       return renderPanelSettings({
         settings: this.settings.panel,
         eigeneId: browserId(),
-        onLead: (leadBrowser) => void this.savePanel({ leadBrowser }),
+        areas: this.areas,
+        gekoppelt: this.settings.panel.syncedBrowsers.includes(browserId()),
+        anzahlGekoppelt: this.settings.panel.syncedBrowsers.length,
+        onKopplung: (an) => void this.savePanel({ syncedBrowsers: this.kopplung(an) }),
+        onChange: (patch) => void this.savePanel(patch),
+      });
+    }
+
+    if (this.section === 'kalender') {
+      return renderCalendarSettings(
+        calendarContext(this.settings, this.kalenderImDashboard, this.deps('calendar')),
+      );
+    }
+
+    if (this.section === 'aufgaben') {
+      return renderTaskSettings({
+        sets: taskContexts(this.settings, this.taskCards, this.deps('todo')),
+        fehler: this.dashboardFehler,
       });
     }
 
@@ -126,15 +163,18 @@ export class FamilySettings extends LitElement {
 
     return renderPhotoSettings({
       settings: this.settings.photos,
-      tiles: this.tiles,
-      uploading: this.uploading,
+      tiles: this.bilder.tiles,
+      uploading: this.bilder.uploading,
       confirmDelete: this.confirmDelete,
-      loading: this.loading,
+      loading: this.bilder.loading,
       onPick: () => this.fileInput?.click(),
-      onFiles: (files) => void this.upload(files),
+      onFiles: (files) => void this.bilder.upload(this.hass, this.folder, files),
       onAskDelete: (id) => (this.confirmDelete = id),
       onCancelDelete: () => (this.confirmDelete = ''),
-      onDelete: (id) => void this.bildLoeschen(id),
+      onDelete: (id) => {
+        this.confirmDelete = '';
+        void this.bilder.remove(this.hass, id);
+      },
       onChange: (patch) => void this.savePhotos(patch),
     });
   }
@@ -146,7 +186,7 @@ export class FamilySettings extends LitElement {
       this.unsubscribe = await subscribeSettings(this.hass, (settings) => {
         const ordnerNeu = settings.photos.folder !== this.settings.photos.folder;
         this.settings = settings;
-        if (ordnerNeu) void this.loadTiles();
+        if (ordnerNeu) void this.bilder.reload(this.hass, this.folder);
       });
     } catch (err) {
       console.error('Family Settings: Einstellungen nicht erreichbar', err);
@@ -154,7 +194,51 @@ export class FamilySettings extends LitElement {
     }
 
     void this.loadVersion();
-    await this.loadTiles();
+    void this.loadDashboard();
+    await this.bilder.reload(this.hass, this.folder);
+  }
+
+  /** Was die Abschnitte zum Bauen ihrer Kontexte brauchen. */
+  private deps(domain: 'calendar' | 'todo') {
+    return {
+      nameOf: (entityId: string) =>
+        this.hass?.states[entityId]?.attributes.friendly_name ?? entityId,
+      choices: this.entityChoices(domain),
+      patch: (patch: SettingsPatch) => void this.save(patch),
+    };
+  }
+
+  /** Alle Entitäten einer Domäne, alphabetisch. */
+  private entityChoices(domain: string): EntityChoice[] {
+    return Object.keys(this.hass?.states ?? {})
+      .filter((id) => id.startsWith(`${domain}.`))
+      .map((id) => ({
+        entityId: id,
+        name: this.hass.states[id].attributes.friendly_name ?? id,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name, 'de'));
+  }
+
+  /** Liest, welche Karten dieses Panel hat.
+   *
+   * Nur lesend: Die Einstellungen selbst liegen in der Integration, nicht
+   * in der Dashboard-Konfiguration.
+   */
+  private async loadDashboard(): Promise<void> {
+    try {
+      const config = await this.hass.callWS({
+        type: 'lovelace/config',
+        url_path: dashboardPath(location.pathname),
+      });
+      this.taskCards = findTaskCards(config);
+      this.areas = findAreas(config);
+      this.kalenderImDashboard = findCalendarConfig(config);
+      this.dashboardFehler = '';
+    } catch (err) {
+      console.error('Family Settings: Dashboard nicht lesbar', err);
+      this.dashboardFehler =
+        'Die Aufteilung des Panels ließ sich nicht lesen. Ohne sie ist nicht bekannt, welche Karten es gibt.';
+    }
   }
 
   private async loadVersion(): Promise<void> {
@@ -170,67 +254,22 @@ export class FamilySettings extends LitElement {
     }
   }
 
-  private async loadTiles(): Promise<void> {
-    this.loading = true;
-    try {
-      const eintraege = await listImageEntries(this.hass, this.settings.photos.folder);
-      this.tiles = await Promise.all(eintraege.map((eintrag) => this.toTile(eintrag)));
-    } catch (err) {
-      console.error('Family Settings: Ordner nicht lesbar', err);
-      this.tiles = [];
-      this.notify('Der Bilderordner ist nicht lesbar.');
-    } finally {
-      this.loading = false;
-    }
-  }
-
-  private async toTile(eintrag: ImageEntry): Promise<PhotoTile> {
-    return { ...eintrag, url: await resolveImage(this.hass, eintrag.id) };
-  }
-
-  // -------------------------------------------------------------- Bilder
-
-  private async upload(files: FileList): Promise<void> {
-    const liste = [...files];
-    this.uploading = { fertig: 0, gesamt: liste.length };
-    let gescheitert = 0;
-
-    for (const datei of liste) {
-      try {
-        await uploadPhoto(this.hass, this.settings.photos.folder, datei);
-      } catch (err) {
-        gescheitert++;
-        console.error('Family Settings: Upload fehlgeschlagen', datei.name, err);
-      }
-      this.uploading = { fertig: this.uploading.fertig + 1, gesamt: liste.length };
-    }
-
-    this.uploading = null;
-    if (gescheitert > 0) {
-      this.notify(
-        gescheitert === liste.length
-          ? 'Kein Bild konnte hochgeladen werden.'
-          : `${gescheitert} von ${liste.length} Bildern konnten nicht hochgeladen werden.`,
-      );
-    }
-    await this.loadTiles();
-  }
-
-  private async bildLoeschen(id: string): Promise<void> {
-    this.confirmDelete = '';
-    try {
-      await deletePhoto(this.hass, id);
-      this.tiles = this.tiles.filter((kachel) => kachel.id !== id);
-    } catch (err) {
-      console.error('Family Settings: Löschen fehlgeschlagen', err);
-      this.notify('Das Bild konnte nicht gelöscht werden.');
-    }
+  /** Diesen Bildschirm in die Kopplung aufnehmen oder herausnehmen. */
+  private kopplung(an: boolean): string[] {
+    const eigene = browserId();
+    const andere = this.settings.panel.syncedBrowsers.filter((id) => id !== eigene);
+    return an && eigene ? [...andere, eigene] : andere;
   }
 
   private async savePanel(patch: Partial<PanelSettings>): Promise<void> {
     this.settings = { ...this.settings, panel: { ...this.settings.panel, ...patch } };
+    await this.save({ panel: patch });
+  }
+
+  /** Einen Ausschnitt schreiben; das Abonnement liefert den neuen Stand. */
+  private async save(patch: SettingsPatch): Promise<void> {
     try {
-      await patchSettings(this.hass, { panel: patch });
+      await patchSettings(this.hass, patch);
     } catch (err) {
       console.error('Family Settings: Speichern fehlgeschlagen', err);
       this.notify('Die Einstellung konnte nicht gespeichert werden.');
@@ -241,13 +280,12 @@ export class FamilySettings extends LitElement {
     // Sofort anzeigen, damit der Schalter nicht nachhinkt; das Abonnement
     // liefert gleich darauf den bestaetigten Stand.
     this.settings = { ...this.settings, photos: { ...this.settings.photos, ...patch } };
-    try {
-      await patchSettings(this.hass, { photos: patch });
-      if (patch.folder !== undefined) await this.loadTiles();
-    } catch (err) {
-      console.error('Family Settings: Speichern fehlgeschlagen', err);
-      this.notify('Die Einstellung konnte nicht gespeichert werden.');
-    }
+    await this.save({ photos: patch });
+    if (patch.folder !== undefined) await this.bilder.reload(this.hass, this.folder);
+  }
+
+  private get folder(): string {
+    return this.settings.photos.folder;
   }
 
   // -------------------------------------------------------------- Helfer

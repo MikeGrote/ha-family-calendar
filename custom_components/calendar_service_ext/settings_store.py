@@ -31,12 +31,36 @@ DEFAULTS: dict[str, Any] = {
         "rescanMinutes": 60,
     },
     "panel": {
-        # BrowserID (browser_mod) des Geraets, das seinen Bereich in den
-        # Auswahlhelfer zurueckmeldet. Der Helfer ist eine einzige globale
-        # Entitaet - ohne diese Einschraenkung zieht jeder Klick auf
-        # irgendeinem Bildschirm alle anderen mit. Leer: alle melden.
-        "leadBrowser": "",
+        # BrowserIDs (browser_mod) der Bildschirme, die sich den
+        # Auswahlhelfer teilen. Der Helfer ist eine einzige globale
+        # Entitaet: Wer mitmacht, folgt ihm und meldet zurueck - und zieht
+        # damit die anderen Gekoppelten mit. Wer nicht darin steht, ist fuer
+        # sich. Leer ist die Vorgabe, weil ein Bildschirm normalerweise
+        # niemanden sonst fernsteuern soll.
+        #
+        # Automationen schalten ueber diesen Helfer um; das Wandpanel
+        # gehoert deshalb ueblicherweise hinein.
+        "syncedBrowsers": [],
+        # Leere Zeichenketten und Nullen heissen durchweg: nichts eingestellt,
+        # es gilt der Eintrag im Dashboard. Nur so laesst sich eine einzelne
+        # Einstellung wieder abgeben, ohne die anderen mitzunehmen.
+        "initialArea": "",
+        "idleAfter": 0,
+        "idleArea": "",
+        "fullscreenArea": "",
+        "fullscreenAfter": 0,
     },
+    "calendars": {
+        # Reihenfolge, in der die Kalender in der Kopfzeile stehen.
+        "order": [],
+        # entity_id -> {"name": str, "color": str, "active": bool}
+        "items": {},
+        # Mit der gestauchten Zeitachse beginnen statt mit dem Stundenraster.
+        "startCompact": False,
+    },
+    # Schluessel der Aufgabenkarte -> ihre Spalten. Zwei Karten (Aufgaben und
+    # Listen) teilen sich sonst einen Eintrag und ueberschreiben einander.
+    "tasks": {},
 }
 
 
@@ -58,7 +82,7 @@ class SettingsStore:
         """Vom Datentraeger lesen; fehlende Felder kommen aus den Vorgaben."""
         if not self._loaded:
             gespeichert = await self._store.async_load() or {}
-            self._data = merge(deepcopy(DEFAULTS), gespeichert)
+            self._data = uebernehme_alte_fuehrung(merge(deepcopy(DEFAULTS), gespeichert))
             self._loaded = True
         return self.data
 
@@ -86,6 +110,22 @@ class SettingsStore:
         stand = self.data
         for listener in list(self._listeners):
             listener(stand)
+
+
+def uebernehme_alte_fuehrung(daten: dict[str, Any]) -> dict[str, Any]:
+    """Uebertraegt das fruehere "ein Geraet fuehrt" auf die Kopplung.
+
+    Zuerst gab es genau ein fuehrendes Geraet, dem alle anderen folgten. Das
+    Modell ist inzwischen umgekehrt - jeder Bildschirm ist fuer sich, und wer
+    mitmachen will, koppelt sich. Wer damals ein Geraet festgelegt hat, soll
+    nicht von vorn anfangen muessen.
+    """
+    panel = daten.get("panel", {})
+    alt = panel.get("leadBrowser")
+    if alt and not panel.get("syncedBrowsers"):
+        panel["syncedBrowsers"] = [alt]
+    panel.pop("leadBrowser", None)
+    return daten
 
 
 def merge(basis: dict[str, Any], patch: dict[str, Any]) -> dict[str, Any]:

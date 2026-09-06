@@ -28,8 +28,11 @@ import {
   withFrequency,
 } from './lib/event-form';
 import { CompactView } from './lib/compact-view';
+import { colorMap, effectiveCalendars } from './lib/effective-config';
 import { EventLoader } from './lib/event-loader';
 import { DEFAULT_COLOR } from './lib/event-mapping';
+import type { AppSettings } from './lib/settings-api';
+import { SettingsListener } from './lib/settings-listener';
 import { calendarStyles } from './styles/index';
 import { renderCompact } from './templates/compact';
 import { renderEventDialog } from './templates/event-dialog';
@@ -47,6 +50,18 @@ export class FamilyCalendar extends LitElement {
 
   @state() private activeCalendars: string[] = [];
   @state() private isCompact = false;
+  /** Zaehlt hoch, wenn sich die Einstellungen aendern. Gelesen wird der
+   *  Wert nirgends - er ist nur das Signal an Lit, neu zu zeichnen; der
+   *  Stand selbst liegt im Zuhoerer. */
+  @state() private settingsRevision = 0;
+
+  private readonly einstellungen = new SettingsListener('Family Calendar', (settings) =>
+    this.applySettings(settings),
+  );
+  /** Woran erkannt wird, dass sich die Kalender geaendert haben. Ohne den
+   *  Vergleich wuerde jede beliebige Einstellung die Filterknoepfe
+   *  zuruecksetzen, die jemand gerade von Hand gesetzt hat. */
+  private letzteKalender = '';
 
   @state() private form: EventFormState = emptyForm();
 
@@ -56,7 +71,7 @@ export class FamilyCalendar extends LitElement {
   private calendar: Calendar | null = null;
   private readonly loader = new EventLoader({
     hass: () => this.hass,
-    config: () => this.config,
+    config: () => this.effectiveConfig,
     calendar: () => this.calendar,
     activeCalendars: () => this.activeCalendars,
     onError: (message, entityId) => this.notify(`${this.friendlyName(entityId)}: ${message}`),
@@ -73,6 +88,32 @@ export class FamilyCalendar extends LitElement {
     this.activeCalendars = [...config.entities];
   }
 
+  /** Die Kalender, wie der Einstellungsbereich sie vorgibt - ersatzweise
+   *  wie sie im Dashboard stehen. */
+  private get kalender() {
+    return effectiveCalendars(this.config, this.einstellungen.settings.calendars);
+  }
+
+  private get effectiveConfig(): CalendarConfig {
+    const kalender = this.kalender;
+    return { ...this.config, entities: kalender.map((k) => k.entityId), colors: colorMap(kalender) };
+  }
+
+  /** Uebernimmt geaenderte Kalender, ohne die Auswahl im Betrieb zu stoeren. */
+  private applySettings(settings: AppSettings): void {
+    this.settingsRevision++;
+
+    const kennung = JSON.stringify(this.kalender.map((k) => [k.entityId, k.active]));
+    if (kennung !== this.letzteKalender) {
+      const ersteRunde = this.letzteKalender === '';
+      this.letzteKalender = kennung;
+      this.activeCalendars = this.kalender.filter((k) => k.active).map((k) => k.entityId);
+      // Beim ersten Mal auch die Startansicht - danach entscheidet der Knopf.
+      if (ersteRunde) this.isCompact = settings.calendars.startCompact;
+      this.loader.applyFilters();
+    }
+  }
+
   getCardSize(): number {
     return 10;
   }
@@ -84,10 +125,10 @@ export class FamilyCalendar extends LitElement {
       <ha-card>
         ${renderHeader({
           links: this.config?.links ?? [],
-          entities: this.config?.entities ?? [],
+          entities: this.kalender.map((k) => k.entityId),
           activeCalendars: this.activeCalendars,
           isCompact: this.isCompact,
-          colorOf: (id) => this.config.colors?.[id] ?? DEFAULT_COLOR,
+          colorOf: (id) => this.kalender.find((k) => k.entityId === id)?.color ?? DEFAULT_COLOR,
           nameOf: (id) => this.friendlyName(id),
           onNavigate: (path) => this.navigate(path),
           onToggleCalendar: (id) => this.toggleCalendar(id),
@@ -139,7 +180,7 @@ export class FamilyCalendar extends LitElement {
       end: form.newEventEnd,
       frequency: form.newEventRecurrence,
       until: form.newEventUntil,
-      entities: this.config.entities,
+      entities: this.kalender.map((k) => k.entityId),
       nameOf: (id) => this.friendlyName(id),
       onTitle: (value) => patch({ newEventTitle: value }),
       onCalendar: (value) => patch({ newEventCalendar: value }),
@@ -164,6 +205,7 @@ export class FamilyCalendar extends LitElement {
   // ------------------------------------------------------------ Lebenszyklus
 
   firstUpdated(): void {
+    void this.einstellungen.start(this.hass);
     if (!this.calendarEl) return;
 
     this.calendar = createCalendar(this.calendarEl, {
@@ -205,6 +247,7 @@ export class FamilyCalendar extends LitElement {
   disconnectedCallback(): void {
     super.disconnectedCallback();
     this.loader.dispose();
+    this.einstellungen.stop();
     this.resizeObserver?.disconnect();
     this.resizeObserver = undefined;
     this.compact.dispose();
@@ -249,12 +292,17 @@ export class FamilyCalendar extends LitElement {
     start.setMinutes(0, 0, 0);
     start.setHours(start.getHours() + 1);
     const end = new Date(start.getTime() + 60 * 60 * 1000);
-    this.form = formForNewEvent(start, end, false, this.config.entities[0] ?? '');
+    this.form = formForNewEvent(start, end, false, this.kalender[0]?.entityId ?? '');
   }
 
   private handleDateSelect(info: DateSelectArg): void {
     info.view.calendar.unselect();
-    this.form = formForNewEvent(info.start, info.end, info.allDay, this.config.entities[0] ?? '');
+    this.form = formForNewEvent(
+      info.start,
+      info.end,
+      info.allDay,
+      this.kalender[0]?.entityId ?? '',
+    );
   }
 
   private handleEventClick(info: EventClickArg): void {
@@ -299,6 +347,8 @@ export class FamilyCalendar extends LitElement {
   // ------------------------------------------------------------------ Helfer
 
   private friendlyName(entityId: string): string {
+    const eigener = this.kalender.find((k) => k.entityId === entityId)?.name;
+    if (eigener) return eigener;
     return this.hass?.states[entityId]?.attributes?.friendly_name ?? entityId;
   }
 
