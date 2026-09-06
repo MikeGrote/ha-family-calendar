@@ -26,11 +26,32 @@ export const photosStyles = css`
     background-size: cover;
     background-position: center;
     opacity: 0;
-    transition: opacity 1.2s ease-in-out;
+    /* Die Bewegung laeuft ueber die ganze Standzeit des Bildes und ist
+       bewusst klein: Sie soll auffallen, wenn man hinsieht, und nicht,
+       wenn man daran vorbeigeht. */
+    transform: scale(1);
+    transition:
+      opacity 1.2s ease-in-out,
+      transform var(--zoom-dauer, 30s) linear;
+    will-change: transform;
   }
 
   .layer--visible {
     opacity: 1;
+  }
+
+  .layer--zoom {
+    transform: scale(1.06);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .layer {
+      transition: opacity 1.2s ease-in-out;
+    }
+
+    .layer--zoom {
+      transform: none;
+    }
   }
 
   /* Verlauf unten, damit die Uhrzeit auch auf hellen Bildern lesbar ist. */

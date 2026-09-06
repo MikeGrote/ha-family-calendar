@@ -15,11 +15,13 @@ from homeassistant.components import websocket_api
 from homeassistant.core import HomeAssistant, callback
 
 from .const import DOMAIN
+from .photo_faces import async_faces_for
 from .settings_store import async_get_store
 
 WS_GET = f"{DOMAIN}/settings/get"
 WS_SET = f"{DOMAIN}/settings/set"
 WS_SUBSCRIBE = f"{DOMAIN}/settings/subscribe"
+WS_FACES = f"{DOMAIN}/photos/faces"
 
 _REGISTERED = f"{DOMAIN}_ws_registered"
 
@@ -33,6 +35,7 @@ def async_register(hass: HomeAssistant) -> None:
     websocket_api.async_register_command(hass, ws_get)
     websocket_api.async_register_command(hass, ws_set)
     websocket_api.async_register_command(hass, ws_subscribe)
+    websocket_api.async_register_command(hass, ws_faces)
     hass.data[_REGISTERED] = True
 
 
@@ -86,3 +89,25 @@ async def ws_subscribe(
     connection.subscriptions[msg["id"]] = store.async_listen(weiterreichen)
     connection.send_result(msg["id"])
     weiterreichen(await store.async_load())
+
+
+@websocket_api.websocket_command(
+    {
+        vol.Required("type"): WS_FACES,
+        vol.Required("media_content_id"): str,
+    }
+)
+@websocket_api.async_response
+async def ws_faces(
+    hass: HomeAssistant,
+    connection: websocket_api.ActiveConnection,
+    msg: dict[str, Any],
+) -> None:
+    """Gesichter eines Bildes, damit der Ausschnitt sie nicht abschneidet.
+
+    Die Angaben stehen bereits in der Datei - Kameras und Fotoverwaltungen
+    schreiben sie nach dem Standard der Metadata Working Group. Gerechnet
+    wird hier also nichts, nur gelesen und gemerkt.
+    """
+    faces = await async_faces_for(hass, msg["media_content_id"])
+    connection.send_result(msg["id"], {"faces": faces})

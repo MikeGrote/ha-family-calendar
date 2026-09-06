@@ -67,3 +67,28 @@ export async function resolveImage(hass: HomeAssistant, mediaContentId: string):
   });
   return result.url;
 }
+
+/** Ein Gesicht, wie die Integration es aus der Datei liest. */
+export interface FaceRegion {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/** Gesichter eines Bildes.
+ *
+ * Kameras und Fotoverwaltungen schreiben sie nach dem Standard der Metadata
+ * Working Group in die Datei; die Integration liest sie dort heraus. Wo
+ * nichts steht, kommt eine leere Liste zurueck - dann wird geschaetzt.
+ */
+export async function fetchFaces(
+  hass: HomeAssistant,
+  mediaContentId: string,
+): Promise<FaceRegion[]> {
+  const antwort = await hass.callWS<{ faces: FaceRegion[] }>({
+    type: 'calendar_service_ext/photos/faces',
+    media_content_id: mediaContentId,
+  });
+  return antwort.faces ?? [];
+}

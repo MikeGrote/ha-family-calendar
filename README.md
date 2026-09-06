@@ -62,6 +62,13 @@ invitations into calendar entries.
     scales up to the whole screen, sidebar and all. A touch shrinks it back,
     noticeably faster than it grew. Animated by transform, not by size: the
     latter is recalculated every frame and stutters on a panel.
+*   **Keeps the heads in frame** — a landscape frame crops a portrait photo top
+    and bottom, and the heads are at the top. Cameras and photo libraries
+    already record the faces they found, following the Metadata Working Group
+    standard; the integration reads those from the file, once, and the frame
+    crops around them. No model, no extra dependency. Where nothing is
+    recorded, it falls back to the upper third. A slow, slight zoom then drifts
+    towards the faces.
 *   **Settings area** — the parameters of the app, in the design of the app:
     calendars (name, colour, order, which ones start visible), the columns of
     each task card, the photo frame including upload, and how the panel
@@ -299,6 +306,13 @@ Besprechungsanfragen in Kalendereinträge verwandelt.
     Berührung holt ihn zurück, spürbar schneller als er gewachsen ist.
     Animiert wird der Transform, nicht die Größe: Letztere rechnet der
     Browser bei jedem Einzelbild neu und ruckelt auf einem Panel.
+*   **Lässt die Köpfe im Bild** — ein Querformat-Rahmen schneidet ein
+    Hochformat oben und unten ab, und oben sind die Köpfe. Kameras und
+    Fotoverwaltungen halten die gefundenen Gesichter längst in der Datei fest,
+    nach dem Standard der Metadata Working Group; die Integration liest sie
+    dort einmal heraus, und der Ausschnitt richtet sich danach. Kein Modell,
+    keine zusätzliche Abhängigkeit. Wo nichts steht, gilt das obere Drittel.
+    Ein langsamer, kleiner Zoom fährt dann auf die Gesichter zu.
 *   **Einstellungsbereich** — die Parameter der App, im Design der App:
     Kalender (Name, Farbe, Reihenfolge, welche beim Start sichtbar sind), die
     Spalten jeder Aufgabenkarte, der Bilderrahmen samt Upload, und wie sich
