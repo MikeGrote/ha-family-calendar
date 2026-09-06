@@ -89,6 +89,14 @@ export interface ShellIdle {
   returnTo?: string;
 }
 
+/** Ein Bereich, der nach einer Weile ohne Beruehrung den Bildschirm fuellt. */
+export interface ShellFullscreen {
+  /** Bereich, der waechst - etwa der Bilderrahmen. */
+  area: string;
+  /** Sekunden ohne Beruehrung, bis er waechst. */
+  after: number;
+}
+
 /** Konfiguration der Huellkarte. */
 export interface ShellConfig {
   type?: string;
@@ -99,6 +107,8 @@ export interface ShellConfig {
   compact?: boolean;
   /** Ruhezustand: nach einer Weile ohne Beruehrung umschalten. */
   idle?: ShellIdle;
+  /** Nach einer Weile ohne Beruehrung auf den ganzen Bildschirm wachsen. */
+  fullscreen?: ShellFullscreen;
   /** Auswahlhelfer, der den aktiven Bereich spiegelt. Erlaubt Automationen,
    *  das Panel umzuschalten. */
   syncEntity?: string;

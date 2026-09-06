@@ -57,6 +57,10 @@ invitations into calendar entries.
 
 *   **Photo frame** — pictures from a folder of the media store, with clock and
     date. New pictures appear on their own; nobody maintains a list.
+*   **Grows into the room** — after a few seconds without a touch the frame
+    scales up to the whole screen, sidebar and all. A touch shrinks it back,
+    noticeably faster than it grew. Animated by transform, not by size: the
+    latter is recalculated every frame and stutters on a panel.
 *   **Settings area** — the parameters of the app, in the design of the app:
     upload pictures, set up the frame, and see what Home Assistant already
     holds. The values live in the integration, not in the dashboard
@@ -156,6 +160,11 @@ areas:
     name: Settings
     card:
       type: custom:family-settings
+
+# Optional: after ten seconds without a touch the photo area fills the screen
+fullscreen:
+  area: photos
+  after: 10
 ```
 
 #### Invitation sync
@@ -275,6 +284,11 @@ Besprechungsanfragen in Kalendereinträge verwandelt.
 
 *   **Bilderrahmen** — Bilder aus einem Ordner der Medienablage, mit Uhrzeit
     und Datum. Neue Bilder erscheinen von selbst, niemand pflegt eine Liste.
+*   **Wächst in den Raum** — nach ein paar Sekunden ohne Berührung skaliert
+    der Rahmen auf den ganzen Bildschirm, über die Seitenleiste hinweg. Eine
+    Berührung holt ihn zurück, spürbar schneller als er gewachsen ist.
+    Animiert wird der Transform, nicht die Größe: Letztere rechnet der
+    Browser bei jedem Einzelbild neu und ruckelt auf einem Panel.
 *   **Einstellungsbereich** — die Parameter der App, im Design der App: Bilder
     hochladen, den Rahmen einstellen, und sehen, was Home Assistant ohnehin
     führt. Die Werte liegen in der Integration, nicht in der
@@ -378,6 +392,11 @@ areas:
     name: Einstellungen
     card:
       type: custom:family-settings
+
+# Optional: nach zehn Sekunden ohne Berührung füllt der Fotobereich den Schirm
+fullscreen:
+  area: fotos
+  after: 10
 ```
 
 #### Einladungs-Abgleich

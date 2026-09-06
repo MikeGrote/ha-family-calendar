@@ -9,8 +9,10 @@ export const photosStyles = css`
 
   ha-card {
     position: relative;
-    height: 85vh;
-    border-radius: 24px;
+    /* Von der Huelle steuerbar, damit der Rahmen auf den ganzen Bildschirm
+       wachsen kann. Eigenschaften reichen durch den Schattenbaum. */
+    height: var(--photos-height, 85vh);
+    border-radius: var(--photos-radius, 24px);
     overflow: hidden;
     background: #101418;
     border: none;

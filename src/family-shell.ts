@@ -3,11 +3,21 @@ import { LitElement, html, type PropertyValues, type TemplateResult } from 'lit'
 import { customElement, property, state } from 'lit/decorators.js';
 
 import { browserId } from './lib/browser-id';
+import { flipTransform, prefersReducedMotion } from './lib/fullscreen-flip';
 import { subscribeSettings } from './lib/settings-api';
 import { navStyles } from './styles/nav';
 import { shellStyles } from './styles/shell';
 import { renderNav } from './templates/nav';
 import type { ShellArea, ShellConfig } from './types';
+
+/** Hinaus etwas gemaechlich, damit man es als Bewegung wahrnimmt. */
+const GROW_MS = 560;
+const GROW_CURVE = 'cubic-bezier(0.16, 1, 0.3, 1)';
+
+/** Zurueck deutlich schneller: Wer das Panel beruehrt, will etwas tun und
+ *  soll nicht auf eine Animation warten. */
+const SHRINK_MS = 200;
+const SHRINK_CURVE = 'cubic-bezier(0.4, 0, 1, 1)';
 
 /** Huelle mit Seitenleiste, die alle Bereiche geladen haelt.
  *
@@ -52,6 +62,8 @@ export class FamilyShell extends LitElement {
   private idleTimer?: number;
   private previousId = '';
   private readonly onActivity = (): void => this.noteActivity();
+  private expandTimer?: number;
+  private expanded = false;
 
   setConfig(config: ShellConfig): void {
     if (!config.areas?.length) {
@@ -74,6 +86,7 @@ export class FamilyShell extends LitElement {
       window.addEventListener(typ, this.onActivity, { passive: true });
     }
     this.restartIdleTimer();
+    this.restartExpandTimer();
   }
 
   disconnectedCallback(): void {
@@ -82,6 +95,7 @@ export class FamilyShell extends LitElement {
       window.removeEventListener(typ, this.onActivity);
     }
     if (this.idleTimer !== undefined) clearTimeout(this.idleTimer);
+    if (this.expandTimer !== undefined) clearTimeout(this.expandTimer);
     this.unsubscribeSettings?.();
     this.unsubscribeSettings = undefined;
   }
@@ -176,7 +190,7 @@ export class FamilyShell extends LitElement {
         : html`<div class="placeholder">Dieser Bereich ist noch nicht eingerichtet.</div>`;
     }
 
-    return html`<div class="area" ?hidden=${hidden}>${element}</div>`;
+    return html`<div class="area" data-area=${area.id} ?hidden=${hidden}>${element}</div>`;
   }
 
   private select(id: string): void {
@@ -198,8 +212,10 @@ export class FamilyShell extends LitElement {
 
   private switchTo(id: string): void {
     if (id === this.activeId) return;
+    if (this.expanded) this.collapse();
     this.previousId = this.activeId;
     this.activeId = id;
+    this.restartExpandTimer();
 
     // Ein verborgener Bereich hat keine Breite. Karten, die ihr Layout
     // selbst berechnen - etwa das Wochenraster - brauchen nach dem
@@ -224,6 +240,107 @@ export class FamilyShell extends LitElement {
     });
   }
 
+  // ------------------------------------------------------- Auf den Schirm
+
+  /** Zeitgeber neu stellen, nach dem der Bereich waechst. */
+  private restartExpandTimer(): void {
+    if (this.expandTimer !== undefined) clearTimeout(this.expandTimer);
+
+    const gross = this.config?.fullscreen;
+    if (!gross?.after || !gross.area) return;
+
+    this.expandTimer = window.setTimeout(() => {
+      if (this.activeId === gross.area) this.expand();
+    }, gross.after * 1000);
+  }
+
+  private areaElement(id: string): HTMLElement | null {
+    if (!id) return null;
+    return this.renderRoot.querySelector<HTMLElement>(`.area[data-area="${id}"]`);
+  }
+
+  /** Waechst auf den ganzen Bildschirm.
+   *
+   * Der Bereich springt sofort auf Vollbild und wird per transform dorthin
+   * zurueckgelegt, wo er herkam; animiert wird nur der transform. Die
+   * Groesse selbst zu animieren hiesse, bei jedem Einzelbild neu zu
+   * rechnen - auf einem Wandpanel sichtbar ruckelig.
+   */
+  private expand(): void {
+    const el = this.areaElement(this.config?.fullscreen?.area ?? '');
+    if (!el || this.expanded) return;
+
+    this.expanded = true;
+    const vorher = el.getBoundingClientRect();
+    el.classList.add('area--fullscreen');
+
+    if (prefersReducedMotion()) return;
+
+    const nachher = el.getBoundingClientRect();
+    el.style.transition = 'none';
+    el.style.transform = flipTransform(vorher, nachher);
+    // Erzwingt die Neuberechnung: Ohne sie fasst der Browser das Setzen und
+    // das Zuruecknehmen zu einem Schritt zusammen und es gibt keine Bewegung.
+    void el.offsetWidth;
+
+    el.style.transition = `transform ${GROW_MS}ms ${GROW_CURVE}`;
+    el.style.transform = '';
+    this.nachDerBewegung(el, GROW_MS, () => {
+      el.style.transition = '';
+    });
+  }
+
+  /** Zurueck in die Seitenleiste - deutlich schneller als hinaus. */
+  private collapse(): void {
+    const el = this.areaElement(this.config?.fullscreen?.area ?? '');
+    if (!el || !this.expanded) return;
+
+    this.expanded = false;
+
+    const aufraeumen = (): void => {
+      el.classList.remove('area--fullscreen');
+      el.style.transition = '';
+      el.style.transform = '';
+    };
+
+    if (prefersReducedMotion()) {
+      aufraeumen();
+      return;
+    }
+
+    const vollbild = el.getBoundingClientRect();
+    // Kurz herausnehmen, um das Ziel zu messen, und sofort zurueck: Der
+    // Browser zeichnet dazwischen nicht.
+    el.classList.remove('area--fullscreen');
+    const ziel = el.getBoundingClientRect();
+    el.classList.add('area--fullscreen');
+
+    el.style.transition = 'none';
+    el.style.transform = '';
+    void el.offsetWidth;
+
+    el.style.transition = `transform ${SHRINK_MS}ms ${SHRINK_CURVE}`;
+    el.style.transform = flipTransform(ziel, vollbild);
+    this.nachDerBewegung(el, SHRINK_MS, aufraeumen);
+  }
+
+  /** Ruft auf, wenn die Bewegung fertig ist - notfalls per Zeitgeber.
+   *
+   * transitionend bleibt aus, wenn der Bildschirm zwischendurch in den
+   * Hintergrund geraet. Ohne Netz haenge der Bereich dann fuer immer im
+   * Vollbild fest.
+   */
+  private nachDerBewegung(el: HTMLElement, dauer: number, fertig: () => void): void {
+    let erledigt = false;
+    const einmal = (): void => {
+      if (erledigt) return;
+      erledigt = true;
+      fertig();
+    };
+    el.addEventListener('transitionend', einmal, { once: true });
+    window.setTimeout(einmal, dauer + 150);
+  }
+
   /** Fuehrt dieses Geraet die Bereichswahl?
    *
    * Ohne festgelegtes Geraet melden alle zurueck - so war es vorher, und so
@@ -239,6 +356,16 @@ export class FamilyShell extends LitElement {
 
   /** Eine Bedienung holt aus dem Ruhezustand zurueck. */
   private noteActivity(): void {
+    // Ist der Bereich gewachsen, gilt diese Beruehrung dem Verkleinern und
+    // sonst nichts. Sie soll nicht zugleich den Bereich wechseln - sonst
+    // waere die Bewegung umsonst und man landet ungewollt woanders.
+    if (this.expanded) {
+      this.collapse();
+      this.restartIdleTimer();
+      this.restartExpandTimer();
+      return;
+    }
+
     const idle = this.config.idle;
     if (idle && this.activeId === idle.area) {
       const ziel = idle.returnTo ?? this.previousId;
@@ -248,6 +375,7 @@ export class FamilyShell extends LitElement {
       }
     }
     this.restartIdleTimer();
+    this.restartExpandTimer();
   }
 
   private restartIdleTimer(): void {

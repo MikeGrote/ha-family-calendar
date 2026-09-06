@@ -28,6 +28,20 @@ export const shellStyles = css`
     display: none;
   }
 
+  /* Gewachsener Bereich: liegt ueber allem, auch ueber der Seitenleiste.
+     Die Groesse des Inhalts kommt ueber Eigenschaften herein - die reichen
+     durch den Schattenbaum der Karte, deren Stile von hier aus sonst nicht
+     erreichbar waeren. */
+  .area--fullscreen {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    transform-origin: top left;
+    will-change: transform;
+    --photos-height: 100vh;
+    --photos-radius: 0px;
+  }
+
   .placeholder {
     display: flex;
     align-items: center;
