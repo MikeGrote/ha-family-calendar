@@ -699,7 +699,7 @@ const js = "calendar_service_ext", at = {
     fullscreenArea: "",
     fullscreenAfter: 0
   },
-  calendars: { order: [], items: {}, startCompact: !1 },
+  calendars: { order: [], items: {}, startCompact: !0 },
   tasks: {}
 }, Vl = {
   order: [],
@@ -10491,7 +10491,7 @@ class ym {
 const As = 7, wm = 100;
 class Em {
   constructor(e) {
-    this.ctx = e, this.all = [], this.visible = [], this.lastSignature = "";
+    this.ctx = e, this.all = [], this.visible = [], this.lastSignature = "", this.geladen = !1;
   }
   /** Aendert sich nur, wenn einer der konfigurierten Kalender sich meldet.
    *
@@ -10526,6 +10526,14 @@ class Em {
   visibleEvents() {
     return this.visible;
   }
+  /** Wurde schon einmal vollstaendig geladen?
+   *
+   * Vorher ist "keine Termine" keine Aussage, sondern Unwissen - und die
+   * Kompaktansicht wuerde bei jedem Start kurz das Gegenteil behaupten.
+   */
+  get hasLoaded() {
+    return this.geladen;
+  }
   adjustTimeRange(e, n) {
     const i = this.ctx.calendar();
     if (!i || i.view.type !== "timeGridWeek") return;
@@ -10546,7 +10554,7 @@ class Em {
       } catch (a) {
         console.error("Family Calendar: Laden fehlgeschlagen für", o, a), this.ctx.onError("Kalender konnte nicht geladen werden.", o);
       }
-    this.all = s, this.applyFilters();
+    this.all = s, this.geladen = !0, this.applyFilters();
   }
   window() {
     const e = this.ctx.calendar()?.view, n = e ? new Date(e.activeStart) : /* @__PURE__ */ new Date(), i = e ? new Date(e.activeEnd) : /* @__PURE__ */ new Date();
@@ -11308,7 +11316,9 @@ function _m(t) {
       </div>
 
       <div class="compact-body">
-        ${e.empty ? y`<p class="compact-empty">Diese Woche steht nichts mit Uhrzeit an.</p>` : y`
+        ${e.empty ? y`<p class="compact-empty">
+              ${t.loading ? "" : "Diese Woche steht nichts mit Uhrzeit an."}
+            </p>` : y`
               <div class="compact-grid compact-scale" style="height: ${e.height}px">
                 <div class="compact-axis">
                   ${e.gaps.map((n) => km(n))}
@@ -11602,6 +11612,7 @@ let J = class extends ne {
     return _m({
       week: this.compact.week(this.loader.visibleEvents(), t?.activeStart ?? /* @__PURE__ */ new Date()),
       title: t?.title ?? "",
+      loading: !this.loader.hasLoaded,
       onEvent: (e) => {
         this.form = vs(e);
       },
@@ -12076,7 +12087,7 @@ function Xa(t, e) {
   const n = new Set(e);
   return t.filter((i) => !n.has(i.entityId));
 }
-function tv(t, e = !1) {
+function tv(t, e) {
   const n = cn(t, void 0);
   return {
     order: n.map((i) => i.entityId),

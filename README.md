@@ -22,10 +22,11 @@ invitations into calendar entries.
 *   **Create, edit and delete** events straight from the card, including all-day
     events and simple recurrence.
 *   **Per-calendar colours and filters** — toggle each calendar on and off.
-*   **Compact mode** — the same week on a squashed time axis. Every busy
-    minute keeps the same scale, so two events stay comparable in length,
-    while long empty stretches collapse into a marked break. The week fits
-    without scrolling.
+*   **Compact mode, the default** — the same week on a squashed time axis.
+    Every busy minute keeps the same scale, so two events stay comparable in
+    length, while long empty stretches collapse into a marked break. The week
+    fits without scrolling, which is why the panel starts here; the hour grid
+    is one button away, and the settings area can switch the default back.
 *   **Adaptive time axis** — the visible hours follow the events of the week.
 
 **Invitation sync** (optional)
@@ -250,10 +251,13 @@ Besprechungsanfragen in Kalendereinträge verwandelt.
     Termine und einfache Wiederholungen.
 *   **Farben und Filter je Kalender** — jeder Kalender einzeln ein- und
     ausblendbar.
-*   **Kompaktmodus** — dieselbe Woche auf gestauchter Zeitachse. Belegte Zeit
-    behält überall denselben Maßstab, zwei Termine bleiben also in ihrer
-    Länge vergleichbar, während lange Leerstellen zu einem gekennzeichneten
-    Bruch zusammenfallen. Die Woche passt ohne Scrollen aufs Bild.
+*   **Kompaktmodus, die Vorgabe** — dieselbe Woche auf gestauchter Zeitachse.
+    Belegte Zeit behält überall denselben Maßstab, zwei Termine bleiben also
+    in ihrer Länge vergleichbar, während lange Leerstellen zu einem
+    gekennzeichneten Bruch zusammenfallen. Die Woche passt ohne Scrollen aufs
+    Bild — deshalb beginnt das Panel damit. Das Stundenraster ist einen
+    Knopfdruck entfernt, und im Einstellungsbereich lässt sich die Vorgabe
+    wieder umstellen.
 *   **Mitwachsende Zeitachse** — der sichtbare Bereich richtet sich nach den
     Terminen der Woche.
 

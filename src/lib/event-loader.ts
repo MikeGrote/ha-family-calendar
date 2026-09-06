@@ -33,6 +33,7 @@ export class EventLoader {
   private refreshTimer?: number;
   private resizeTimer?: number;
   private lastSignature = '';
+  private geladen = false;
 
   constructor(private readonly ctx: LoaderContext) {}
 
@@ -91,6 +92,15 @@ export class EventLoader {
     return this.visible;
   }
 
+  /** Wurde schon einmal vollstaendig geladen?
+   *
+   * Vorher ist "keine Termine" keine Aussage, sondern Unwissen - und die
+   * Kompaktansicht wuerde bei jedem Start kurz das Gegenteil behaupten.
+   */
+  get hasLoaded(): boolean {
+    return this.geladen;
+  }
+
   adjustTimeRange(viewStart: Date, viewEnd: Date): void {
     const calendar = this.ctx.calendar();
     if (!calendar || calendar.view.type !== 'timeGridWeek') return;
@@ -125,6 +135,7 @@ export class EventLoader {
     }
 
     this.all = collected;
+    this.geladen = true;
     this.applyFilters();
   }
 

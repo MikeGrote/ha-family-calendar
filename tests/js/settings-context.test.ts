@@ -36,7 +36,7 @@ function deps() {
 
 describe('seedCalendars', () => {
   it('macht aus dem Dashboard einen vollständigen Ausgangsstand', () => {
-    expect(seedCalendars(dashboard)).toEqual({
+    expect(seedCalendars(dashboard, false)).toEqual({
       order: ['calendar.mike', 'calendar.anja'],
       items: {
         'calendar.mike': { name: '', color: '#111111', active: true },
@@ -44,6 +44,10 @@ describe('seedCalendars', () => {
       },
       startCompact: false,
     });
+  });
+
+  it('trägt die Startansicht durch, statt sie anzunehmen', () => {
+    expect(seedCalendars(dashboard, true).startCompact).toBe(true);
   });
 });
 

@@ -85,6 +85,12 @@ async def test_fehlende_felder_kommen_aus_den_vorgaben(store):
     assert stand["photos"]["folder"] == DEFAULTS["photos"]["folder"]
 
 
+async def test_kompaktansicht_ist_die_vorgabe(store):
+    # Auf einem Wandpanel passt die gestauchte Woche ohne Scrollen aufs
+    # Bild; das Stundenraster bleibt einen Knopfdruck entfernt.
+    assert (await store.async_load())["calendars"]["startCompact"] is True
+
+
 async def test_ohne_festlegung_ist_jeder_bildschirm_fuer_sich(store):
     # Ein Bildschirm soll niemanden fernsteuern, solange das niemand
     # eingestellt hat.

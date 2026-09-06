@@ -55,8 +55,10 @@ DEFAULTS: dict[str, Any] = {
         "order": [],
         # entity_id -> {"name": str, "color": str, "active": bool}
         "items": {},
-        # Mit der gestauchten Zeitachse beginnen statt mit dem Stundenraster.
-        "startCompact": False,
+        # Mit der gestauchten Zeitachse beginnen. Vorgabe, weil die Woche
+        # dort ohne Scrollen aufs Bild passt - auf einem Wandpanel der
+        # Normalfall. Das Stundenraster bleibt einen Knopfdruck entfernt.
+        "startCompact": True,
     },
     # Schluessel der Aufgabenkarte -> ihre Spalten. Zwei Karten (Aufgaben und
     # Listen) teilen sich sonst einen Eintrag und ueberschreiben einander.

@@ -154,6 +154,7 @@ export class FamilyCalendar extends LitElement {
     return renderCompact({
       week: this.compact.week(this.loader.visibleEvents(), view?.activeStart ?? new Date()),
       title: view?.title ?? '',
+      loading: !this.loader.hasLoaded,
       onEvent: (event) => {
         this.form = formForExistingEvent(event);
       },

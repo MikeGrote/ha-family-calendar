@@ -30,7 +30,7 @@ export interface ContextDeps {
 /** Ausgangsstand aus dem, was im Dashboard steht. */
 export function seedCalendars(
   config: { entities: string[]; colors: Record<string, string> },
-  startCompact = false,
+  startCompact: boolean,
 ): CalendarSettings {
   const kalender = effectiveCalendars(config, undefined);
   return {

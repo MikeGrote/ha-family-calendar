@@ -42,7 +42,8 @@ export interface CalendarSettings {
   /** Reihenfolge in der Kopfzeile. */
   order: string[];
   items: Record<string, CalendarItem>;
-  /** Mit der gestauchten Zeitachse beginnen. */
+  /** Mit der gestauchten Zeitachse beginnen. Vorgabe: ja - dort passt die
+   *  Woche ohne Scrollen aufs Bild. */
   startCompact: boolean;
 }
 
@@ -85,7 +86,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
     fullscreenArea: '',
     fullscreenAfter: 0,
   },
-  calendars: { order: [], items: {}, startCompact: false },
+  calendars: { order: [], items: {}, startCompact: true },
   tasks: {},
 };
 

@@ -11,6 +11,8 @@ import type { ClickedEvent } from '../lib/event-form';
 export interface CompactContext {
   week: CompactWeek;
   title: string;
+  /** Noch nie fertig geladen - dann ist "nichts da" keine Aussage. */
+  loading: boolean;
   onEvent: (event: ClickedEvent) => void;
   onPrev: () => void;
   onNext: () => void;
@@ -71,7 +73,9 @@ export function renderCompact(ctx: CompactContext): TemplateResult {
 
       <div class="compact-body">
         ${week.empty
-          ? html`<p class="compact-empty">Diese Woche steht nichts mit Uhrzeit an.</p>`
+          ? html`<p class="compact-empty">
+              ${ctx.loading ? '' : 'Diese Woche steht nichts mit Uhrzeit an.'}
+            </p>`
           : html`
               <div class="compact-grid compact-scale" style="height: ${week.height}px">
                 <div class="compact-axis">
