@@ -22,6 +22,9 @@ export interface LoaderContext {
   calendar: () => Calendar | null;
   activeCalendars: () => string[];
   onError: (message: string, entityId: string) => void;
+  /** Die sichtbaren Termine haben sich geaendert. Die Kompaktansicht
+   *  zeichnet ohne FullCalendar und braucht dafuer ein eigenes Signal. */
+  onVisibleChanged?: () => void;
 }
 
 export class EventLoader {
@@ -80,6 +83,12 @@ export class EventLoader {
     const view = calendar.view;
     this.adjustTimeRange(view.activeStart, view.activeEnd);
     calendar.updateSize();
+    this.ctx.onVisibleChanged?.();
+  }
+
+  /** Die aktuell eingeschalteten Termine - Grundlage der Kompaktansicht. */
+  visibleEvents(): EventInput[] {
+    return this.visible;
   }
 
   adjustTimeRange(viewStart: Date, viewEnd: Date): void {

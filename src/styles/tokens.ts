@@ -19,6 +19,14 @@ export const tokenStyles = css`
     --text-secondary: #6e6e73;
     --grid-line: rgba(60, 60, 67, 0.08);
     --accent-color: #007aff;
+    /* Flaechen und Linien der Kompaktansicht. Der Glaslook der Karte
+       traegt dort nicht: Sieben Spalten mit je eigener Unschaerfe waeren
+       teuer und unruhig. */
+    --surface-soft: rgba(255, 255, 255, 0.34);
+    --surface-hover: rgba(255, 255, 255, 0.62);
+    --today-tint: rgba(0, 122, 255, 0.09);
+    --grid-line-strong: rgba(60, 60, 67, 0.22);
+    --break-stripe: rgba(60, 60, 67, 0.13);
   }
 
   ha-card {

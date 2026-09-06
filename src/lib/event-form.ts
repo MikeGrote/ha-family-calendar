@@ -1,5 +1,3 @@
-import type { EventApi } from '@fullcalendar/core';
-
 import type { CalendarEventPayload, EventExtendedProps, RecurrenceFrequency } from '../types';
 import { formatForInput, reformatInput } from './datetime';
 import { buildRrule, parseRrule } from './recurrence';
@@ -61,9 +59,23 @@ export function formForNewEvent(
   };
 }
 
+/** Ein angeklickter Termin, so weit das Formular ihn braucht.
+ *
+ * Bewusst schmaler als FullCalendars EventApi: Die Kompaktansicht zeichnet
+ * ohne FullCalendar und hat nur diese Felder. Ein EventApi passt darauf.
+ */
+export interface ClickedEvent {
+  id?: string;
+  title: string;
+  start: Date | null;
+  end: Date | null;
+  allDay: boolean;
+  extendedProps: EventExtendedProps;
+}
+
 /** Formular fuer einen bestehenden Termin. */
-export function formForExistingEvent(event: EventApi): EventFormState {
-  const props = event.extendedProps as EventExtendedProps;
+export function formForExistingEvent(event: ClickedEvent): EventFormState {
+  const props = event.extendedProps;
   const recurrence = parseRrule(props.rrule);
 
   return {

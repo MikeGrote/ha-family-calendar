@@ -1,6 +1,7 @@
 import { css } from 'lit';
 
 import { calendarGridStyles } from './calendar';
+import { compactStyles } from './compact';
 import { dialogStyles } from './dialog';
 import { headerStyles } from './header';
 import { tokenStyles } from './tokens';
@@ -10,5 +11,6 @@ export const calendarStyles = css`
   ${tokenStyles}
   ${headerStyles}
   ${calendarGridStyles}
+  ${compactStyles}
   ${dialogStyles}
 `;

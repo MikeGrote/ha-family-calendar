@@ -1,7 +1,7 @@
-import type { EventApi } from '@fullcalendar/core';
 import { describe, expect, it } from 'vitest';
 
 import {
+  type ClickedEvent,
   emptyForm,
   formForExistingEvent,
   formForNewEvent,
@@ -29,8 +29,9 @@ interface TerminVorlage {
   rrule?: string;
 }
 
-/** Ein Termin, wie FullCalendar ihn beim Anklicken übergibt. */
-function terminApi(vorlage: TerminVorlage): EventApi {
+/** Ein Termin, wie ihn ein Klick übergibt - aus dem Raster oder aus der
+ *  Kompaktansicht. */
+function terminApi(vorlage: TerminVorlage): ClickedEvent {
   const props: EventExtendedProps = {
     entityId: vorlage.entityId ?? 'calendar.mike',
     uid: vorlage.uid ?? 'uid-1',
@@ -44,7 +45,7 @@ function terminApi(vorlage: TerminVorlage): EventApi {
     end: vorlage.end ?? null,
     allDay: vorlage.allDay ?? false,
     extendedProps: props,
-  } as unknown as EventApi;
+  };
 }
 
 describe('emptyForm', () => {

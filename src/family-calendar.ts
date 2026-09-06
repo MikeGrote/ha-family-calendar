@@ -11,30 +11,30 @@ import { html, LitElement, type PropertyValues, type TemplateResult } from 'lit'
 import { customElement, property, query, state } from 'lit/decorators.js';
 
 import { createCalendar } from './lib/calendar-setup';
-import { createEvent, deleteEvent, updateEvent } from './lib/calendar-api';
-import { formatForApi } from './lib/datetime';
 import {
+  type ActionContext,
+  deleteFormEvent,
+  moveEvent,
+  saveFormEvent,
+} from './lib/event-actions';
+import {
+  type ClickedEvent,
   type EventFormState,
   emptyForm,
   formForExistingEvent,
   formForNewEvent,
   missingField,
-  recurrenceScope,
-  toPayload,
   withAllDay,
   withFrequency,
 } from './lib/event-form';
-import { DEFAULT_COLOR } from './lib/event-mapping';
+import { CompactView } from './lib/compact-view';
 import { EventLoader } from './lib/event-loader';
+import { DEFAULT_COLOR } from './lib/event-mapping';
 import { calendarStyles } from './styles/index';
+import { renderCompact } from './templates/compact';
 import { renderEventDialog } from './templates/event-dialog';
 import { renderHeader } from './templates/header';
-import type {
-  CalendarConfig,
-  CalendarEventPayload,
-  EventExtendedProps,
-
-} from './types';
+import type { CalendarConfig } from './types';
 
 const DEFAULT_DEBOUNCE_MS = 500;
 /** Zeitpunkte nach dem Aufbau, zu denen die Groesse nachgemessen wird (ms). */
@@ -51,6 +51,7 @@ export class FamilyCalendar extends LitElement {
   @state() private form: EventFormState = emptyForm();
 
   @query('#calendar') private calendarEl!: HTMLElement;
+  @query('.compact-body') private compactBodyEl?: HTMLElement;
 
   private calendar: Calendar | null = null;
   private readonly loader = new EventLoader({
@@ -59,7 +60,9 @@ export class FamilyCalendar extends LitElement {
     calendar: () => this.calendar,
     activeCalendars: () => this.activeCalendars,
     onError: (message, entityId) => this.notify(`${this.friendlyName(entityId)}: ${message}`),
+    onVisibleChanged: () => this.requestUpdate(),
   });
+  private readonly compact = new CompactView(() => this.requestUpdate());
   private resizeObserver?: ResizeObserver;
 
   setConfig(config: CalendarConfig): void {
@@ -91,10 +94,32 @@ export class FamilyCalendar extends LitElement {
           onToggleCompact: () => this.toggleCompact(),
           onNewEvent: () => this.openNewEvent(),
         })}
-        <div id="calendar"></div>
+        <div id="calendar" ?hidden=${this.isCompact}></div>
+        ${this.isCompact ? this.renderCompactView() : ''}
         ${this.form.showModal ? this.renderDialog() : ''}
       </ha-card>
     `;
+  }
+
+  /** Die Woche gestaucht: Termine massstabsgetreu, leere Zeit gerafft.
+   *
+   * FullCalendar bleibt dabei im Hintergrund bestehen. Es fuehrt weiter
+   * den sichtbaren Zeitraum und laedt nach; nur gezeichnet wird hier
+   * selbst, weil sein Raster die Zeit zwingend gleichmaessig auftraegt.
+   */
+  private renderCompactView(): TemplateResult {
+    const view = this.calendar?.view;
+
+    return renderCompact({
+      week: this.compact.week(this.loader.visibleEvents(), view?.activeStart ?? new Date()),
+      title: view?.title ?? '',
+      onEvent: (event) => {
+        this.form = formForExistingEvent(event);
+      },
+      onPrev: () => this.calendar?.prev(),
+      onNext: () => this.calendar?.next(),
+      onToday: () => this.calendar?.today(),
+    });
   }
 
   private renderDialog(): TemplateResult {
@@ -169,6 +194,7 @@ export class FamilyCalendar extends LitElement {
     if (changedProps.has('hass') && this.loader.hasRelevantChange()) {
       this.refresh();
     }
+    this.compact.watch(this.isCompact ? this.compactBodyEl : undefined);
   }
 
   /** Nachladen anstossen, entprellt. */
@@ -181,6 +207,7 @@ export class FamilyCalendar extends LitElement {
     this.loader.dispose();
     this.resizeObserver?.disconnect();
     this.resizeObserver = undefined;
+    this.compact.dispose();
     this.calendar?.destroy();
     this.calendar = null;
   }
@@ -193,7 +220,9 @@ export class FamilyCalendar extends LitElement {
 
   private toggleCompact(): void {
     this.isCompact = !this.isCompact;
-    this.calendar?.changeView(this.isCompact ? 'dayGridWeek' : 'timeGridWeek');
+    // FullCalendar bleibt auf der Wochenansicht: Es liefert weiterhin den
+    // sichtbaren Zeitraum und den Titel, auch wenn es verborgen ist.
+    if (!this.isCompact) this.calendar?.updateSize();
   }
 
   private toggleCalendar(entityId: string): void {
@@ -229,84 +258,43 @@ export class FamilyCalendar extends LitElement {
   }
 
   private handleEventClick(info: EventClickArg): void {
-    this.form = formForExistingEvent(info.event);
+    // FullCalendar typisiert extendedProps als offenes Woerterbuch; was
+    // wirklich drinsteht, legt toEventInput fest.
+    this.form = formForExistingEvent(info.event as unknown as ClickedEvent);
   }
 
   // ------------------------------------------------------------- Schreiben
+
+  private actions(): ActionContext {
+    return {
+      hass: this.hass,
+      notify: (message) => this.notify(message),
+      errorText: (err) => this.errorText(err),
+    };
+  }
 
   private async saveEvent(): Promise<void> {
     const fehlt = missingField(this.form);
     if (fehlt) return this.notify(fehlt);
 
-    const form = this.form;
-    try {
-      if (form.editMode && form.currentEventId) {
-        await updateEvent(
-          this.hass,
-          form.newEventCalendar,
-          form.currentEventId,
-          toPayload(form),
-          recurrenceScope(form),
-        );
-      } else {
-        await createEvent(this.hass, form.newEventCalendar, toPayload(form));
-      }
+    if (await saveFormEvent(this.actions(), this.form)) {
       this.form = emptyForm();
       this.refresh();
-    } catch (err) {
-      console.error('Family Calendar: Speichern fehlgeschlagen', err);
-      this.notify(`Termin konnte nicht gespeichert werden: ${this.errorText(err)}`);
     }
   }
 
   private async deleteEvent(): Promise<void> {
-    const form = this.form;
-    try {
-      await deleteEvent(this.hass, form.newEventCalendar, form.currentEventId, recurrenceScope(form));
+    if (await deleteFormEvent(this.actions(), this.form)) {
       this.form = emptyForm();
       this.refresh();
-    } catch (err) {
-      console.error('Family Calendar: Löschen fehlgeschlagen', err);
-      this.notify(`Termin konnte nicht gelöscht werden: ${this.errorText(err)}`);
+    } else {
       this.form = { ...this.form, confirmDelete: false };
     }
   }
 
-  /** Termin wurde gezogen oder in der Dauer geaendert. */
   private async handleEventMoved(info: EventDropArg | EventResizeDoneArg): Promise<void> {
-    const event = info.event;
-    const props = event.extendedProps as EventExtendedProps;
-
-    if (!props.uid) {
-      info.revert();
-      this.notify('Dieser Termin hat keine Kennung und lässt sich nicht verschieben.');
-      return;
-    }
-
-    const payload: CalendarEventPayload = {
-      summary: event.title,
-      dtstart: formatForApi(event.start, event.allDay),
-      dtend: formatForApi(event.end ?? event.start, event.allDay),
-    };
-
-    try {
-      // Beim Ziehen wird genau diese Instanz verschoben, nicht die ganze
-      // Serie - deshalb ohne recurrence_range.
-      const scope: Record<string, string> = props.recurrenceId
-        ? { recurrence_id: props.recurrenceId }
-        : {};
-      await updateEvent(this.hass, props.entityId, props.uid, payload, scope);
-      this.refresh();
-    } catch (err) {
-      // Ohne revert() bliebe der Termin optisch an der neuen Stelle stehen,
-      // obwohl der Server ihn nicht uebernommen hat.
-      info.revert();
-      console.error('Family Calendar: Verschieben fehlgeschlagen', err);
-      this.notify(`Termin konnte nicht verschoben werden: ${this.errorText(err)}`);
-    }
+    if (await moveEvent(this.actions(), info)) this.refresh();
   }
-
-  /** Reichweite einer Aenderung an einem Serientermin. */
 
   // ------------------------------------------------------------------ Helfer
 

@@ -13,6 +13,15 @@ export const calendarGridStyles = css`
     height: 100%;
   }
 
+  /* In der Kompaktansicht bleibt das Raster im DOM - es fuehrt weiter den
+     sichtbaren Zeitraum und laedt nach. Verborgen wird es ueber [hidden],
+     und das braucht hier eine eigene Regel: FullCalendar setzt auf seinen
+     Wurzelknoten display:flex, und diese Regel schlaegt die eingebaute
+     des Browsers. */
+  #calendar[hidden] {
+    display: none;
+  }
+
   /* --- Header Styling (Apple Style) --- */
   .fc-theme-standard .fc-scrollgrid {
     border: none; /* Äußerer Rahmen weg */
