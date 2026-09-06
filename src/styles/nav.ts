@@ -27,14 +27,20 @@ export const navStyles = css`
     gap: 2px;
   }
 
-  /* Zurueckhaltend: Er wird selten gebraucht und soll die Bereiche nicht
-     ueberstrahlen. Erst beim Beruehren tritt er hervor. */
-  .reload {
+  /* Zurueckhaltend: Selten gebraucht, soll die Bereiche nicht ueberstrahlen.
+     Erst beim Beruehren treten die Knoepfe hervor. */
+  .fuss {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2px;
+    margin: auto 0 10px;
+  }
+
+  .fuss-knopf {
     display: flex;
     align-items: center;
     justify-content: center;
-    align-self: center;
-    margin: auto 0 10px;
     width: 40px;
     height: 40px;
     border: none;
@@ -46,18 +52,18 @@ export const navStyles = css`
     transition: opacity 0.15s, background 0.15s, color 0.15s;
   }
 
-  .reload ha-icon {
+  .fuss-knopf ha-icon {
     --mdc-icon-size: 20px;
   }
 
-  .reload:hover,
-  .reload:focus-visible {
+  .fuss-knopf:hover,
+  .fuss-knopf:focus-visible {
     opacity: 1;
     background: rgba(0, 0, 0, 0.05);
     color: #1d1d1f;
   }
 
-  .reload:active ha-icon {
+  .fuss-knopf--laden:active ha-icon {
     /* Kurze Drehung als Rueckmeldung - bis das Neuladen greift, vergeht
        auf dem Panel ein Moment. */
     animation: reload-dreht 0.6s linear infinite;
@@ -70,7 +76,7 @@ export const navStyles = css`
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .reload:active ha-icon {
+    .fuss-knopf--laden:active ha-icon {
       animation: none;
     }
   }

@@ -112,6 +112,14 @@ export interface ShellConfig {
   /** Auswahlhelfer, der den aktiven Bereich spiegelt. Erlaubt Automationen,
    *  das Panel umzuschalten. */
   syncEntity?: string;
+  /** Wege aus der App heraus, am Fuss der Seitenleiste.
+   *
+   * Im Kioskmodus blendet Home Assistant seine eigene Seitenleiste aus - dann
+   * gibt es sonst keinen Weg zurueck in die Einstellungen, die Add-ons oder
+   * ein anderes Dashboard. Ohne Kioskmodus wird das nicht gebraucht, deshalb
+   * ist die Vorgabe leer.
+   */
+  exits?: CardLink[];
 }
 
 /** Konfiguration der Uebersichtskarte. */

@@ -326,7 +326,7 @@ class kl {
     for (; l !== void 0; ) {
       if (o === l.index) {
         let d;
-        l.type === 2 ? d = new pi(s, s.nextSibling, this, e) : l.type === 1 ? d = new l.ctor(s, l.name, l.strings, this, e) : l.type === 6 && (d = new Nl(s, this, e)), this._$AV.push(d), l = i[++a];
+        l.type === 2 ? d = new pi(s, s.nextSibling, this, e) : l.type === 1 ? d = new l.ctor(s, l.name, l.strings, this, e) : l.type === 6 && (d = new $l(s, this, e)), this._$AV.push(d), l = i[++a];
       }
       o !== l?.index && (s = _e.nextNode(), o++);
     }
@@ -445,7 +445,7 @@ let pi = class qs {
   handleEvent(e) {
     typeof this._$AH == "function" ? this._$AH.call(this.options?.host ?? this.element, e) : this._$AH.handleEvent(e);
   }
-}, Nl = class {
+}, $l = class {
   constructor(e, n, i) {
     this.element = e, this.type = 6, this._$AN = void 0, this._$AM = n, this.options = i;
   }
@@ -456,8 +456,8 @@ let pi = class qs {
     Ye(this, e);
   }
 };
-const $l = hi.litHtmlPolyfillSupport;
-$l?.(Wn, pi), (hi.litHtmlVersions ??= []).push("3.3.2");
+const Nl = hi.litHtmlPolyfillSupport;
+Nl?.(Wn, pi), (hi.litHtmlVersions ??= []).push("3.3.2");
 const Pl = (t, e, n) => {
   const i = n?.renderBefore ?? e;
   let r = i._$litPart$;
@@ -1533,7 +1533,7 @@ function Ei(t) {
     wo(e, t);
   });
 }
-function Nc(t) {
+function $c(t) {
   t.isConnected && // sometimes true if SSR system simulates DOM
   t.getRootNode && yo(t.getRootNode());
 }
@@ -1547,10 +1547,10 @@ function yo(t) {
       const i = t === document ? document.head : t, r = t === document ? i.querySelector("script,link[rel=stylesheet],link[as=style],style") : i.firstChild;
       i.insertBefore(e, r);
     }
-    qn.set(t, e), $c(e);
+    qn.set(t, e), Nc(e);
   }
 }
-function $c(t) {
+function Nc(t) {
   for (const e of bo)
     wo(t, e);
 }
@@ -1711,9 +1711,9 @@ function Co(t) {
     }
   };
 }
-let Nr = 0;
-function $e() {
-  return Nr += 1, String(Nr);
+let $r = 0;
+function Ne() {
+  return $r += 1, String($r);
 }
 function Di() {
   document.body.classList.add("fc-not-allowed");
@@ -1762,7 +1762,7 @@ function ct(t, e, n) {
 function Jc(t, e) {
   return t - e;
 }
-function Nt(t) {
+function $t(t) {
   return t % 1 === 0;
 }
 function ed(t) {
@@ -1774,7 +1774,7 @@ function ed(t) {
   return t.getBoundingClientRect().width - e.getBoundingClientRect().width + // the cell padding+border
   n.getBoundingClientRect().width;
 }
-const $r = ["years", "months", "days", "milliseconds"], td = /^(-?)(?:(\d+)\.)?(\d+):(\d\d)(?::(\d\d)(?:\.(\d\d\d))?)?/;
+const Nr = ["years", "months", "days", "milliseconds"], td = /^(-?)(?:(\d+)\.)?(\d+):(\d\d)(?::(\d\d)(?:\.(\d\d\d))?)?/;
 function x(t, e) {
   return typeof t == "string" ? nd(t) : typeof t == "object" && t ? Pr(t) : typeof t == "number" ? Pr({ [e || "milliseconds"]: t }) : null;
 }
@@ -1848,11 +1848,11 @@ function J(t) {
 }
 function xi(t, e) {
   let n = null;
-  for (let i = 0; i < $r.length; i += 1) {
-    let r = $r[i];
+  for (let i = 0; i < Nr.length; i += 1) {
+    let r = Nr[i];
     if (e[r]) {
       let s = t[r] / e[r];
-      if (!Nt(s) || n !== null && n !== s)
+      if (!$t(s) || n !== null && n !== s)
         return null;
       n = s;
     } else if (t[r])
@@ -2049,7 +2049,7 @@ function A(t, e, n) {
     return i = s, r;
   };
 }
-function $t(t, e, n) {
+function Nt(t, e, n) {
   let i, r;
   return (s) => (i ? ee(i, s) || (r = t.call(this, s)) : r = t.call(this, s), i = s, r);
 }
@@ -2090,7 +2090,7 @@ class xd {
     let d = this.format(e, i), c = this.format(n, i);
     if (d === c)
       return d;
-    let f = Od(s, l), h = Lr(f, o, i), u = h(e), g = h(n), m = Nd(d, u, c, g), b = o.separator || r || i.defaultSeparator || "";
+    let f = Od(s, l), h = Lr(f, o, i), u = h(e), g = h(n), m = $d(d, u, c, g), b = o.separator || r || i.defaultSeparator || "";
     return m ? m.before + u + b + g + m.after : d + b + c;
   }
   getSmallestUnit() {
@@ -2155,7 +2155,7 @@ function Od(t, e) {
     Gt[i] <= e) && (n[i] = t[i]);
   return n;
 }
-function Nd(t, e, n, i) {
+function $d(t, e, n, i) {
   let r = 0;
   for (; r < t.length; ) {
     let s = t.indexOf(e, r);
@@ -2206,7 +2206,7 @@ function qt(t, e, n, i) {
     defaultSeparator: i || n.defaultSeparator
   };
 }
-class $d {
+class Nd {
   constructor(e) {
     this.cmdStr = e;
   }
@@ -2228,8 +2228,8 @@ class Pd {
     return this.func(qt(e, n, i, r));
   }
 }
-function $(t) {
-  return typeof t == "object" && t ? new xd(t) : typeof t == "string" ? new $d(t) : typeof t == "function" ? new Pd(t) : null;
+function N(t) {
+  return typeof t == "object" && t ? new xd(t) : typeof t == "string" ? new Nd(t) : typeof t == "function" ? new Pd(t) : null;
 }
 const Fr = {
   navLinkDayClick: v,
@@ -2245,7 +2245,7 @@ const Fr = {
   scrollTimeReset: Boolean,
   slotMinTime: x,
   slotMaxTime: x,
-  dayPopoverFormat: $,
+  dayPopoverFormat: N,
   slotDuration: x,
   snapDuration: x,
   headerToolbar: v,
@@ -2254,7 +2254,7 @@ const Fr = {
   titleRangeSeparator: String,
   forceEventDuration: Boolean,
   dayHeaders: Boolean,
-  dayHeaderFormat: $,
+  dayHeaderFormat: N,
   dayHeaderClassNames: v,
   dayHeaderContent: v,
   dayHeaderDidMount: v,
@@ -2306,7 +2306,7 @@ const Fr = {
   height: v,
   contentHeight: v,
   direction: String,
-  weekNumberFormat: $,
+  weekNumberFormat: N,
   eventResizableFromStart: Boolean,
   displayEventTime: Boolean,
   displayEventEnd: Boolean,
@@ -2362,7 +2362,7 @@ const Fr = {
   allDayWillUnmount: v,
   slotMinWidth: Number,
   navLinks: Boolean,
-  eventTimeFormat: $,
+  eventTimeFormat: N,
   rerenderDelay: Number,
   moreLinkText: v,
   moreLinkHint: v,
@@ -2399,7 +2399,7 @@ const Fr = {
   moreLinkContent: v,
   moreLinkDidMount: v,
   moreLinkWillUnmount: v,
-  monthStartFormat: $,
+  monthStartFormat: N,
   // for connectors
   // (can't be part of plugin system b/c must be provided at runtime)
   handleCustomRendering: v,
@@ -2736,7 +2736,7 @@ class Yd {
   // Range / Duration
   greatestWholeUnit(e, n) {
     let i = this.diffWholeYears(e, n);
-    return i !== null ? { unit: "year", value: i } : (i = this.diffWholeMonths(e, n), i !== null ? { unit: "month", value: i } : (i = pd(e, n), i !== null ? { unit: "week", value: i } : (i = Vt(e, n), i !== null ? { unit: "day", value: i } : (i = dd(e, n), Nt(i) ? { unit: "hour", value: i } : (i = ud(e, n), Nt(i) ? { unit: "minute", value: i } : (i = hd(e, n), Nt(i) ? { unit: "second", value: i } : { unit: "millisecond", value: n.valueOf() - e.valueOf() }))))));
+    return i !== null ? { unit: "year", value: i } : (i = this.diffWholeMonths(e, n), i !== null ? { unit: "month", value: i } : (i = pd(e, n), i !== null ? { unit: "week", value: i } : (i = Vt(e, n), i !== null ? { unit: "day", value: i } : (i = dd(e, n), $t(i) ? { unit: "hour", value: i } : (i = ud(e, n), $t(i) ? { unit: "minute", value: i } : (i = hd(e, n), $t(i) ? { unit: "second", value: i } : { unit: "millisecond", value: n.valueOf() - e.valueOf() }))))));
   }
   countDurationsBetween(e, n, i) {
     let r;
@@ -2968,7 +2968,7 @@ function re(t, e) {
 }
 class Ii extends T {
   constructor() {
-    super(...arguments), this.id = $e(), this.queuedDomNodes = [], this.currentDomNodes = [], this.handleEl = (e) => {
+    super(...arguments), this.id = Ne(), this.queuedDomNodes = [], this.currentDomNodes = [], this.handleEl = (e) => {
       const { options: n } = this.context, { generatorName: i } = this.props;
       (!n.customRenderingReplaces || !Zn(i, n)) && this.updateElRef(e);
     }, this.updateElRef = (e) => {
@@ -3121,11 +3121,11 @@ function ae(t, e) {
 function ou(t, e) {
   return e.start != null && t < e.start ? e.start : e.end != null && t >= e.end ? new Date(e.end.valueOf() - 1) : t;
 }
-function No(t) {
+function $o(t) {
   let e = Math.floor(Pe(t.start, t.end)) || 1, n = I(t.start), i = B(n, e);
   return { start: n, end: i };
 }
-function $o(t, e = x(0)) {
+function No(t, e = x(0)) {
   let n = null, i = null;
   if (t.end) {
     i = I(t.end);
@@ -3261,7 +3261,7 @@ class Po {
   refineRange(e) {
     if (e) {
       let n = iu(e, this.props.dateEnv);
-      return n && (n = $o(n)), n;
+      return n && (n = No(n)), n;
     }
     return null;
   }
@@ -3298,9 +3298,9 @@ class Po {
     return e;
   }
 }
-function Ni(t, e, n, i) {
+function $i(t, e, n, i) {
   return {
-    instanceId: $e(),
+    instanceId: Ne(),
     defId: t,
     range: e,
     forcedStartTzo: n ?? null,
@@ -3322,7 +3322,7 @@ function au(t, e, n, i) {
   }
   return null;
 }
-function Ne(t, e, n) {
+function $e(t, e, n) {
   let { dateEnv: i, pluginHooks: r, options: s } = n, { defs: o, instances: a } = t;
   a = Ie(a, (l) => !o[l.defId].recurringDef);
   for (let l in o) {
@@ -3332,7 +3332,7 @@ function Ne(t, e, n) {
       c || (c = d.allDay ? s.defaultAllDayEventDuration : s.defaultTimedEventDuration);
       let f = lu(d, c, e, i, r.recurringTypes);
       for (let h of f) {
-        let u = Ni(l, {
+        let u = $i(l, {
           start: h,
           end: i.add(h, c)
         });
@@ -3361,7 +3361,7 @@ const Pt = {
   date: v,
   allDay: Boolean
 }, cu = Object.assign(Object.assign(Object.assign({}, Pt), Ho), { extendedProps: v });
-function zo(t, e, n, i, r = $i(n), s, o) {
+function zo(t, e, n, i, r = Ni(n), s, o) {
   let { refined: a, extra: l } = Bo(t, n, r), d = uu(e, n), c = au(a, d, n.dateEnv, n.pluginHooks.recurringTypes);
   if (c) {
     let h = Kn(a, l, e ? e.sourceId : "", c.allDay, !!c.duration, n, s);
@@ -3373,15 +3373,15 @@ function zo(t, e, n, i, r = $i(n), s, o) {
   }
   let f = du(a, d, n, i);
   if (f) {
-    let h = Kn(a, l, e ? e.sourceId : "", f.allDay, f.hasEnd, n, s), u = Ni(h.defId, f.range, f.forcedStartTzo, f.forcedEndTzo);
+    let h = Kn(a, l, e ? e.sourceId : "", f.allDay, f.hasEnd, n, s), u = $i(h.defId, f.range, f.forcedStartTzo, f.forcedEndTzo);
     return o && h.publicId && o[h.publicId] && (u.instanceId = o[h.publicId]), { def: h, instance: u };
   }
   return null;
 }
-function Bo(t, e, n = $i(e)) {
+function Bo(t, e, n = Ni(e)) {
   return Ti(t, n);
 }
-function $i(t) {
+function Ni(t) {
   return Object.assign(Object.assign(Object.assign({}, Kt), cu), t.pluginHooks.eventRefiners);
 }
 function Kn(t, e, n, i, r, s, o) {
@@ -3391,7 +3391,7 @@ function Kn(t, e, n, i, r, s, o) {
     publicId: t.id || "",
     url: t.url || "",
     recurringDef: null,
-    defId: (o && t.id ? o[t.id] : "") || $e(),
+    defId: (o && t.id ? o[t.id] : "") || Ne(),
     sourceId: n,
     allDay: i,
     hasEnd: r,
@@ -3422,7 +3422,7 @@ function uu(t, e) {
   return t && (n = t.defaultAllDay), n == null && (n = e.options.defaultAllDay), n;
 }
 function gt(t, e, n, i, r, s) {
-  let o = Q(), a = $i(n);
+  let o = Q(), a = Ni(n);
   for (let l of t) {
     let d = zo(l, e, n, i, a, r, s);
     d && Xn(d, o);
@@ -3559,7 +3559,7 @@ function Uo(t, e, n = Fo(e)) {
         success: r.success,
         failure: r.failure,
         publicId: r.id || "",
-        sourceId: $e(),
+        sourceId: Ne(),
         sourceDefId: o.sourceDefId,
         meta: o.meta,
         ui: Xt(r, e),
@@ -3603,7 +3603,7 @@ function yu(t, e, n, i, r) {
     case "NEXT":
     case "CHANGE_DATE":
     case "CHANGE_VIEW_TYPE":
-      return i ? Ne(t, i.activeRange, r) : t;
+      return i ? $e(t, i.activeRange, r) : t;
     case "REMOVE_EVENTS":
       return fu(t, e.eventStore);
     case "REMOVE_EVENT_SOURCE":
@@ -3620,14 +3620,14 @@ function wu(t, e, n, i, r, s) {
   if (e && // not already removed
   n === e.latestFetchId) {
     let o = gt(jo(r, e, s), e, s);
-    return i && (o = Ne(o, i, s)), Hi(Wo(t, e.sourceId), o);
+    return i && (o = $e(o, i, s)), Hi(Wo(t, e.sourceId), o);
   }
   return t;
 }
 function Eu(t, e, n, i, r) {
   const { defIdMap: s, instanceIdMap: o } = Du(t);
   let a = gt(jo(n, e, r), e, r, !1, s, o);
-  return Ne(a, i, r);
+  return $e(a, i, r);
 }
 function jo(t, e, n) {
   let i = n.options.eventDataTransform, r = e ? e.eventDataTransform : null;
@@ -3647,7 +3647,7 @@ function qr(t, e) {
   return n;
 }
 function Su(t, e, n, i) {
-  return n && (e = Ne(e, n, i)), Hi(t, e);
+  return n && (e = $e(e, n, i)), Hi(t, e);
 }
 function Yr(t, e, n) {
   let { defs: i } = t, r = le(t.instances, (s) => i[s.defId].allDay ? s : Object.assign(Object.assign({}, s), { range: {
@@ -3766,7 +3766,7 @@ function Mu(t, e, n, i) {
 }
 function Iu(t, e, n, i, r) {
   let { dateEnv: s } = r, o = i.standardProps && i.standardProps.allDay === !0, a = i.standardProps && i.standardProps.hasEnd === !1, l = Object.assign({}, t);
-  return o && (l.range = No(l.range)), i.datesDelta && n.startEditable && (l.range = {
+  return o && (l.range = $o(l.range)), i.datesDelta && n.startEditable && (l.range = {
     start: s.add(l.range.start, i.datesDelta),
     end: s.add(l.range.end, i.datesDelta)
   }), i.startDelta && n.durationEditable && (l.range = {
@@ -3810,7 +3810,7 @@ class Le {
     return this.internalEventSource.meta.format;
   }
 }
-class N {
+class $ {
   // instance will be null if expressing a recurring event that has no current instances,
   // OR if trying to validate an incoming external event that has no dates assigned
   constructor(e, n, i) {
@@ -3864,7 +3864,7 @@ class N {
     let { dateEnv: r } = this._context, s = { allDay: i.allDay }, o = r.createMarker(e), a;
     if (o && !(n != null && (a = r.createMarker(n), !a)) && this._instance) {
       let l = this._instance.range;
-      i.allDay === !0 && (l = No(l));
+      i.allDay === !0 && (l = $o(l));
       let d = Ue(l.start, o, r, i.granularity);
       if (a) {
         let c = Ue(l.end, a, r, i.granularity);
@@ -3890,7 +3890,7 @@ class N {
     r == null && (r = this._context.options.allDayMaintainDuration), this._def.allDay !== e && (i.hasEnd = r), this.mutate({ standardProps: i });
   }
   formatRange(e) {
-    let { dateEnv: n } = this._context, i = this._instance, r = $(e);
+    let { dateEnv: n } = this._context, i = this._instance, r = N(e);
     return this._def.hasEnd ? n.formatRange(i.range.start, i.range.end, r, {
       forcedStartTzo: i.forcedStartTzo,
       forcedEndTzo: i.forcedEndTzo
@@ -3916,7 +3916,7 @@ class N {
           classNames: []
         }
       }, e, r);
-      let l = new N(r, i, n);
+      let l = new $(r, i, n);
       this._def = o.defs[i.defId], this._instance = o.instances[n.instanceId], r.dispatch({
         type: "MERGE_EVENTS",
         eventStore: o
@@ -4047,7 +4047,7 @@ function Re(t, e, n) {
   let { defs: i, instances: r } = t, s = [], o = n ? n.instanceId : "";
   for (let a in r) {
     let l = r[a], d = i[l.defId];
-    l.instanceId !== o && s.push(new N(e, d, l));
+    l.instanceId !== o && s.push(new $(e, d, l));
   }
   return s;
 }
@@ -4058,7 +4058,7 @@ function Zr(t, e, n, i) {
     d[f.defId].display === "inverse-background" && (f.groupId ? (r[f.groupId] = [], o[f.groupId] || (o[f.groupId] = f)) : s[c] = []);
   }
   for (let c in t.instances) {
-    let f = t.instances[c], h = t.defs[f.defId], u = d[h.defId], g = f.range, m = !h.allDay && i ? $o(g, i) : g, b = Oe(m, n);
+    let f = t.instances[c], h = t.defs[f.defId], u = d[h.defId], g = f.range, m = !h.allDay && i ? No(g, i) : g, b = Oe(m, n);
     b && (u.display === "inverse-background" ? h.groupId ? r[h.groupId].push(b) : s[f.defId].push(b) : u.display !== "none" && (u.display === "background" ? a : l).push({
       def: h,
       ui: u,
@@ -4114,10 +4114,10 @@ function qo(t, e) {
   return e[""] && n.push(e[""]), e[t.defId] && n.push(e[t.defId]), n.push(t.ui), Lo(n);
 }
 function Yo(t, e) {
-  let n = t.map(Nu);
+  let n = t.map($u);
   return n.sort((i, r) => Zc(i, r, e)), n.map((i) => i._seg);
 }
-function Nu(t) {
+function $u(t) {
   let { eventRange: e } = t, n = e.def, i = e.instance ? e.instance.range : e.range, r = i.start ? i.start.valueOf() : 0, s = i.end ? i.end.valueOf() : 0;
   return Object.assign(Object.assign(Object.assign({}, n.extendedProps), n), {
     id: n.publicId,
@@ -4128,7 +4128,7 @@ function Nu(t) {
     _seg: t
   });
 }
-function $u(t, e) {
+function Nu(t, e) {
   let { pluginHooks: n } = e, i = n.isDraggableTransformers, { def: r, ui: s } = t.eventRange, o = s.startEditable;
   for (let a of i)
     o = a(o, r, s, e);
@@ -4175,7 +4175,7 @@ function Ko(t, e) {
   return a == null && (a = n.interactive, a == null && (a = !!s.hasHandlers("eventClick"))), a ? Co((l) => {
     s.trigger("eventClick", {
       el: l.target,
-      event: new N(e, n, i),
+      event: new $(e, n, i),
       jsEvent: l,
       view: e.viewApi
     });
@@ -4244,7 +4244,7 @@ function Vu(t, e, n) {
   return {
     def: r,
     ui: qo(r, e),
-    instance: Ni(r.defId, t.range),
+    instance: $i(r.defId, t.range),
     range: t.range,
     isStart: !0,
     isEnd: !0
@@ -4542,12 +4542,12 @@ class Xu {
   // -----------------------------------------------------------------------------------------------------------------
   formatDate(e, n) {
     let { dateEnv: i } = this.getCurrentData();
-    return i.format(i.createMarker(e), $(n));
+    return i.format(i.createMarker(e), N(n));
   }
   // `settings` is for formatter AND isEndExclusive
   formatRange(e, n, i) {
     let { dateEnv: r } = this.getCurrentData();
-    return r.formatRange(r.createMarker(e), r.createMarker(n), $(i), i);
+    return r.formatRange(r.createMarker(e), r.createMarker(n), N(i), i);
   }
   formatIso(e, n) {
     let { dateEnv: i } = this.getCurrentData();
@@ -4574,7 +4574,7 @@ class Xu {
   // Public Events API
   // -----------------------------------------------------------------------------------------------------------------
   addEvent(e, n) {
-    if (e instanceof N) {
+    if (e instanceof $) {
       let o = e._def, a = e._instance;
       return this.getCurrentData().eventStore.defs[o.defId] || (this.dispatch({
         type: "ADD_EVENTS",
@@ -4595,7 +4595,7 @@ class Xu {
     }
     let s = zo(e, r, i, !1);
     if (s) {
-      let o = new N(i, s.def, s.def.recurringDef ? null : s.instance);
+      let o = new $(i, s.def, s.def.recurringDef ? null : s.instance);
       return this.dispatch({
         type: "ADD_EVENTS",
         eventStore: Xn(s)
@@ -4624,11 +4624,11 @@ class Xu {
       let o = i[s];
       if (o.publicId === e) {
         if (o.recurringDef)
-          return new N(n, o, null);
+          return new $(n, o, null);
         for (let a in r) {
           let l = r[a];
           if (l.defId === o.defId)
-            return new N(n, o, l);
+            return new $(n, o, l);
         }
       }
     }
@@ -4807,7 +4807,7 @@ function Ui(t, e) {
   ];
   return t.isDisabled ? n.push("fc-day-disabled") : (t.isToday && (n.push("fc-day-today"), n.push(e.getClass("today"))), t.isPast && n.push("fc-day-past"), t.isFuture && n.push("fc-day-future"), t.isOther && n.push("fc-day-other")), n;
 }
-const sh = $({ year: "numeric", month: "long", day: "numeric" }), oh = $({ week: "long" });
+const sh = N({ year: "numeric", month: "long", day: "numeric" }), oh = N({ week: "long" });
 function en(t, e, n = "day", i = !0) {
   const { dateEnv: r, options: s, calendarApi: o } = t;
   let a = r.format(e, n === "week" ? oh : sh);
@@ -5050,7 +5050,7 @@ class gh extends ji {
 }
 class se extends T {
   constructor() {
-    super(...arguments), this.uid = $e();
+    super(...arguments), this.uid = Ne();
   }
   // Hit System
   // -----------------------------------------------------------------------------------------------------------------
@@ -5113,7 +5113,7 @@ class sa {
   }
   insertEntryAt(e, n) {
     let { entriesByLevel: i, levelCoords: r } = this;
-    n.lateral === -1 ? (Nn(r, n.level, n.levelCoord), Nn(i, n.level, [e])) : Nn(i[n.level], n.lateral, e), this.stackCnts[Te(e)] = n.stackCnt;
+    n.lateral === -1 ? ($n(r, n.level, n.levelCoord), $n(i, n.level, [e])) : $n(i[n.level], n.lateral, e), this.stackCnts[Te(e)] = n.stackCnt;
   }
   /*
   does not care about limits
@@ -5193,7 +5193,7 @@ function Wi(t, e) {
   let n = Math.max(t.start, e.start), i = Math.min(t.end, e.end);
   return n < i ? { start: n, end: i } : null;
 }
-function Nn(t, e, n) {
+function $n(t, e, n) {
   t.splice(e, 0, n);
 }
 function ti(t, e, n) {
@@ -5228,7 +5228,7 @@ class bh {
 }
 const Vi = {};
 function yh(t, e) {
-  return !t || e > 10 ? $({ weekday: "short" }) : e > 1 ? $({ weekday: "short", month: "numeric", day: "numeric", omitCommas: !0 }) : $({ weekday: "long" });
+  return !t || e > 10 ? N({ weekday: "short" }) : e > 1 ? N({ weekday: "short", month: "numeric", day: "numeric", omitCommas: !0 }) : N({ weekday: "long" });
 }
 const oa = "fc-col-header-cell";
 function aa(t) {
@@ -5245,7 +5245,7 @@ class wh extends T {
     ] })));
   }
 }
-const Eh = $({ weekday: "long" });
+const Eh = N({ weekday: "long" });
 class Sh extends T {
   render() {
     let { props: e } = this, { dateEnv: n, theme: i, viewApi: r, options: s } = this.context, o = B(/* @__PURE__ */ new Date(2592e5), e.dow), a = {
@@ -5398,7 +5398,7 @@ class ua {
     );
   }
   _sliceBusinessHours(e, n, i, r, ...s) {
-    return e ? this._sliceEventStore(Ne(e, xt(n, !!i), r), {}, n, i, ...s).bg : [];
+    return e ? this._sliceEventStore($e(e, xt(n, !!i), r), {}, n, i, ...s).bg : [];
   }
   _sliceEventStore(e, n, i, r, ...s) {
     if (e) {
@@ -5494,16 +5494,16 @@ function xh(t, e, n, i) {
     for (let k in h) {
       let O = h[k];
       if (Oi(b, O.range) && (u[O.defId].overlap === !1 && s.isEvent || w.overlap === !1 || C && !C(
-        new N(e, f[O.defId], O),
+        new $(e, f[O.defId], O),
         // still event
-        new N(e, E, m)
+        new $(e, E, m)
       )))
         return !1;
     }
     let P = r.eventStore;
     for (let k of w.allows) {
       let O = Object.assign(Object.assign({}, n), { range: m.range, allDay: E.allDay }), _ = P.defs[E.defId], fe = P.instances[g], it;
-      if (_ ? it = new N(e, _, fe) : it = new N(e, E), !k(zi(O, e), it))
+      if (_ ? it = new $(e, _, fe) : it = new $(e, E), !k(zi(O, e), it))
         return !1;
     }
   }
@@ -5516,7 +5516,7 @@ function _h(t, e, n, i) {
   let { selectOverlap: c } = e.options, f = typeof c == "function" ? c : null;
   for (let h in o) {
     let u = o[h];
-    if (Oi(l, u.range) && (d.overlap === !1 || f && !f(new N(e, s[u.defId], u), null)))
+    if (Oi(l, u.range) && (d.overlap === !1 || f && !f(new $(e, s[u.defId], u), null)))
       return !1;
   }
   for (let h of d.allows) {
@@ -5533,9 +5533,9 @@ function pa(t, e, n, i, r) {
   return !0;
 }
 function Rh(t, e, n, i, r) {
-  return t === "businessHours" ? $n(Ne(i, e, r)) : typeof t == "string" ? $n(vn(n, (s) => s.groupId === t)) : typeof t == "object" && t ? $n(Ne(t, e, r)) : [];
+  return t === "businessHours" ? Nn($e(i, e, r)) : typeof t == "string" ? Nn(vn(n, (s) => s.groupId === t)) : typeof t == "object" && t ? Nn($e(t, e, r)) : [];
 }
-function $n(t) {
+function Nn(t) {
   let { instances: e } = t, n = [];
   for (let i in e)
     n.push(e[i].range);
@@ -5647,10 +5647,10 @@ function Oh(t, e, n, i) {
     role: "presentation"
   }, typeof e.rowContent == "function" ? e.rowContent(n) : e.rowContent));
 }
-function Nh(t, e) {
+function $h(t, e) {
   return ye(t, e, ee);
 }
-function $h(t, e) {
+function Nh(t, e) {
   let n = [];
   for (let i of t) {
     let r = i.span || 1;
@@ -5703,7 +5703,7 @@ function ma(t) {
 }
 class Gi extends T {
   constructor() {
-    super(...arguments), this.processCols = A((e) => e, Nh), this.renderMicroColGroup = A($h), this.scrollerRefs = new oe(), this.scrollerElRefs = new oe(this._handleScrollerEl.bind(this)), this.state = {
+    super(...arguments), this.processCols = A((e) => e, $h), this.renderMicroColGroup = A(Nh), this.scrollerRefs = new oe(), this.scrollerElRefs = new oe(this._handleScrollerEl.bind(this)), this.state = {
       shrinkWidth: null,
       forceYScrollbars: !1,
       scrollerClientWidths: {},
@@ -5803,7 +5803,7 @@ function Lh(t, e) {
 }
 class qi extends T {
   constructor() {
-    super(...arguments), this.buildPublicEvent = A((e, n, i) => new N(e, n, i)), this.handleEl = (e) => {
+    super(...arguments), this.buildPublicEvent = A((e, n, i) => new $(e, n, i)), this.handleEl = (e) => {
       this.el = e, re(this.props.elRef, e), e && Kr(e, this.props.seg);
     };
   }
@@ -5815,7 +5815,7 @@ class qi extends T {
       textColor: o.textColor,
       backgroundColor: o.backgroundColor,
       borderColor: o.borderColor,
-      isDraggable: !e.disableDragging && $u(r, n),
+      isDraggable: !e.disableDragging && Nu(r, n),
       isStartResizable: !e.disableResizing && Pu(r, n),
       isEndResizable: !e.disableResizing && Hu(r),
       isMirror: !!(e.isDragging || e.isResizing || e.isDateSelecting),
@@ -5875,10 +5875,10 @@ const Qi = (t) => p(de.Consumer, null, (e) => {
     view: e.viewApi
   };
   return p(K, { elRef: t.elRef, elTag: t.elTag || "div", elAttrs: t.elAttrs, elClasses: t.elClasses, elStyle: t.elStyle, renderProps: i, generatorName: "nowIndicatorContent", customGenerator: n.nowIndicatorContent, classNameGenerator: n.nowIndicatorClassNames, didMount: n.nowIndicatorDidMount, willUnmount: n.nowIndicatorWillUnmount }, t.children);
-}), Fh = $({ day: "numeric" });
+}), Fh = N({ day: "numeric" });
 class Zi extends T {
   constructor() {
-    super(...arguments), this.refineRenderProps = $t(jh);
+    super(...arguments), this.refineRenderProps = Nt(jh);
   }
   render() {
     let { props: e, context: n } = this, { options: i } = n, r = this.refineRenderProps({
@@ -6038,7 +6038,7 @@ class wa extends T {
       function o(a) {
         let { def: l, instance: d, range: c } = a.eventRange;
         return {
-          event: new N(i, l, d),
+          event: new $(i, l, d),
           start: i.dateEnv.toDate(c.start),
           end: i.dateEnv.toDate(c.end),
           isStart: a.isStart,
@@ -6201,7 +6201,7 @@ function Ca(t, e, n) {
 }
 function ue(t) {
   return {
-    id: $e(),
+    id: Ne(),
     name: t.name,
     premiumReleaseDate: t.premiumReleaseDate ? new Date(t.premiumReleaseDate) : void 0,
     deps: t.deps || [],
@@ -6532,7 +6532,7 @@ function Xi(t, e, n, i, r) {
   return s;
 }
 function Af(t, e, n, i) {
-  let { options: r, calendarApi: s } = i, o = i.pluginHooks.eventSourceDefs[t.sourceDefId], a = $e();
+  let { options: r, calendarApi: s } = i, o = i.pluginHooks.eventSourceDefs[t.sourceDefId], a = Ne();
   return o.fetch({
     eventSource: t,
     range: e,
@@ -6715,11 +6715,11 @@ let Of = {
     });
   }
 };
-const Nf = ue({
+const $f = ue({
   name: "array-event-source",
   eventSourceDefs: [Of]
 });
-let $f = {
+let Nf = {
   parseMeta(t) {
     return typeof t.events == "function" ? t.events : null;
   },
@@ -6730,7 +6730,7 @@ let $f = {
 };
 const Pf = ue({
   name: "func-event-source",
-  eventSourceDefs: [$f]
+  eventSourceDefs: [Nf]
 }), Hf = {
   method: String,
   extraParams: v,
@@ -6857,7 +6857,7 @@ function qf(t, e) {
   n.hasHandlers("eventsSet") && n.trigger("eventsSet", Re(t, e));
 }
 const Yf = [
-  Nf,
+  $f,
   Pf,
   Bf,
   jf,
@@ -6904,7 +6904,7 @@ class Qf {
 }
 function Zf(t, e, n) {
   let i;
-  return /^(year|month)$/.test(t.currentRangeUnit) ? i = t.currentRange : i = t.activeRange, n.formatRange(i.start, i.end, $(e.titleFormat || Kf(t)), {
+  return /^(year|month)$/.test(t.currentRangeUnit) ? i = t.currentRange : i = t.activeRange, n.formatRange(i.start, i.end, N(e.titleFormat || Kf(t)), {
     isEndExclusive: t.isRangeAllDay,
     defaultSeparator: e.titleRangeSeparator
   });
@@ -6940,7 +6940,7 @@ class ss {
 }
 class Xf {
   constructor(e) {
-    this.computeCurrentViewData = A(this._computeCurrentViewData), this.organizeRawLocales = A(Jh), this.buildLocale = A(Da), this.buildPluginHooks = rf(), this.buildDateEnv = A(Jf), this.buildTheme = A(ep), this.parseToolbars = A(kf), this.buildViewSpecs = A(df), this.buildDateProfileGenerator = $t(tp), this.buildViewApi = A(np), this.buildViewUiProps = $t(sp), this.buildEventUiBySource = A(ip, ee), this.buildEventUiBases = A(rp), this.parseContextBusinessHours = $t(op), this.buildTitle = A(Zf), this.nowManager = new ss(), this.emitter = new bn(), this.actionRunner = new Qf(this._handleAction.bind(this), this.updateData.bind(this)), this.currentCalendarOptionsInput = {}, this.currentCalendarOptionsRefined = {}, this.currentViewOptionsInput = {}, this.currentViewOptionsRefined = {}, this.currentCalendarOptionsRefiners = {}, this.optionsForRefining = [], this.optionsForHandling = [], this.getCurrentData = () => this.data, this.dispatch = (h) => {
+    this.computeCurrentViewData = A(this._computeCurrentViewData), this.organizeRawLocales = A(Jh), this.buildLocale = A(Da), this.buildPluginHooks = rf(), this.buildDateEnv = A(Jf), this.buildTheme = A(ep), this.parseToolbars = A(kf), this.buildViewSpecs = A(df), this.buildDateProfileGenerator = Nt(tp), this.buildViewApi = A(np), this.buildViewUiProps = Nt(sp), this.buildEventUiBySource = A(ip, ee), this.buildEventUiBases = A(rp), this.parseContextBusinessHours = Nt(op), this.buildTitle = A(Zf), this.nowManager = new ss(), this.emitter = new bn(), this.actionRunner = new Qf(this._handleAction.bind(this), this.updateData.bind(this)), this.currentCalendarOptionsInput = {}, this.currentCalendarOptionsRefined = {}, this.currentViewOptionsInput = {}, this.currentViewOptionsRefined = {}, this.currentCalendarOptionsRefiners = {}, this.optionsForRefining = [], this.optionsForHandling = [], this.getCurrentData = () => this.data, this.dispatch = (h) => {
       this.actionRunner.request(h);
     }, this.props = e, this.actionRunner.pause(), this.nowManager = new ss();
     let n = {}, i = this.computeOptionsData(e.optionOverrides, n, e.calendarApi), r = i.calendarOptions.initialView || i.pluginHooks.initialView, s = this.computeCurrentViewData(r, i, e.optionOverrides, n);
@@ -7270,7 +7270,7 @@ class cp extends et {
         let a = U(n.target, ".fc-event-forced-url"), l = a ? a.querySelector("a[href]").href : "";
         s.emitter.trigger("eventClick", {
           el: i,
-          event: new N(r.context, o.eventRange.def, o.eventRange.instance),
+          event: new $(r.context, o.eventRange.def, o.eventRange.instance),
           jsEvent: n,
           view: s.viewApi
         }), l && !n.defaultPrevented && (window.location.href = l);
@@ -7307,7 +7307,7 @@ class dp extends et {
     let { component: r } = this, { context: s } = r, o = Ke(i);
     (!n || r.isValidSegDownEl(n.target)) && s.emitter.trigger(e, {
       el: i,
-      event: new N(s, o.eventRange.def, o.eventRange.instance),
+      event: new $(s, o.eventRange.def, o.eventRange.instance),
       jsEvent: n,
       view: s.viewApi
     });
@@ -7442,7 +7442,7 @@ class pp extends Xu {
           ))), this.el);
         });
       } else this.isRendered && (this.isRendered = !1, pt(null, this.el), this.setClassNames([]), this.setHeight(""));
-    }, Nc(e), this.el = e, this.renderRunner = new Si(this.handleRenderRequest), new Xf({
+    }, $c(e), this.el = e, this.renderRunner = new Si(this.handleRenderRequest), new Xf({
       optionOverrides: n,
       calendarApi: this,
       onAction: this.handleAction,
@@ -7632,7 +7632,7 @@ function ls(t, e) {
       n[i] = null;
   return n;
 }
-const Ma = $({
+const Ma = N({
   hour: "numeric",
   minute: "2-digit",
   omitZeroMinute: !0,
@@ -7650,7 +7650,7 @@ class Oa extends T {
     return p(Yi, Object.assign({}, e, { elClasses: ["fc-daygrid-event", "fc-daygrid-block-event", "fc-h-event"], defaultTimeFormat: Ma, defaultDisplayEventEnd: e.defaultDisplayEventEnd, disableResizing: !e.seg.eventRange.def.allDay }));
   }
 }
-class Na extends T {
+class $a extends T {
   render() {
     let { props: e, context: n } = this, { options: i } = n, { seg: r } = e, s = i.eventTimeFormat || Ma, o = Qo(r, s, n, !0, e.defaultDisplayEventEnd);
     return p(qi, Object.assign({}, e, { elTag: "a", elClasses: ["fc-daygrid-event", "fc-daygrid-dot-event"], elAttrs: Ko(e.seg, n), defaultGenerator: vp, timeText: o, isResizing: !1, isDateSelecting: !1 }));
@@ -7677,7 +7677,7 @@ class bp extends T {
         let o = s.eventRange.instance.instanceId;
         return p("div", { className: "fc-daygrid-event-harness", key: o, style: {
           visibility: r[o] ? "hidden" : ""
-        } }, Ia(s) ? p(Na, Object.assign({ seg: s, isDragging: !1, isSelected: o === e.eventSelection, defaultDisplayEventEnd: !1 }, be(s, e.todayRange))) : p(Oa, Object.assign({ seg: s, isDragging: !1, isResizing: !1, isDateSelecting: !1, isSelected: o === e.eventSelection, defaultDisplayEventEnd: !1 }, be(s, e.todayRange))));
+        } }, Ia(s) ? p($a, Object.assign({ seg: s, isDragging: !1, isSelected: o === e.eventSelection, defaultDisplayEventEnd: !1 }, be(s, e.todayRange))) : p(Oa, Object.assign({ seg: s, isDragging: !1, isResizing: !1, isDateSelecting: !1, isSelected: o === e.eventSelection, defaultDisplayEventEnd: !1 }, be(s, e.todayRange))));
       }));
     } });
   }
@@ -7688,7 +7688,7 @@ function yp(t) {
     e.push(i.seg), i.isVisible || n.push(i.seg);
   return { allSegs: e, invisibleSegs: n };
 }
-const wp = $({ week: "narrow" });
+const wp = N({ week: "narrow" });
 class Ep extends se {
   constructor() {
     super(...arguments), this.rootElRef = F(), this.state = {
@@ -7745,11 +7745,11 @@ function Ap(t, e, n) {
   (t.valueOf() === i.valueOf() || // a month-start that's within the current range?
   n.getDay(t) === 1 && t.valueOf() < r.valueOf());
 }
-function $a(t) {
+function Na(t) {
   return t.eventRange.instance.instanceId + ":" + t.firstCol;
 }
 function Pa(t) {
-  return $a(t) + ":" + t.lastCol;
+  return Na(t) + ":" + t.lastCol;
 }
 function Dp(t, e, n, i, r, s, o) {
   let a = new _p((w) => {
@@ -7959,13 +7959,13 @@ class Ha extends se {
     if (c)
       for (let g of n) {
         let { seg: m } = g, { instanceId: b } = m.eventRange.instance, w = g.isVisible && !r[b], E = g.isAbsolute, D = "", C = "";
-        E && (l.isRtl ? (C = 0, D = c.lefts[m.lastCol] - c.lefts[m.firstCol]) : (D = 0, C = c.rights[m.firstCol] - c.rights[m.lastCol])), u.push(p("div", { className: "fc-daygrid-event-harness" + (E ? " fc-daygrid-event-harness-abs" : ""), key: $a(m), ref: h ? null : this.segHarnessRefs.createRef(Pa(m)), style: {
+        E && (l.isRtl ? (C = 0, D = c.lefts[m.lastCol] - c.lefts[m.firstCol]) : (D = 0, C = c.rights[m.firstCol] - c.rights[m.lastCol])), u.push(p("div", { className: "fc-daygrid-event-harness" + (E ? " fc-daygrid-event-harness-abs" : ""), key: Na(m), ref: h ? null : this.segHarnessRefs.createRef(Pa(m)), style: {
           visibility: w ? "" : "hidden",
           marginTop: E ? "" : g.marginTop,
           top: E ? g.absoluteTop : "",
           left: D,
           right: C
-        } }, Ia(m) ? p(Na, Object.assign({ seg: m, isDragging: s, isSelected: b === d, defaultDisplayEventEnd: f }, be(m, i))) : p(Oa, Object.assign({ seg: m, isDragging: s, isResizing: o, isDateSelecting: a, isSelected: b === d, defaultDisplayEventEnd: f }, be(m, i)))));
+        } }, Ia(m) ? p($a, Object.assign({ seg: m, isDragging: s, isSelected: b === d, defaultDisplayEventEnd: f }, be(m, i))) : p(Oa, Object.assign({ seg: m, isDragging: s, isResizing: o, isDateSelecting: a, isSelected: b === d, defaultDisplayEventEnd: f }, be(m, i)))));
       }
     return u;
   }
@@ -8204,7 +8204,7 @@ class Op extends se {
   }
   flushScrollReset() {
     if (this.needsScrollReset && this.props.clientWidth) {
-      const e = Np(this.elRef.current, this.props.dateProfile);
+      const e = $p(this.elRef.current, this.props.dateProfile);
       if (e) {
         const n = e.closest(".fc-daygrid-body"), i = n.closest(".fc-scroller"), r = e.getBoundingClientRect().top - n.getBoundingClientRect().top;
         i.scrollTop = r ? r + 1 : 0;
@@ -8213,11 +8213,11 @@ class Op extends se {
     }
   }
 }
-function Np(t, e) {
+function $p(t, e) {
   let n;
   return e.currentRangeUnit.match(/year|month/) && (n = t.querySelector(`[data-date="${wd(e.currentDate)}-01"]`)), n || (n = t.querySelector(`[data-date="${_i(e.currentDate)}"]`)), n;
 }
-class $p extends ua {
+class Np extends ua {
   constructor() {
     super(...arguments), this.forceDayIfListItem = !0;
   }
@@ -8227,7 +8227,7 @@ class $p extends ua {
 }
 class za extends se {
   constructor() {
-    super(...arguments), this.slicer = new $p(), this.tableRef = F();
+    super(...arguments), this.slicer = new Np(), this.tableRef = F();
   }
   render() {
     let { props: e, context: n } = this;
@@ -8875,7 +8875,7 @@ class Et extends et {
       let a = this.component.context, l = this.eventRange, d = l.instance.instanceId;
       o.isTouch ? d !== this.component.props.eventSelection && a.dispatch({ type: "SELECT_EVENT", eventInstanceId: d }) : a.dispatch({ type: "UNSELECT_EVENT" }), this.isDragging && (a.calendarApi.unselect(o), a.emitter.trigger("eventDragStart", {
         el: this.subjectEl,
-        event: new N(a, l.def, l.instance),
+        event: new $(a, l.def, l.instance),
         jsEvent: o.origEvent,
         view: a.viewApi
       }));
@@ -8898,7 +8898,7 @@ class Et extends et {
       this.isDragging || this.cleanup();
     }, this.handleDragEnd = (o) => {
       if (this.isDragging) {
-        let a = this.component.context, l = a.viewApi, { receivingContext: d, validMutation: c } = this, f = this.eventRange.def, h = this.eventRange.instance, u = new N(a, f, h), g = this.relevantEvents, m = this.mutatedRelevantEvents, { finalHit: b } = this.hitDragging;
+        let a = this.component.context, l = a.viewApi, { receivingContext: d, validMutation: c } = this, f = this.eventRange.def, h = this.eventRange.instance, u = new $(a, f, h), g = this.relevantEvents, m = this.mutatedRelevantEvents, { finalHit: b } = this.hitDragging;
         if (this.clearDrag(), a.emitter.trigger("eventDragStop", {
           el: this.subjectEl,
           event: u,
@@ -8906,7 +8906,7 @@ class Et extends et {
           view: l
         }), c) {
           if (d === a) {
-            let w = new N(a, m.defs[f.defId], h ? m.instances[h.instanceId] : null);
+            let w = new $(a, m.defs[f.defId], h ? m.instances[h.instanceId] : null);
             a.dispatch({
               type: "MERGE_EVENTS",
               eventStore: m
@@ -8941,7 +8941,7 @@ class Et extends et {
               type: "REMOVE_EVENTS",
               eventStore: g
             }), a.emitter.trigger("eventRemove", w);
-            let E = m.defs[f.defId], D = m.instances[h.instanceId], C = new N(d, E, D);
+            let E = m.defs[f.defId], D = m.instances[h.instanceId], C = new $(d, E, D);
             d.dispatch({
               type: "MERGE_EVENTS",
               eventStore: m
@@ -9023,7 +9023,7 @@ class rg extends et {
       let l = this.querySegEl(s);
       this.draggingSegEl = l, this.draggingSeg = Ke(l), o.calendarApi.unselect(), o.emitter.trigger("eventResizeStart", {
         el: l,
-        event: new N(o, a.def, a.instance),
+        event: new $(o, a.def, a.instance),
         jsEvent: s.origEvent,
         view: o.viewApi
       });
@@ -9038,14 +9038,14 @@ class rg extends et {
         state: m
       }) : l.dispatch({ type: "UNSET_EVENT_RESIZE" }), g ? Di() : Ci(), o || (h && wn(c, s) && (h = null), this.validMutation = h, this.mutatedRelevantEvents = u);
     }, this.handleDragEnd = (s) => {
-      let { context: o } = this.component, a = this.eventRange.def, l = this.eventRange.instance, d = new N(o, a, l), c = this.relevantEvents, f = this.mutatedRelevantEvents;
+      let { context: o } = this.component, a = this.eventRange.def, l = this.eventRange.instance, d = new $(o, a, l), c = this.relevantEvents, f = this.mutatedRelevantEvents;
       if (o.emitter.trigger("eventResizeStop", {
         el: this.draggingSegEl,
         event: d,
         jsEvent: s.origEvent,
         view: o.viewApi
       }), this.validMutation) {
-        let h = new N(o, f.defs[a.defId], l ? f.instances[l.instanceId] : null);
+        let h = new $(o, f.defs[a.defId], l ? f.instances[l.instanceId] : null);
         o.dispatch({
           type: "MERGE_EVENTS",
           eventStore: f
@@ -9152,7 +9152,7 @@ class dg extends ih {
     return e.allDay ? Ou(e) ? ["timed", "allDay"] : ["allDay"] : ["timed"];
   }
 }
-const ug = $({
+const ug = N({
   hour: "numeric",
   minute: "2-digit",
   omitZeroMinute: !0,
@@ -9169,7 +9169,7 @@ function Wa(t) {
       return p("td", { className: e.join(" "), "data-time": t.isoTimeStr });
     let { dateEnv: i, options: r, viewApi: s } = n, o = (
       // TODO: fully pre-parse
-      r.slotLabelFormat == null ? ug : Array.isArray(r.slotLabelFormat) ? $(r.slotLabelFormat[0]) : $(r.slotLabelFormat)
+      r.slotLabelFormat == null ? ug : Array.isArray(r.slotLabelFormat) ? N(r.slotLabelFormat[0]) : N(r.slotLabelFormat)
     ), a = {
       level: 0,
       time: t.time,
@@ -9201,7 +9201,7 @@ class fg extends T {
     ));
   }
 }
-const pg = $({ week: "short" }), gg = 5;
+const pg = N({ week: "short" }), gg = 5;
 class mg extends se {
   constructor() {
     super(...arguments), this.allDaySplitter = new dg(), this.headerElRef = F(), this.rootElRef = F(), this.scrollerElRef = F(), this.state = {
@@ -9690,7 +9690,7 @@ function Mg(t, e, n, i) {
     l.push({ seg: d, rect: null });
   return { segPlacements: l, hiddenGroups: a };
 }
-const Ig = $({
+const Ig = N({
   hour: "numeric",
   minute: "2-digit",
   meridiem: !1
@@ -9760,7 +9760,7 @@ class Og extends T {
   renderHiddenGroups(e, n) {
     let { extraDateSpan: i, dateProfile: r, todayRange: s, nowDate: o, eventSelection: a, eventDrag: l, eventResize: d } = this.props;
     return p(M, null, e.map((c) => {
-      let f = Bn(c.span), h = Ng(c.entries, n);
+      let f = Bn(c.span), h = $g(c.entries, n);
       return p(Sg, { key: _o(Ea(h)), hiddenSegs: h, top: f.top, bottom: f.bottom, extraDateSpan: i, dateProfile: r, todayRange: s, nowDate: o, eventSelection: a, eventDrag: l, eventResize: d });
     }));
   }
@@ -9815,10 +9815,10 @@ function Bn(t) {
     bottom: -t.end
   } : { top: "", bottom: "" };
 }
-function Ng(t, e) {
+function $g(t, e) {
   return t.map((n) => e[n.index]);
 }
-class $g extends T {
+class Ng extends T {
   constructor() {
     super(...arguments), this.splitFgEventSegs = A(st), this.splitBgEventSegs = A(st), this.splitBusinessHourSegs = A(st), this.splitNowIndicatorSegs = A(st), this.splitDateSelectionSegs = A(st), this.splitEventDrag = A(ds), this.splitEventResize = A(ds), this.rootElRef = F(), this.cellElRefs = new oe();
   }
@@ -9911,7 +9911,7 @@ class Hg extends se {
         minWidth: e.tableMinWidth
       } },
       p(wg, { axis: e.axis, dateProfile: e.dateProfile, slatMetas: e.slatMetas, clientWidth: e.clientWidth, minHeight: e.expandRows ? e.clientHeight : "", tableMinWidth: e.tableMinWidth, tableColGroupNode: e.axis ? e.tableColGroupNode : null, onCoords: this.handleSlatCoords }),
-      p($g, { cells: e.cells, axis: e.axis, dateProfile: e.dateProfile, businessHourSegs: e.businessHourSegs, bgEventSegs: e.bgEventSegs, fgEventSegs: e.fgEventSegs, dateSelectionSegs: e.dateSelectionSegs, eventSelection: e.eventSelection, eventDrag: e.eventDrag, eventResize: e.eventResize, todayRange: e.todayRange, nowDate: e.nowDate, nowIndicatorSegs: e.nowIndicatorSegs, clientWidth: e.clientWidth, tableMinWidth: e.tableMinWidth, tableColGroupNode: e.tableColGroupNode, slatCoords: n.slatCoords, onColCoords: this.handleColCoords, forPrint: e.forPrint })
+      p(Ng, { cells: e.cells, axis: e.axis, dateProfile: e.dateProfile, businessHourSegs: e.businessHourSegs, bgEventSegs: e.bgEventSegs, fgEventSegs: e.fgEventSegs, dateSelectionSegs: e.dateSelectionSegs, eventSelection: e.eventSelection, eventDrag: e.eventDrag, eventResize: e.eventResize, todayRange: e.todayRange, nowDate: e.nowDate, nowIndicatorSegs: e.nowIndicatorSegs, clientWidth: e.clientWidth, tableMinWidth: e.tableMinWidth, tableColGroupNode: e.tableColGroupNode, slatCoords: n.slatCoords, onColCoords: this.handleColCoords, forPrint: e.forPrint })
     );
   }
   componentDidMount() {
@@ -10966,7 +10966,7 @@ const Im = G`
   .compact-block.flach .compact-block-time {
     display: none;
   }
-`, Nm = G`
+`, $m = G`
   .modal-overlay {
     position: absolute;
     top: 0;
@@ -11113,7 +11113,7 @@ const Im = G`
   .btn-delete--confirm {
     background-color: #8c1d16;
   }
-`, $m = G`
+`, Nm = G`
   .header {
     padding-bottom: 12px;
     border-bottom: 1px solid var(--glass-border);
@@ -11261,10 +11261,10 @@ const Im = G`
   }
 `, Pm = G`
   ${tl}
-  ${$m}
+  ${Nm}
   ${Im}
   ${Om}
-  ${Nm}
+  ${$m}
 `;
 function Hm(t) {
   const { week: e } = t;
@@ -13151,7 +13151,7 @@ function cl(t, e, n) {
     />
   `;
 }
-function Nv(t) {
+function $v(t) {
   return y`
     ${Z(
     "Zeit",
@@ -13192,7 +13192,7 @@ function Nv(t) {
   )}
   `;
 }
-const $v = [
+const Nv = [
   "#0078d4",
   "#2980b9",
   "#16a085",
@@ -13247,7 +13247,7 @@ function Pv(t, e, n) {
       </div>
 
       <div class="set-palette">
-        ${$v.map(
+        ${Nv.map(
     (r) => y`
             <button
               class="set-farbe ${r.toLowerCase() === t.color.toLowerCase() ? "gewaehlt" : ""}"
@@ -13626,7 +13626,7 @@ let V = class extends ie {
     `;
   }
   inhalt() {
-    return this.section === "info" ? Nv({
+    return this.section === "info" ? $v({
       timeZone: this.hass?.config?.time_zone ?? "",
       haVersion: this.hass?.config?.version ?? "",
       appVersion: this.appVersion,
@@ -13801,17 +13801,17 @@ window.customCards.push({
   preview: !1
 });
 function Os(t, e) {
-  const n = Ns(t.width, e.width), i = Ns(t.height, e.height), r = li(t.left - e.left), s = li(t.top - e.top);
+  const n = $s(t.width, e.width), i = $s(t.height, e.height), r = li(t.left - e.left), s = li(t.top - e.top);
   return `translate(${r}px, ${s}px) scale(${n}, ${i})`;
 }
-function Ns(t, e) {
+function $s(t, e) {
   return e <= 0 ? 1 : li(t / e, 4);
 }
 function li(t, e = 2) {
   const n = 10 ** e;
   return Math.round(t * n) / n;
 }
-function $s() {
+function Ns() {
   return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? !1;
 }
 const Ps = 560, Zv = "cubic-bezier(0.16, 1, 0.3, 1)", Hs = 200, Kv = "cubic-bezier(0.4, 0, 1, 1)";
@@ -13838,7 +13838,7 @@ class Xv {
     if (!e || this.gewachsen) return;
     this.gewachsen = !0;
     const n = e.getBoundingClientRect();
-    if (e.classList.add("area--fullscreen"), $s()) return;
+    if (e.classList.add("area--fullscreen"), Ns()) return;
     const i = e.getBoundingClientRect();
     e.style.transition = "none", e.style.transform = Os(n, i), e.offsetWidth, e.style.transition = `transform ${Ps}ms ${Zv}`, e.style.transform = "", this.nachDerBewegung(e, Ps, () => {
       e.style.transition = "";
@@ -13851,7 +13851,7 @@ class Xv {
     const n = () => {
       e.classList.remove("area--fullscreen"), e.style.transition = "", e.style.transform = "";
     };
-    if ($s()) {
+    if (Ns()) {
       n();
       return;
     }
@@ -13900,14 +13900,20 @@ const Jv = G`
     gap: 2px;
   }
 
-  /* Zurueckhaltend: Er wird selten gebraucht und soll die Bereiche nicht
-     ueberstrahlen. Erst beim Beruehren tritt er hervor. */
-  .reload {
+  /* Zurueckhaltend: Selten gebraucht, soll die Bereiche nicht ueberstrahlen.
+     Erst beim Beruehren treten die Knoepfe hervor. */
+  .fuss {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2px;
+    margin: auto 0 10px;
+  }
+
+  .fuss-knopf {
     display: flex;
     align-items: center;
     justify-content: center;
-    align-self: center;
-    margin: auto 0 10px;
     width: 40px;
     height: 40px;
     border: none;
@@ -13919,18 +13925,18 @@ const Jv = G`
     transition: opacity 0.15s, background 0.15s, color 0.15s;
   }
 
-  .reload ha-icon {
+  .fuss-knopf ha-icon {
     --mdc-icon-size: 20px;
   }
 
-  .reload:hover,
-  .reload:focus-visible {
+  .fuss-knopf:hover,
+  .fuss-knopf:focus-visible {
     opacity: 1;
     background: rgba(0, 0, 0, 0.05);
     color: #1d1d1f;
   }
 
-  .reload:active ha-icon {
+  .fuss-knopf--laden:active ha-icon {
     /* Kurze Drehung als Rueckmeldung - bis das Neuladen greift, vergeht
        auf dem Panel ein Moment. */
     animation: reload-dreht 0.6s linear infinite;
@@ -13943,7 +13949,7 @@ const Jv = G`
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .reload:active ha-icon {
+    .fuss-knopf--laden:active ha-icon {
       animation: none;
     }
   }
@@ -14083,18 +14089,33 @@ function tb(t) {
   return y`
     <ha-card>
       <nav>${t.items.map((e) => nb(e, t))}</nav>
-      <!-- Im Kiosk-Modus gibt es keine Browserleiste und damit keinen Weg,
-           die Seite neu zu laden. Der Knopf sitzt am Fuss und weit weg von
-           den Bereichen: erreichbar, wenn man ihn sucht, und schwer
-           versehentlich zu treffen. -->
-      <button
-        class="reload"
-        title="Seite neu laden"
-        aria-label="Seite neu laden"
-        @click=${() => t.onReload()}
-      >
-        <ha-icon icon="mdi:refresh"></ha-icon>
-      </button>
+      <!-- Im Kioskmodus blendet Home Assistant Seitenleiste und Kopfzeile
+           aus. Dann gibt es weder einen Weg zurueck in seine Oberflaeche noch
+           eine Moeglichkeit, die Seite neu zu laden. Beides sitzt deshalb hier
+           am Fuss, weit weg von den Bereichen: zu finden, wenn man es sucht,
+           und schwer versehentlich zu treffen. -->
+      <div class="fuss">
+        ${t.exits.map(
+    (e) => y`
+            <button
+              class="fuss-knopf"
+              title=${e.name ?? "Verlassen"}
+              aria-label=${e.name ?? "Verlassen"}
+              @click=${() => t.onExit(e.path)}
+            >
+              <ha-icon .icon=${e.icon}></ha-icon>
+            </button>
+          `
+  )}
+        <button
+          class="fuss-knopf fuss-knopf--laden"
+          title="Seite neu laden"
+          aria-label="Seite neu laden"
+          @click=${() => t.onReload()}
+        >
+          <ha-icon icon="mdi:refresh"></ha-icon>
+        </button>
+      </div>
     </ha-card>
   `;
 }
@@ -14193,7 +14214,9 @@ let Ee = class extends ie {
         ${tb({
       items: this.config.areas,
       isActive: (t) => t.id === this.activeId && !this.pathOf(t.id),
+      exits: this.config.exits ?? [],
       onSelect: (t) => this.select(t.id),
+      onExit: (t) => this.leave(t),
       onReload: () => location.reload()
     })}
         <div class="content">
@@ -14229,11 +14252,27 @@ let Ee = class extends ie {
     const e = this.config.areas.find((n) => n.id === t);
     if (e) {
       if (e.path) {
-        history.pushState(null, "", e.path), window.dispatchEvent(new CustomEvent("location-changed", { bubbles: !0, composed: !0 }));
+        this.navigate(e.path);
         return;
       }
       t !== this.activeId && (this.selbstGewaehlt = !0, this.switchTo(t), this.reportToSyncEntity(t));
     }
+  }
+  /** Wechselt innerhalb von Home Assistant, ohne die Seite neu zu laden. */
+  navigate(t) {
+    history.pushState(null, "", t), window.dispatchEvent(new CustomEvent("location-changed", { bubbles: !0, composed: !0 }));
+  }
+  /** Verlaesst die App wirklich - mit vollem Seitenaufbau.
+   *
+   * Ein Wechsel nur der Route reicht hier nicht: Der Kioskmodus hat die
+   * Seitenleiste von Home Assistant ausgeblendet und blendet sie beim
+   * seiteninternen Wechsel nicht wieder ein. Man landet dann in den
+   * Einstellungen ohne jede Navigation - und ohne Browserleiste, die am
+   * Panel fehlt, auch ohne Weg zurueck. Ein echtes Neuladen laesst den
+   * Kioskmodus hinter sich, weil er nur fuer dieses Dashboard gilt.
+   */
+  leave(t) {
+    location.href = t;
   }
   switchTo(t) {
     t !== this.activeId && (this.vollbild.expanded && this.vollbild.collapse(), this.previousId = this.activeId, this.activeId = t, this.vollbild.restart(), window.setTimeout(() => window.dispatchEvent(new Event("resize")), 50));

@@ -143,6 +143,13 @@ If you also set `syncEntity` so automations can switch the panel, every area
 id must be an option of that `input_select`. An area the helper cannot name
 snaps straight back to the previous one.
 
+In kiosk mode Home Assistant hides its own sidebar, and the panel has no
+browser chrome either — so there is no way back out. `exits` puts that way at
+the foot of the sidebar, next to the reload button. Those buttons load the
+page for real rather than switching the route: kiosk mode does not bring the
+sidebar back on an in-page change, and you would land in the settings without
+any navigation at all.
+
 ```yaml
 type: custom:family-shell
 initial: kalender
@@ -179,6 +186,13 @@ areas:
 fullscreen:
   area: photos
   after: 10
+
+# Optional: ways out of the app, at the foot of the sidebar. Needed in
+# kiosk mode, where Home Assistant hides its own navigation.
+exits:
+  - icon: mdi:home-assistant
+    path: /config/dashboard
+    name: Home Assistant
 ```
 
 #### Invitation sync
@@ -391,6 +405,14 @@ können, muss jede Bereichskennung als Option in diesem `input_select` führen.
 Ein Bereich, den der Helfer nicht benennen kann, springt sofort auf den
 vorherigen zurück.
 
+Im Kioskmodus blendet Home Assistant seine eigene Seitenleiste aus, und am
+Panel gibt es auch keine Browserleiste — es führt dann kein Weg zurück.
+`exits` legt diesen Weg an den Fuß der Seitenleiste, neben den Knopf zum
+Neuladen. Diese Knöpfe laden die Seite wirklich neu, statt nur die Route zu
+wechseln: Der Kioskmodus blendet die Seitenleiste bei einem seiteninternen
+Wechsel nicht wieder ein, und man landete sonst in den Einstellungen ganz
+ohne Navigation.
+
 ```yaml
 type: custom:family-shell
 initial: kalender
@@ -427,6 +449,13 @@ areas:
 fullscreen:
   area: fotos
   after: 10
+
+# Optional: Wege aus der App heraus, am Fuß der Seitenleiste. Im Kioskmodus
+# nötig, weil Home Assistant dort seine eigene Navigation ausblendet.
+exits:
+  - icon: mdi:home-assistant
+    path: /config/dashboard
+    name: Home Assistant
 ```
 
 #### Einladungs-Abgleich

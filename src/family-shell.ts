@@ -164,7 +164,9 @@ export class FamilyShell extends LitElement {
         ${renderNav({
           items: this.config.areas,
           isActive: (item) => item.id === this.activeId && !this.pathOf(item.id),
+          exits: this.config.exits ?? [],
           onSelect: (item) => this.select(item.id),
+          onExit: (path) => this.leave(path),
           onReload: () => location.reload(),
         })}
         <div class="content">
@@ -227,8 +229,7 @@ export class FamilyShell extends LitElement {
     // Ziele ausserhalb des Panels - etwa die Einstellungen von Home
     // Assistant - lassen sich nicht einblenden, dorthin wird gewechselt.
     if (area.path) {
-      history.pushState(null, '', area.path);
-      window.dispatchEvent(new CustomEvent('location-changed', { bubbles: true, composed: true }));
+      this.navigate(area.path);
       return;
     }
 
@@ -236,6 +237,25 @@ export class FamilyShell extends LitElement {
     this.selbstGewaehlt = true;
     this.switchTo(id);
     this.reportToSyncEntity(id);
+  }
+
+  /** Wechselt innerhalb von Home Assistant, ohne die Seite neu zu laden. */
+  private navigate(path: string): void {
+    history.pushState(null, '', path);
+    window.dispatchEvent(new CustomEvent('location-changed', { bubbles: true, composed: true }));
+  }
+
+  /** Verlaesst die App wirklich - mit vollem Seitenaufbau.
+   *
+   * Ein Wechsel nur der Route reicht hier nicht: Der Kioskmodus hat die
+   * Seitenleiste von Home Assistant ausgeblendet und blendet sie beim
+   * seiteninternen Wechsel nicht wieder ein. Man landet dann in den
+   * Einstellungen ohne jede Navigation - und ohne Browserleiste, die am
+   * Panel fehlt, auch ohne Weg zurueck. Ein echtes Neuladen laesst den
+   * Kioskmodus hinter sich, weil er nur fuer dieses Dashboard gilt.
+   */
+  private leave(path: string): void {
+    location.href = path;
   }
 
   private switchTo(id: string): void {
