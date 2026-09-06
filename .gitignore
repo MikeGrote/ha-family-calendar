@@ -25,3 +25,7 @@ dist-ssr
 
 # Build-Artefakt, wird beim Deploy erzeugt
 custom_components/calendar_service_ext/www/*.js.gz
+
+# Python-Bytecode, entsteht beim Testen und beim Laden durch Home Assistant
+__pycache__/
+*.pyc
