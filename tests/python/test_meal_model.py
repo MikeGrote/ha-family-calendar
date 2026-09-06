@@ -241,6 +241,82 @@ def test_verweise_auch_als_objekte():
     assert r["instructions"][1]["ingredientIds"] == ["r1"]
 
 
+def test_verweise_als_textdarstellung_eines_woerterbuchs():
+    """Der Fall, der die Hervorhebung stumm ausgehebelt hat.
+
+    aiomealie beschreibt das Feld als Liste von Zeichenketten, Mealie
+    schickt Objekte - heraus kommt der repr eines Woerterbuchs. Wer den
+    woertlich nimmt, bekommt eine Kennung, die zu keiner Zutat passt, und
+    beim Kochen hebt kein Schritt etwas hervor. Ohne Fehlermeldung.
+    """
+    roh = {
+        "recipe_id": "x",
+        "name": "Test",
+        "ingredients": [{"reference_id": "b6854a7c-c688-429b-990d-8b5bc8f46621"}],
+        "instructions": [
+            {
+                "instruction_id": "s1",
+                "text": "Kochen.",
+                "ingredient_references": [
+                    "{'referenceId': 'b6854a7c-c688-429b-990d-8b5bc8f46621'}"
+                ],
+            }
+        ],
+    }
+
+    r = recipe(roh)
+
+    assert r["instructions"][0]["ingredientIds"] == ["b6854a7c-c688-429b-990d-8b5bc8f46621"]
+    assert r["instructions"][0]["ingredientIds"][0] == r["ingredients"][0]["id"]
+
+
+def test_mehrere_verweise_als_textdarstellung():
+    roh = {
+        "recipe_id": "x",
+        "name": "Test",
+        "instructions": [
+            {
+                "instruction_id": "s1",
+                "text": "Mischen.",
+                "ingredient_references": [
+                    "{'referenceId': 'aaaaaaaa-0000-0000-0000-000000000001'}",
+                    "{'referenceId': 'aaaaaaaa-0000-0000-0000-000000000002'}",
+                ],
+            }
+        ],
+    }
+
+    assert recipe(roh)["instructions"][0]["ingredientIds"] == [
+        "aaaaaaaa-0000-0000-0000-000000000001",
+        "aaaaaaaa-0000-0000-0000-000000000002",
+    ]
+
+
+def test_unlesbare_textdarstellung_ergibt_keinen_verweis():
+    # Lieber kein Verweis als einer, der auf die falsche Zutat zeigt.
+    roh = {
+        "recipe_id": "x",
+        "name": "Test",
+        "instructions": [
+            {"instruction_id": "s1", "text": "?", "ingredient_references": ["{kaputt"]}
+        ],
+    }
+
+    assert recipe(roh)["instructions"][0]["ingredientIds"] == []
+
+
+def test_doppelte_verweise_zaehlen_einmal():
+    roh = {
+        "recipe_id": "x",
+        "name": "Test",
+        "instructions": [
+            {"instruction_id": "s1", "text": "?", "ingredient_references": ["r1", "r1"]}
+        ],
+    }
+
+    assert recipe(roh)["instructions"][0]["ingredientIds"] == ["r1"]
+
+
 def test_rezept_ohne_zutaten_und_schritte():
     r = recipe({"recipe_id": "x", "name": "Butterbrot"})
 

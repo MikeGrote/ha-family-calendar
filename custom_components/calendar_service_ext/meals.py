@@ -104,6 +104,28 @@ def async_image_path(recipe_id: str, gross: bool = False) -> str:
 
 
 @callback
+def async_mealie_credentials(hass: HomeAssistant) -> tuple[str, str] | None:
+    """Adresse und Zugangsschluessel aus dem Config-Entry von Mealie.
+
+    Damit greift diese Integration in die Innereien einer anderen - der
+    Eintrag ist keine oeffentliche Schnittstelle und kann sich aendern.
+    Der Grund: Home Assistant bietet keine Aktion, um ein Rezept anzulegen,
+    nur eine, um eines aus einer Webadresse zu holen. Wer ein Rezept selbst
+    schreiben will, kaeme sonst nicht hinein.
+
+    Der Schluessel bleibt dabei, wo er ist: Er wandert von einem Speicher
+    auf dieser Box zu einem Dienst auf derselben Box.
+    """
+    entry = async_entry(hass)
+    basis = async_mealie_base_url(hass)
+    if entry is None or not basis:
+        return None
+
+    token = entry.data.get("api_token")
+    return (basis, str(token)) if token else None
+
+
+@callback
 def async_mealie_base_url(hass: HomeAssistant) -> str | None:
     """Adresse, unter der Mealie fuer Home Assistant erreichbar ist.
 

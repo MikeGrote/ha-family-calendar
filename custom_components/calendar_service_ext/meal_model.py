@@ -9,6 +9,8 @@ die einzige Stelle, die es merkt.
 
 from __future__ import annotations
 
+import ast
+import re
 from typing import Any
 
 # Bruchzeichen fuer die Kueche. "0,5 Zwiebel" liest sich schlechter als
@@ -67,10 +69,20 @@ def recipe(roh: dict[str, Any] | None) -> dict[str, Any] | None:
 
 
 def _ingredient(roh: dict[str, Any]) -> dict[str, Any]:
+    """Eine Zutat - mit dem, was Mealie zerlegt hat, falls es das tat.
+
+    Beim Import aus einer Webseite bleibt alles roh in einer Zeichenkette:
+    Menge 0, Einheit und Lebensmittel leer. Zerlegt wird dann in der Karte.
+    Was Mealie doch zerlegt hat, wird aber durchgereicht - von Hand
+    eingetragene Rezepte sind genauer, als ein Textzerleger es sein kann.
+    """
     return {
         "id": _text(roh.get("reference_id")),
         "display": ingredient_text(roh),
         "note": _text(roh.get("note")),
+        "quantity": _zahl(roh.get("quantity")),
+        "unit": _text((roh.get("unit") or {}).get("name")),
+        "food": _text((roh.get("food") or {}).get("name")),
     }
 
 
@@ -140,25 +152,59 @@ def _instruction(roh: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _references(roh: Any) -> list[str]:
-    """Verweise auf Zutaten - mal als Zeichenkette, mal als Objekt.
+#: Eine Kennung, wie Mealie sie vergibt.
+_UUID = re.compile(
+    r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", re.IGNORECASE
+)
 
-    Damit weiss jeder Schritt, welche Zutaten zu ihm gehoeren. Beide Formen
-    zu nehmen kostet drei Zeilen und erspart einen Fehler, der erst beim
-    Kochen auffiele.
+
+def _references(roh: Any) -> list[str]:
+    """Verweise auf Zutaten - in allen Formen, in denen sie ankommen.
+
+    Damit weiss jeder Schritt, welche Zutaten zu ihm gehoeren. Der Haken
+    steckt in der Bibliothek: aiomealie beschreibt das Feld als Liste von
+    Zeichenketten, Mealie schickt aber Objekte. Heraus kommt dann die
+    *Textdarstellung* eines Woerterbuchs:
+
+        "{'referenceId': 'b6854a7c-c688-429b-990d-8b5bc8f46621'}"
+
+    Wer die wortwoertlich nimmt, bekommt eine Kennung, die zu keiner Zutat
+    passt - und beim Kochen hebt kein Schritt etwas hervor, ohne dass
+    irgendwo ein Fehler auftaucht.
     """
     if not roh:
         return []
 
     ergebnis: list[str] = []
     for eintrag in roh:
-        if isinstance(eintrag, str):
-            ergebnis.append(eintrag)
-        elif isinstance(eintrag, dict):
-            kennung = eintrag.get("reference_id") or eintrag.get("referenceId")
-            if kennung:
-                ergebnis.append(str(kennung))
+        kennung = _kennung(eintrag)
+        if kennung and kennung not in ergebnis:
+            ergebnis.append(kennung)
     return ergebnis
+
+
+def _kennung(eintrag: Any) -> str:
+    if isinstance(eintrag, dict):
+        return _text(eintrag.get("reference_id") or eintrag.get("referenceId"))
+
+    text = _text(eintrag)
+    if not text:
+        return ""
+
+    # Die Textdarstellung eines Woerterbuchs zurueckuebersetzen.
+    if text.startswith("{"):
+        try:
+            gelesen = ast.literal_eval(text)
+        except (ValueError, SyntaxError):
+            gelesen = None
+        if isinstance(gelesen, dict):
+            return _text(gelesen.get("reference_id") or gelesen.get("referenceId"))
+
+        # Falls das misslingt, reicht die Kennung selbst.
+        treffer = _UUID.search(text)
+        return treffer.group(0) if treffer else ""
+
+    return text
 
 
 def _text(wert: Any) -> str:

@@ -15,15 +15,24 @@ import hashlib
 import logging
 from pathlib import Path
 
+import voluptuous as vol
 from homeassistant.components import frontend
 from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant, callback
+from homeassistant.core import (
+    HomeAssistant,
+    ServiceCall,
+    ServiceResponse,
+    SupportsResponse,
+    callback,
+)
+from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.start import async_at_started
 
 from . import websocket
 from .const import CONF_ENABLED, DOMAIN, FRONTEND_SCRIPT, URL_BASE
 from .invite_sync import InviteSync
+from .meal_write import async_create_recipe
 from .recipe_image import RecipeImageView
 from .todo_recurrence import TodoRecurrenceWatcher
 
@@ -34,12 +43,15 @@ _LOGGER = logging.getLogger(__name__)
 _FRONTEND_REGISTERED = f"{DOMAIN}_frontend_registered"
 _VIEWS_REGISTERED = f"{DOMAIN}_views_registered"
 
+SERVICE_CREATE_RECIPE = "create_recipe"
+
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Richte die Integration aus einem Config Entry ein."""
     await _async_register_frontend(hass)
     websocket.async_register(hass)
     _async_register_views(hass)
+    _async_register_services(hass)
 
     if entry.options.get(CONF_ENABLED):
         sync = InviteSync(hass, entry)
@@ -71,6 +83,38 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def _async_update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Lade den Eintrag neu, wenn die Optionen geaendert wurden."""
     await hass.config_entries.async_reload(entry.entry_id)
+
+
+@callback
+def _async_register_services(hass: HomeAssistant) -> None:
+    """Dienste anmelden. Wie die Ansichten nur einmal."""
+    if hass.services.has_service(DOMAIN, SERVICE_CREATE_RECIPE):
+        return
+
+    async def anlegen(call: ServiceCall) -> ServiceResponse:
+        slug = await async_create_recipe(hass, dict(call.data))
+        return {"slug": slug}
+
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_CREATE_RECIPE,
+        anlegen,
+        schema=vol.Schema(
+            {
+                vol.Optional("slug"): cv.string,
+                vol.Required("name"): cv.string,
+                vol.Optional("description"): cv.string,
+                vol.Optional("servings"): vol.Coerce(float),
+                vol.Optional("total_time"): cv.string,
+                vol.Optional("prep_time"): cv.string,
+                vol.Required("ingredients"): [cv.string],
+                vol.Required("instructions"): [dict],
+                vol.Optional("categories"): [cv.string],
+                vol.Optional("tags"): [cv.string],
+            }
+        ),
+        supports_response=SupportsResponse.ONLY,
+    )
 
 
 @callback

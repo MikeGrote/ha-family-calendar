@@ -1,0 +1,64 @@
+create_recipe:
+  name: Rezept anlegen
+  description: >-
+    Legt ein Rezept in Mealie an. Home Assistant selbst kann Rezepte nur aus
+    einer Webadresse holen; hier lässt sich eines schreiben - mitsamt der
+    Angabe, welche Zutat zu welchem Schritt gehört. Genau die füllt Mealies
+    eigener Import nie.
+  fields:
+    slug:
+      name: Kennung eines vorhandenen Rezepts
+      description: >-
+        Gesetzt, wird dieses Rezept überschrieben statt ein neues angelegt.
+      selector:
+        text:
+    name:
+      name: Name
+      required: true
+      example: Nudelauflauf mit Gemüse
+      selector:
+        text:
+    description:
+      name: Kurzbeschreibung
+      selector:
+        text:
+    servings:
+      name: Portionen
+      selector:
+        number:
+          min: 1
+          max: 24
+    total_time:
+      name: Gesamtzeit
+      example: 30 Minuten
+      selector:
+        text:
+    prep_time:
+      name: Vorbereitungszeit
+      example: 10 Minuten
+      selector:
+        text:
+    ingredients:
+      name: Zutaten
+      description: Je Zeile eine Zutat, so wie sie gelesen werden soll.
+      required: true
+      example: '["300 g Nudeln", "200 g Schmand"]'
+      selector:
+        object:
+    instructions:
+      name: Zubereitung
+      description: >-
+        Liste aus {text, uses}. "uses" nennt die Plätze der Zutaten, die der
+        Schritt braucht - beginnend bei null.
+      required: true
+      example: '[{"text": "Nudeln kochen.", "uses": [0]}]'
+      selector:
+        object:
+    categories:
+      name: Kategorien
+      selector:
+        object:
+    tags:
+      name: Schlagworte
+      selector:
+        object:

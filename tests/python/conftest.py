@@ -47,9 +47,10 @@ class _HAFehler(Exception):
 
 
 class _Zustand:
-    """Platzhalter fuer ConfigEntryState - nur der Wert, der gebraucht wird."""
+    """Platzhalter fuer Aufzaehlungen - nur die Werte, die gebraucht werden."""
 
     LOADED = "loaded"
+    ONLY = "only"
 
 
 class _Marker:
@@ -83,6 +84,7 @@ def _stub_homeassistant() -> None:
         "homeassistant.exceptions",
         "homeassistant.helpers.aiohttp_client",
         "voluptuous",
+        "homeassistant.helpers.config_validation",
         "aiohttp",
         "aiohttp.web",
     ):
@@ -103,6 +105,14 @@ def _stub_homeassistant() -> None:
     sys.modules["homeassistant.helpers.aiohttp_client"].async_get_clientsession = (
         lambda hass: None
     )
+    sys.modules["homeassistant.core"].ServiceCall = object
+    sys.modules["homeassistant.core"].ServiceResponse = object
+    sys.modules["homeassistant.core"].SupportsResponse = _Zustand
+    sys.modules["homeassistant.helpers"].config_validation = types.ModuleType("cv")
+    sys.modules["homeassistant.helpers.config_validation"] = sys.modules[
+        "homeassistant.helpers"
+    ].config_validation
+    sys.modules["homeassistant.helpers.config_validation"].string = str
 
     aiohttp = sys.modules["aiohttp"]
     aiohttp.ClientError = _HAFehler
@@ -132,7 +142,11 @@ def _stub_homeassistant() -> None:
     ws.async_response = lambda func: func
     sys.modules["homeassistant.components"].websocket_api = ws
 
-    sys.modules["voluptuous"].Required = _Marker
+    vol = sys.modules["voluptuous"]
+    vol.Required = _Marker
+    vol.Optional = _Marker
+    vol.Schema = lambda *a, **k: None
+    vol.Coerce = lambda *a, **k: None
 
 
 _stub_homeassistant()
